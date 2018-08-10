@@ -1,1 +1,0 @@
-Android_C_OpenCV_Template project
