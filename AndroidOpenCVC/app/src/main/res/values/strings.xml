@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">AndroidOpenCVC</string>
+    <string name="title_activity_canny">Canny</string>
+    <string name="title_activity_arcamera">ARCamera</string>
 </resources>

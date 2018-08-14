@@ -9,7 +9,7 @@ using namespace cv;
 
 extern "C"
 {
-void JNICALL Java_com_example_aopencvc_androidopencvc_MainActivity_salt(JNIEnv *env, jobject instance,
+void JNICALL Java_com_example_aopencvc_androidopencvc_Canny_salt(JNIEnv *env, jobject instance,
                                                                       jlong matAddrGray) {
     Mat &mGr = *(Mat *) matAddrGray;
 
