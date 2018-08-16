@@ -18,9 +18,9 @@ public class ARCamera extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mGLView = new SurfaceViewer(this);
         setContentView(R.layout.activity_arcamera);
-        mGLView = (SurfaceViewer) findViewById(R.id.surface_opengl);
+
 
     }
 

@@ -24,4 +24,10 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void launchOpenGL(View view){
+        Intent intent = new Intent(this,ARCamera.class);
+        startActivity(intent);
+
+    }
+
 }

@@ -2,7 +2,6 @@ package com.example.aopencvc.androidopencvc;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.opengl.GLSurfaceView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,8 +22,6 @@ public class Canny extends AppCompatActivity implements CameraBridgeViewBase.CvC
     private CameraBridgeViewBase _cameraBridgeViewBase;
 
     //OpenGL
-    private GLSurfaceView glSurfaceView;
-    private boolean rendererSet;
 
     private BaseLoaderCallback _baseLoaderCallback = new BaseLoaderCallback(this) {
         @Override

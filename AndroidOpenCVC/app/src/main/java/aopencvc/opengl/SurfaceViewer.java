@@ -6,7 +6,6 @@ import android.util.AttributeSet;
 
 public class SurfaceViewer extends GLSurfaceView {
 
-    private final MyGLRenderer mRenderer;
 
     public SurfaceViewer(Context context){
         super(context);
@@ -14,6 +13,7 @@ public class SurfaceViewer extends GLSurfaceView {
     }
 
     public SurfaceViewer(Context context, AttributeSet attr){
+        super(context);
         init();
     }
 
@@ -21,5 +21,6 @@ public class SurfaceViewer extends GLSurfaceView {
         setEGLContextClientVersion(2);
         setPreserveEGLContextOnPause(true);
         setRenderer(new ObjectRenderer());
+
     }
 }
