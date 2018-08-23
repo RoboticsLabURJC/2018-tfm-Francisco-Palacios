@@ -18,13 +18,16 @@ android {
     }
     sourceSets {
         main {
-            jniLibs.srcDirs = ['src/main/jniLibs']
+            jniLibs.srcDirs = ['src/main/jniLibs','src/main/libs']
         }
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            debuggable true
         }
     }
     externalNativeBuild {

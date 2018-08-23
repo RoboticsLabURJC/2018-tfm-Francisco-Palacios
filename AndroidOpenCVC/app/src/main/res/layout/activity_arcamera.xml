@@ -7,9 +7,16 @@
     tools:context=".ARCamera">
 
 
-    <aopencvc.opengl.SurfaceViewer
-        android:id="@+id/surface_opengl"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:id="@+id/frame_opengl_camera">
+
+        <org.opencv.android.JavaCameraView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/surface_camera" />
+    </FrameLayout>
+
 
 </android.support.design.widget.CoordinatorLayout>

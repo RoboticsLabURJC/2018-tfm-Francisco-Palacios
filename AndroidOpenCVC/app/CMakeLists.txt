@@ -15,14 +15,6 @@ set_target_properties(lib_opencv PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SO
 # You can define multiple libraries, and CMake builds them for you.
 # Gradle automatically packages shared libraries with your APK.
 
-add_library( # Sets the name of the library.
-             native-lib
-
-             # Sets the library as a shared library.
-             STATIC
-
-             # Provides a relative path to your source file(s).
-             src/main/cpp/native-opengl.cpp )
 
 add_library( # Sets the name of the library.
              native-lib
@@ -56,8 +48,8 @@ find_library( # Sets the name of the path variable.
 # build script, prebuilt third-party libraries, or system libraries.
 
 target_link_libraries( # Specifies the target library.
-                       native-opengl
                        native-lib
+
 
                        lib_opencv
                        # Links the target library to the log library

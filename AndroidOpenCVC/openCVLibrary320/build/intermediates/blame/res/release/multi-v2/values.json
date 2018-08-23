@@ -1,11 +1,11 @@
 {
     "logs": [
         {
-            "outputFile": "/home/fjpalfer/git_repository/AndroidOpenCVC/openCVLibrary320/build/intermediates/res/merged/release/values/values.xml",
+            "outputFile": "/home/fjpalfer/git_repository_TFM/AndroidOpenCVC/openCVLibrary320/build/intermediates/res/merged/release/values/values.xml",
             "map": []
         },
         {
-            "outputFile": "/home/fjpalfer/git_repository/AndroidOpenCVC/openCVLibrary320/build/intermediates/incremental/mergeReleaseResources/merged.dir/values/values.xml",
+            "outputFile": "/home/fjpalfer/git_repository_TFM/AndroidOpenCVC/openCVLibrary320/build/intermediates/incremental/mergeReleaseResources/merged.dir/values/values.xml",
             "map": []
         }
     ]

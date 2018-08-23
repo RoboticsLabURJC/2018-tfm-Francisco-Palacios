@@ -18,7 +18,7 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
 
 public class Canny extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
-    private static final String TAG = "OCVSample::Activity";
+    private static final String TAG = "OCVCanny::Activity";
     private CameraBridgeViewBase _cameraBridgeViewBase;
 
     //OpenGL
