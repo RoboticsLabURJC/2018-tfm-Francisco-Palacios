@@ -9,10 +9,10 @@ using namespace cv;
 
 extern "C"
 {
-void JNICALL Java_com_example_aopencvc_androidopencvc_Canny_salt(JNIEnv *env, jobject instance,
-                                                                      jlong matAddrGray) {
-    Mat &mGr = *(Mat *) matAddrGray;
+    void JNICALL Java_com_example_aopencvc_androidopencvc_Canny_openCVCanny(JNIEnv *env, jobject instance,
+                                                                          jlong matAddrGray) {
+        Mat &mGr = *(Mat *) matAddrGray;
 
-    Canny( mGr, mGr, 20, 60, 3 );
-}
+        Canny( mGr, mGr, 20, 60, 3 );
+    }
 }

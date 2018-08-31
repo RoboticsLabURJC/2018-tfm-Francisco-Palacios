@@ -30,4 +30,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void launchSDSLAM(View view) {
+        Intent intent = new Intent(this,SDSLAM.class);
+        startActivity(intent);
+    }
+
 }

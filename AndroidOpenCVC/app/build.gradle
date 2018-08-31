@@ -9,16 +9,19 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            stl 'gnustl_shared'
+        }
         externalNativeBuild {
             cmake {
-                cppFlags "-frtti -fexceptions"
-                abiFilters 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'
+                cppFlags "-std=c++11 -stdlib=libstdc++"
+                arguments "-DANDROID_STL=gnustl_shared"
             }
         }
     }
     sourceSets {
         main {
-            jniLibs.srcDirs = ['src/main/jniLibs','src/main/libs']
+            jniLibs.srcDirs = ['src/main/jniLibs']
         }
     }
     buildTypes {
@@ -35,6 +38,7 @@ android {
             path "CMakeLists.txt"
         }
     }
+    buildToolsVersion '27.0.3'
 }
 
 dependencies {

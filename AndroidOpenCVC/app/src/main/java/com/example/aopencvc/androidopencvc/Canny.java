@@ -125,9 +125,9 @@ public class Canny extends AppCompatActivity implements CameraBridgeViewBase.CvC
 
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         Mat imgGray = inputFrame.gray();
-        salt(imgGray.getNativeObjAddr());
+        openCVCanny(imgGray.getNativeObjAddr());
         return imgGray;
     }
 
-    public native void salt(long matAddrGray);
+    public native void openCVCanny(long matAddrGray);
 }

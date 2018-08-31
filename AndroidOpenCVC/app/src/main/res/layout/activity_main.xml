@@ -24,6 +24,13 @@
             android:id="@+id/openglar"
             android:text="OpenGL"
             android:onClick="launchOpenGL" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/sd-slam"
+            android:text="SD-SLAM"
+            android:onClick="launchSDSLAM" />
     </LinearLayout>
 
 

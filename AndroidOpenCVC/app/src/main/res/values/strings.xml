@@ -2,4 +2,5 @@
     <string name="app_name">AndroidOpenCVC</string>
     <string name="title_activity_canny">Canny</string>
     <string name="title_activity_arcamera">ARCamera</string>
+    <string name="title_activity_sdslam">SDSLAM</string>
 </resources>
