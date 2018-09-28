@@ -11,26 +11,13 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical">
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/canny"
-            android:text="Canny"
-            android:onClick="launchCanny"/>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/openglar"
-            android:text="OpenGL"
-            android:onClick="launchOpenGL" />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/sd-slam"
-            android:text="SD-SLAM"
-            android:onClick="launchSDSLAM" />
+            android:text="AR"
+            android:onClick="launchAR" />
     </LinearLayout>
 
 

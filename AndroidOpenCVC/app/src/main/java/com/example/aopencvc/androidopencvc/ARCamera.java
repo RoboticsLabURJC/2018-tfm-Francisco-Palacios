@@ -19,9 +19,11 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
 
 import aopencvc.opengl.SurfaceViewer;
+import aopencvc.utils.CameraHandler;
+import aopencvc.utils.SLAMHandler;
 
 
-public class ARCamera extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
+public class ARCamera extends AppCompatActivity{
 
 
     private SurfaceViewer mGLView;
@@ -41,6 +43,8 @@ public class ARCamera extends AppCompatActivity implements CameraBridgeViewBase.
                 {
                     Log.i(TAG, "OpenCV loaded successfully");
                     mOpenCvCameraView.enableView();
+
+
                 } break;
                 default:
                 {
@@ -56,14 +60,17 @@ public class ARCamera extends AppCompatActivity implements CameraBridgeViewBase.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(TAG, "called onCreate");
         mGLView = new SurfaceViewer(this);
         mGLView.setZOrderOnTop(true);
         requestWindowFeature( Window.FEATURE_NO_TITLE );
         getWindow().setFlags( WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN );
-
-        Log.i(TAG, "called onCreate");
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+
+        SLAMHandler slamHandler = new SLAMHandler();
+        CameraHandler cameraHandler = new CameraHandler(this.getBaseContext(), slamHandler, mGLView);
 
 
         ActivityCompat.requestPermissions(ARCamera.this,
@@ -76,11 +83,8 @@ public class ARCamera extends AppCompatActivity implements CameraBridgeViewBase.
         mOpenCvCameraView.setZOrderOnTop(false);
         mFrame.addView(mGLView);
 
-
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
-
-        mOpenCvCameraView.setCvCameraViewListener(this);
-
+        mOpenCvCameraView.setCvCameraViewListener(cameraHandler);
 
     }
 
@@ -107,17 +111,9 @@ public class ARCamera extends AppCompatActivity implements CameraBridgeViewBase.
     }
 
     @Override
-    public void onCameraViewStarted(int width, int height) {
-
-    }
-
-    @Override
-    public void onCameraViewStopped() {
-
-    }
-
-    @Override
-    public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
-        return inputFrame.rgba();
+    public void onDestroy() {
+        super.onDestroy();
+        if (mOpenCvCameraView != null)
+            mOpenCvCameraView.disableView();
     }
 }

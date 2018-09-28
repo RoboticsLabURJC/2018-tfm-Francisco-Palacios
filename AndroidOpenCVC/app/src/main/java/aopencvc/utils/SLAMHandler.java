@@ -1,12 +1,9 @@
 package aopencvc.utils;
 
-import com.example.aopencvc.androidopencvc.SDSLAM;
-
 import org.opencv.core.Mat;
 
 public class SLAMHandler {
 
-    private SDSLAM activitySDSLAM;
     private long nativeSLAM = 0;
 
     public SLAMHandler() {
@@ -14,13 +11,23 @@ public class SLAMHandler {
     }
 
 
-    public String TrackFrame(Mat image) {
-        return this.TrackFrame(this.nativeSLAM, 33, image.getNativeObjAddr());
+    public String TrackFrame(Mat image, Mat cameraRotation, Mat cameraTranslation, Mat worldPosPoint) {
+        return this.TrackFrame(this.nativeSLAM, 33, image.getNativeObjAddr(),
+                                cameraRotation.getNativeObjAddr(), cameraTranslation.getNativeObjAddr(),
+                                worldPosPoint.getNativeObjAddr());
+    }
+
+    public boolean GetWorldPos(Mat pointPos){
+        return this.GetPointWorldPos(this.nativeSLAM, pointPos.getNativeObjAddr());
     }
 
     // Native methods implemented by SLAM native library.
 
 
     private native long CreateSLAM();
-    public native String TrackFrame(long slam, int param, long img);
+    public native String TrackFrame(long slam, int param, long img, long rotation,
+                                    long translation, long wPPoint);
+
+    public native boolean GetPointWorldPos(long slam, long worldPosPoint);
+
 }

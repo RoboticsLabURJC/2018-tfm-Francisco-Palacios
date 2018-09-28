@@ -15,6 +15,7 @@
     <application
         android:allowBackup="true"
         android:debuggable="true"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -28,19 +29,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Canny"
-            android:label="@string/title_activity_canny"
-            android:screenOrientation="landscape" />
-        <activity
             android:name=".ARCamera"
             android:label="@string/title_activity_arcamera"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".SDSLAM"
-            android:label="@string/title_activity_sdslam"
-            android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

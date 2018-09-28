@@ -5,8 +5,11 @@ import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 
+import org.opencv.core.Mat;
+
 public class SurfaceViewer extends GLSurfaceView {
 
+    private ObjectRenderer renderer;
 
     public SurfaceViewer(Context context){
         super(context);
@@ -23,7 +26,21 @@ public class SurfaceViewer extends GLSurfaceView {
         setPreserveEGLContextOnPause(true);
         setEGLConfigChooser(8, 8, 8, 8, 16, 0);
         getHolder().setFormat(PixelFormat.TRANSLUCENT);
-        setRenderer(new ObjectRenderer());
+        renderer = new ObjectRenderer();
+        setRenderer(renderer);
 
     }
+
+    public void putCameraRotation(Mat cr){
+        renderer.putCameraRotation(cr);
+    }
+
+    public void putCameraTranslation(Mat ct){
+        renderer.putCameraTranslation(ct);
+    }
+
+    public void putWorldPosPoint(Mat wpp){
+        renderer.putWorldPosPoint(wpp);
+    }
+
 }

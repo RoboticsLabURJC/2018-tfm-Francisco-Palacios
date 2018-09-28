@@ -61,8 +61,7 @@ class ObjectInit {
     public ObjectInit() {
         // Drawing lines
         final float[] coordinatesData = {
-                // X, Y, Z,
-                // R, G, B, A
+                // X, Y, Z
                 0.0f, 0.0f, 0.0f,
 
                 1.5f, 0.0f, 0.0f,

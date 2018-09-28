@@ -15,24 +15,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        System.loadLibrary("opencv_java3");
+        System.loadLibrary("SD_SLAM");
+        System.loadLibrary("SLAM");
 
     }
 
 
-    public void launchCanny(View view){
-        Intent intent = new Intent(this,Canny.class);
-        startActivity(intent);
-    }
-
-    public void launchOpenGL(View view){
+    public void launchAR(View view){
         Intent intent = new Intent(this,ARCamera.class);
         startActivity(intent);
 
-    }
-
-    public void launchSDSLAM(View view) {
-        Intent intent = new Intent(this,SDSLAM.class);
-        startActivity(intent);
     }
 
 }
