@@ -31,3 +31,18 @@ In the next video, we can see how this program works:
 ### SD-SLAM in android:
 
 [![](http://img.youtube.com/vi/shRlWhWcSqk/0.jpg)](http://www.youtube.com/watch?v=shRlWhWcSqk "")
+
+
+## Weeks 6-8
+
+In this period i tried to join SD-SLAM for Android and the AR program, with the objetive to use the calculations of SD-SLAM to perform the required changes in the AR program to seems that the object rendered is at a point of the space captured by the camera.
+
+These changes consisted in using the translations and rotations provided by SD-SLAM and reflecting them in the AR camera. However, those changes didn't reflect well the movement of the object on the screen, so i tried to get a 3D point calculated by SD-SLAM and translate the AR object to it. This also, didn't reflect the movement well and the 3D point calculated appears out of the bounds of projection in the AR program.
+
+Therefore, it will be necessary to make some calculations before transferring the data from SD-SLAM to the AR program. In the next video we can see the behaivor of this changes.
+
+### SD-SLAM and AR in Android, first try:
+
+[![](http://img.youtube.com/vi/cGTfwEcq_pI/0.jpg)](http://www.youtube.com/watch?v=cGTfwEcq_pI "")
+
+
