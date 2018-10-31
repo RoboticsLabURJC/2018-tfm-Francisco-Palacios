@@ -45,4 +45,22 @@ Therefore, it will be necessary to make some calculations before transferring th
 
 [![](http://img.youtube.com/vi/cGTfwEcq_pI/0.jpg)](http://www.youtube.com/watch?v=cGTfwEcq_pI "")
 
+## Weeks 9-11
+
+During this weeks i tried to improve the behavior of the AR camera, i calculated a plane using the points provided by SD-SLAM to put the grid of the AR object in it. I had some issues with this calculations because it seems that the Y and Z coords of SD-SLAM are in the opposite direction to the Y and Z coords of GLESv2 (the library controling the AR camera).
+
+So i needed to rotate 180º along the x-axis and with this i made some mistakes trying to create the appropriated roation matrix, but they are all solved.
+
+I also changed the projection matrix used by the AR camera using the calibration parameters of the camera that i am using to make the tests of the code.
+
+And finally i included a small dot in the up left corner of the images provided by SD-SLAM to know what is the state of the tracker (green -> not initialized, blue -> ok, red -> lost) and that the tests are simpler.
+
+The results are not yet what is expected, because de point calculated to translate the AR object seems to be floating and not close to the flat surface on which I am trying to initialize it
+
+In the following video we can see better what I'm trying to say.
+
+### SD-SLAM and AR in Android, second try including plane calculation and calibration parameters:
+
+[![](http://img.youtube.com/vi/rmWQLTqQMNg/0.jpg)](http://www.youtube.com/watch?v=rmWQLTqQMNg "")
+
 

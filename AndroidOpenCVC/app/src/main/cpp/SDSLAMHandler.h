@@ -13,6 +13,8 @@
 #include <android/log.h>
 #include <ORBmatcher.h>
 
+using std::vector;
+
 
 namespace SLAM{
     class SDSLAMHandler {
@@ -22,7 +24,7 @@ namespace SLAM{
 
 
             int TrackMonocular(cv::Mat &img, cv::Mat &rotation,
-                               cv::Mat &mOw, cv::Mat &wPPoint);
+                               cv::Mat &mOw, cv::Mat &pose);
 
             SD_SLAM::MapPoint * getMapPoints();
 
@@ -33,16 +35,19 @@ namespace SLAM{
 
     private:
 
-        void DrawFrame(SD_SLAM::System * slam, cv::Mat &img, cv::Mat &rotation,
-                       cv::Mat &mOw, cv::Mat &wPPoint);
+        void DrawFrame(SD_SLAM::System * slam, cv::Mat &img, cv::Mat &pose, cv::Mat &plane);
+
+        bool DetectPlane(const vector<Eigen::Vector3d> vPoints, cv::Mat &result);
+
+        void FindMP(const std::vector<SD_SLAM::MapPoint*> &vMPs,std::vector<SD_SLAM::MapPoint *> &result);
 
         SD_SLAM::Tracking::eTrackingState trackerStatus;
 
         bool selectKP;
 
-        Eigen::Vector3d worldPosHighResponse;
-
         int counter_;
+
+        long nKeyFrames;
 
         SD_SLAM::MapPoint * CurrentMP;
 

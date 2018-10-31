@@ -26,6 +26,7 @@ public class SurfaceViewer extends GLSurfaceView {
         setPreserveEGLContextOnPause(true);
         setEGLConfigChooser(8, 8, 8, 8, 16, 0);
         getHolder().setFormat(PixelFormat.TRANSLUCENT);
+        getHolder().setFixedSize(1280,720);
         renderer = new ObjectRenderer();
         setRenderer(renderer);
 
@@ -35,12 +36,12 @@ public class SurfaceViewer extends GLSurfaceView {
         renderer.putCameraRotation(cr);
     }
 
-    public void putCameraTranslation(Mat ct){
-        renderer.putCameraTranslation(ct);
+    public void putPlaneEquation(Mat pe){
+        renderer.putPlaneEquation(pe);
     }
 
-    public void putWorldPosPoint(Mat wpp){
-        renderer.putWorldPosPoint(wpp);
+    public void putCameraPose(Mat cp){
+        renderer.putCameraPose(cp);
     }
 
 }

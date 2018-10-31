@@ -11,23 +11,21 @@ public class SLAMHandler {
     }
 
 
-    public String TrackFrame(Mat image, Mat cameraRotation, Mat cameraTranslation, Mat worldPosPoint) {
-        return this.TrackFrame(this.nativeSLAM, 33, image.getNativeObjAddr(),
-                                cameraRotation.getNativeObjAddr(), cameraTranslation.getNativeObjAddr(),
-                                worldPosPoint.getNativeObjAddr());
+    public String TrackFrame(Mat image, Mat cameraRotation, Mat planeEq, Mat worldPosPoint) {
+        String a = this.TrackFrame(this.nativeSLAM, 33, image.getNativeObjAddr(),
+                cameraRotation.getNativeObjAddr(), planeEq.getNativeObjAddr(),
+                worldPosPoint.getNativeObjAddr());
+        //System.out.println("Punto param z: " + planeEq.toString());
+
+        return a;
     }
 
-    public boolean GetWorldPos(Mat pointPos){
-        return this.GetPointWorldPos(this.nativeSLAM, pointPos.getNativeObjAddr());
-    }
 
     // Native methods implemented by SLAM native library.
 
 
     private native long CreateSLAM();
     public native String TrackFrame(long slam, int param, long img, long rotation,
-                                    long translation, long wPPoint);
-
-    public native boolean GetPointWorldPos(long slam, long worldPosPoint);
+                                    long planeEq, long wPPoint);
 
 }

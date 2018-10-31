@@ -7,6 +7,9 @@
 
 class System;
 
+using namespace Eigen;
+
+
 extern "C"{
     jlong JNICALL Java_aopencvc_utils_SLAMHandler_CreateSLAM(JNIEnv *env, jobject instance) {
         jlong result = 0;
@@ -19,24 +22,23 @@ extern "C"{
             env->ThrowNew(je, "Unknown exception in JNI code of CreateSLAM()");
             return 0;
         }
-
         return result;
     }
 }
 extern "C"{
     jstring JNICALL Java_aopencvc_utils_SLAMHandler_TrackFrame(JNIEnv *env, jobject instance,
                                                                jlong slam, jint param, jlong img,
-                                                                jlong cameraRotation, jlong cameraTranslation,
-                                                               jlong worldPosPoint) {
+                                                                jlong cameraRotation, jlong planeEq,
+                                                               jlong cameraPose) {
         std::stringstream ss;
         ss << "Hello from C++: ";
 
         try {
             cv::Mat * cimg = (cv::Mat*) img;
             cv::Mat * cRot = (cv::Mat*) cameraRotation;
-            cv::Mat * cTra = (cv::Mat*) cameraTranslation;
-            cv::Mat * wPPoint = (cv::Mat*) worldPosPoint;
-            ss << ((SLAM::SDSLAMHandler*)slam)->TrackMonocular(*cimg, *cRot, *cTra, *wPPoint);
+            cv::Mat * plane = (cv::Mat*) planeEq;
+            cv::Mat * pose = (cv::Mat*) cameraPose;
+            ss << ((SLAM::SDSLAMHandler*)slam)->TrackMonocular(*cimg, *cRot, *plane, *pose);
         } catch (...) {
             jclass je = env->FindClass("java/lang/Exception");
             env->ThrowNew(je, "Unknown exception in JNI code of TrackFrame()");
@@ -47,30 +49,8 @@ extern "C"{
     }
 }
 
-extern "C"
-JNIEXPORT jboolean JNICALL
-Java_aopencvc_utils_SLAMHandler_GetPointWorldPos(JNIEnv *env, jobject instance, jlong slam,
-                                                 jlong worldPosPoint) {
-    bool gotPoint = false;
-    if( ((SLAM::SDSLAMHandler*)slam)->getTrackingStatus() == SD_SLAM::Tracking::OK){
-        cv::Mat * point = (cv::Mat*) worldPosPoint;
 
-        SD_SLAM::MapPoint * currentMP = ((SLAM::SDSLAMHandler*)slam)->getMapPoints();
-        Eigen::Vector3d pointWorldPos = currentMP->GetWorldPos();
-
-        point->at<double>(0) = pointWorldPos(0);
-        point->at<double>(1) = pointWorldPos(1);
-        point->at<double>(2) = pointWorldPos(2);
-
-        gotPoint = true;
-    }
-
-    return gotPoint;
-
-}
-
-
-
+using std::vector;
 
 namespace SLAM {
 
@@ -80,23 +60,24 @@ namespace SLAM {
 
         // Set camera config
         SD_SLAM::Config &config = SD_SLAM::Config::GetInstance();
-        config.SetCameraIntrinsics(1280, 720, 1080.33874061861, 1081.398961189691,
-                                   644.2552668090187, 347.007496696664);
-        config.SetCameraDistortion(0.1390849622709781, -0.9989370047449903,
-                                   0.0009328385593714286, 0.0000381832961871823, 2.231184493469707);
+        config.SetCameraIntrinsics(1280, 720, 1080.3387, 1081.3989,
+                                   644.2552, 347.0074);
+        config.SetCameraDistortion(0.139084, -0.99893,
+                                   0.000932, 0.000038, 2.231184);
         selectKP = true;
+        nKeyFrames = 0;
 
         slam = new SD_SLAM::System(SD_SLAM::System::MONOCULAR);
     }
 
     int SDSLAMHandler::TrackMonocular(cv::Mat &img, cv::Mat &rotation,
-                                      cv::Mat &mOw, cv::Mat &wPPoint) {
+                                      cv::Mat &plane, cv::Mat &pose) {
         // Convert to gray to track
         cv::Mat gray;
         cv::cvtColor(img, gray, cv::COLOR_RGB2GRAY);
-        slam->TrackMonocular(gray);
+        Eigen::Matrix4d ePose = slam->TrackMonocular(gray);
         // Draw in image
-        DrawFrame(slam, img, rotation, mOw, wPPoint);
+        DrawFrame(slam, img, pose, plane);
 
         counter_++;
         return img.cols*1000 + img.rows*1000000 + counter_;
@@ -112,8 +93,8 @@ namespace SLAM {
         return trackerStatus;
     }
 
-    void SDSLAMHandler::DrawFrame(SD_SLAM::System * slam, cv::Mat &img, cv::Mat &rotation,
-                                  cv::Mat &mOw, cv::Mat &wPPoint) {
+    void SDSLAMHandler::DrawFrame(SD_SLAM::System * slam, cv::Mat &img, cv::Mat &pose,
+                                  cv::Mat &plane) {
         SD_SLAM::Tracking * tracker = slam->GetTracker();
         trackerStatus = tracker->GetLastState();
         // Not initialized
@@ -122,10 +103,7 @@ namespace SLAM {
             std::vector<cv::KeyPoint> vIniKeys = tracker->GetInitialFrame().mvKeys;
             std::vector<cv::KeyPoint> vCurrentKeys = tracker->GetCurrentFrame().mvKeys;
 
-            for(unsigned int i=0; i<vMatches.size(); i++) {
-                if (vMatches[i]>=0)
-                    cv::line(img, vIniKeys[i].pt, vCurrentKeys[vMatches[i]].pt, cv::Scalar(0,255,0), 2);
-            }
+            circle(img, cv::Point(50,50),5, cv::Scalar(0,255,0),CV_FILLED, 8,0);
         }
 
         // Status OK
@@ -133,36 +111,61 @@ namespace SLAM {
             SD_SLAM::Frame &currentFrame = tracker->GetCurrentFrame();
             std::vector<cv::KeyPoint> vCurrentKeys = currentFrame.mvKeys;
             //std::vector<SD_SLAM::MapPoint *> vCurrentMP = currentFrame.mvpMapPoints;
+            nKeyFrames = slam->GetMap()->GetAllKeyFrames().size();
+
+            Eigen::Matrix4d mTcw = currentFrame.GetPose();
+            Eigen::Matrix3d mRcw = mTcw.block<3, 3>(0, 0);
+            Eigen::Vector3d mtcw = mTcw.block<3, 1>(0, 3);
+
+            Eigen::Matrix3d rotMat;
+            rotMat.setZero();
+            rotMat(0,0) = 1;
+            rotMat(1,1) = -1;
+            rotMat(2,2) = -1;
+            Eigen::Matrix3d mRcwRotated = rotMat * mRcw;
+            Eigen::Vector3d mtcwRotated = rotMat * mtcw;
+
+            cv::Mat result = *new cv::Mat(1, 4, CV_64F);
 
 
-            Eigen::Matrix3d mRwc = currentFrame.GetRotationInverse();
-            Eigen::Vector3d eigenCen = currentFrame.GetCameraCenter();
+            Eigen::Matrix4d newPose;
+            newPose.setZero();
+            newPose.block<3, 3>(0, 0) = mRcwRotated;
+            newPose.block<3, 1>(0, 3) = mtcwRotated;
+            newPose.block<1,4>(3,0) = mTcw.block<1,4>(3,0);
+            for (int i = 0;i<pose.rows * pose.cols;i++){
+                pose.at<double>(i%4,i/4) = newPose(i);
+            }
 
-            mOw.at<double>(0) = eigenCen(0);
-            mOw.at<double>(1) = eigenCen(1);
-            mOw.at<double>(2) = eigenCen(2);
-            Eigen::AngleAxisd eigenRot;
-            eigenRot.fromRotationMatrix(mRwc);
-            // char matRow[100] = ""; // You can calculate how much memory u need, but for debug prints just put a big enough number
-
-            //for (int i = 0; i < 3; i++) {
-            //    sprintf(matRow + strlen(matRow), "%lf ", mOw(i)); // You can use data from row you need by accessing trainingLabels.row(...).data
-            //}
-
-            //__android_log_print(ANDROID_LOG_ERROR, "SEARCH FOR THIS TAG", "%s", matRow);
-            cv::Mat OrbDescriptors = currentFrame.mDescriptors;
-
-            double rot_angle = eigenRot.angle();
-            double xRot = (eigenRot.angle() * 57.2958) * eigenRot.axis()(0);
-            double yRot = (eigenRot.angle() * 57.2958) * eigenRot.axis()(1);
-            double zRot = (eigenRot.angle() * 57.2958) * eigenRot.axis()(2);
-
-            rotation.at<double>(0) = xRot;
-            rotation.at<double>(1) = yRot;
-            rotation.at<double>(2) = zRot;
-
-            if (selectKP) {
+            if (selectKP && nKeyFrames > 5) {
                 selectKP = false;
+                vector<Eigen::Vector3d> vPoints;
+                std::vector<SD_SLAM::MapPoint *> vNotNullMPs;
+                FindMP(currentFrame.mvpMapPoints,vNotNullMPs);
+                vPoints.reserve(vNotNullMPs.size());
+                for (size_t i = 0; i < vNotNullMPs.size(); i++) {
+                    SD_SLAM::MapPoint *pMP = vNotNullMPs[i];
+                    Eigen::Vector3d worldPos = pMP->GetWorldPos();
+
+                    //La posicion de puntos no la rotamos, ya que si se lo aplicamos estariamos haciendo
+                    //una doble rotacion: rotamos 1 vez por X 180º las coordenadas y luego ademas
+                    //180º todos los puntos.
+                    //Por ello utilizamos las coordenadas sin rectificar ya que para las coordenadas
+                    //estos se encuentran en el mismo sitio.
+                    Eigen::Vector3d cameraPos = mTcw.block<3, 3>(0, 0)*worldPos + mTcw.block<3, 1>(0, 3);
+                    vPoints.push_back(cameraPos);
+                }
+
+                if (!DetectPlane(vPoints, result)) {
+                    selectKP = true;
+                }else{
+                    plane.at<float>(0,0) = result.at<float>(0,0);
+                    plane.at<float>(0,1) = result.at<float>(0,1);
+                    plane.at<float>(0,2) = result.at<float>(0,2);
+                    plane.at<float>(0,3) = result.at<float>(0,3);
+                }
+
+                /*
                 std::vector<SD_SLAM::MapPoint *> vCurrentMP = currentFrame.mvpMapPoints;
                 std::vector<cv::KeyPoint> vCurrentKeys = currentFrame.mvKeys;
                 float response = 0;
@@ -178,14 +181,20 @@ namespace SLAM {
                     else{
                         selectKP = true;
                     }
+                    */
                 }
-                /*
-                if (worldPosHighResponse(0) == 0.0 && worldPosHighResponse(1) == 0.0 && worldPosHighResponse(2) == 0.0){
-                    selectKP = false;
-                }else{
-                    worldPosHighResponse = tempVect;
-                }
-                 */
+                circle(img, cv::Point(50,50),5, cv::Scalar(0,0,255),CV_FILLED, 8,0);
+
+            /*
+            if (worldPosHighResponse(0) == 0.0 && worldPosHighResponse(1) == 0.0 && worldPosHighResponse(2) == 0.0){
+                selectKP = false;
+            }else{
+                worldPosHighResponse = tempVect;
+            }
+             */
+            }
+            if (trackerStatus == SD_SLAM::Tracking::LOST) {
+                circle(img, cv::Point(50,50),5, cv::Scalar(255,0,0),CV_FILLED, 8,0);
             }
             //std::vector<float> a = currentFrame.mvScaleFactors;
 
@@ -213,7 +222,100 @@ namespace SLAM {
             }
             */
 
+
+
+    }
+
+    void SDSLAMHandler::FindMP(const std::vector<SD_SLAM::MapPoint *> &vMPs, std::vector<SD_SLAM::MapPoint *> &result) {
+        result = * new std::vector<SD_SLAM::MapPoint *>();
+        for (size_t i = 0; i < vMPs.size(); i++) {
+            SD_SLAM::MapPoint *pMP = vMPs[i];
+            if (pMP != NULL){
+                result.push_back(pMP);
+            }
         }
+
+    }
+
+
+    bool SDSLAMHandler::DetectPlane(const vector<Eigen::Vector3d> vPoints,
+                                    cv::Mat &result) {
+
+        const int N = vPoints.size();
+        int iterations = 10;
+
+        if (N < 50)
+            return false;
+
+        cv::Mat vt;
+        // Indices for minimum set selection
+        vector<size_t> vAllIndices;
+        vAllIndices.reserve(N);
+        vector<size_t> vAvailableIndices;
+        float bestDist = 1e10;
+        for (int i = 0; i < N; i++)
+            vAllIndices.push_back(i);
+
+       // float bestDist = 1e10;
+        //vector<float> bestvDist;
+
+        // RANSAC
+        for(int n=0; n<iterations; n++) {
+            vAvailableIndices = vAllIndices;
+
+            cv::Mat A(3, 4, CV_32F);
+            A.col(3) = cv::Mat::ones(3, 1, CV_32F);
+
+            // Get min set of points
+            for (short i = 0; i < 3; ++i) {
+                int randi = rand() % (vAvailableIndices.size() - 1);
+                int idx = vAvailableIndices[randi];
+
+                A.at<float>(i, 0) = vPoints[idx](0);
+                A.at<float>(i, 1) = vPoints[idx](1);
+                A.at<float>(i, 2) = vPoints[idx](2);
+
+                float h = vPoints[idx](2);
+
+
+                vAvailableIndices[randi] = vAvailableIndices.back();
+                vAvailableIndices.pop_back();
+            }
+
+            cv::Mat u, w;
+            cv::SVDecomp(A, w, u, vt, cv::SVD::MODIFY_A | cv::SVD::FULL_UV);
+
+
+            float a = vt.at<float>(3, 0);
+            float b = vt.at<float>(3, 1);
+            float c = vt.at<float>(3, 2);
+            float d = vt.at<float>(3, 3);
+
+            vector<float> vDistances(N, 0);
+
+            const float f = 1.0f / sqrt(a * a + b * b + c * c + d * d);
+
+            for (int i = 0; i < N; i++)
+                vDistances[i] =
+                        fabs(vPoints[i](0) * a + vPoints[i](1) * b + vPoints[i](2) * c + d) * f;
+
+            vector<float> vSorted = vDistances;
+            sort(vSorted.begin(), vSorted.end());
+
+            int nth = std::max((int) (0.2 * N), 20);
+            const float medianDist = vSorted[nth];
+
+            if (medianDist < bestDist) {
+                bestDist = medianDist;
+                result.at<float>(0, 0) = a;
+                result.at<float>(0, 1) = b;
+                result.at<float>(0, 2) = c;
+                result.at<float>(0, 3) = d;
+            }
+        }
+
+
+        return true;
 
     }
 }
