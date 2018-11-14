@@ -2,10 +2,10 @@
 
 ## Table of contents
 
-- [Week 1 - Testing SD-SLAM and first mobile app](#heading-3)
-- [Weeks 2-5 - Testing AR and SD-SLAM in mobile app](#heading-2)
-- [Weeks 6-8 - Integrating OpenGL AR and SD-SLAM together](#heading-1)
-- [Week 9-11 - Improving the AR app](#heading)
+- [Week 1](#heading-3)
+- [Weeks 2-5](#heading-2)
+- [Weeks 6-8](#heading-1)
+- [Weeks 9-11](#heading)
 
 
 
