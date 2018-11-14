@@ -1,8 +1,8 @@
 # 2018-tfm-Francisco-Palacios
 
-- [Week 1 - Testing SD-SLAM and fist mobile app](#heading-3)
-- [Weeks 2-5 - Testing AR and SD-SLAM in mobile app](#heading-2)
-- [Weeks 6-8 - Integrating OpenGL AR and SD-SLAM](#heading-1)
+- [Week 1 - Testing SD-SLAM and fist mobile app](#heading)
+- [Weeks 2-5 - Testing AR and SD-SLAM in mobile app](#heading)
+- [Weeks 6-8 - Integrating OpenGL AR and SD-SLAM](#heading)
 - [Week 9-11 - Improving the AR app](#heading)
 
 
