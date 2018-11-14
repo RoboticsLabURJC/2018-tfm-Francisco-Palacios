@@ -5,12 +5,12 @@
 - [Week 1](#heading-3)
 - [Weeks 2-5](#heading-2)
 - [Weeks 6-8](#heading-1)
-- [Weeks 9-11](#heading)
+- [Weeks 9-11](#week9-11)
 
 
 
 
-
+<a name="week9-11"></a>
 ## Weeks 9-11
 
 During this weeks i tried to improve the behavior of the AR camera, i calculated a plane using the points provided by SD-SLAM to put the grid of the AR object in it. I had some issues with this calculations because it seems that the Y and Z coords of SD-SLAM are in the opposite direction to the Y and Z coords of GLESv2 (the library controling the AR camera).
