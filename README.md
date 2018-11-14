@@ -2,15 +2,15 @@
 
 ## Table of contents
 
-- [Week 1](#heading-3)
-- [Weeks 2-5](#heading-2)
-- [Weeks 6-8](#heading-1)
-- [Weeks 9-11](#week9-11)
+- [Week 1 - Testing SD-SLAM and first mobile app](#week1)
+- [Weeks 2-5 - Testing GLESv2 AR and SD-SLAM in a mobile app](#week2)
+- [Weeks 6-8 - Integrating SD-SLAM and GLESv2 AR together](#week3)
+- [Weeks 9-11 - Improving the AR app](#week4)
 
 
 
 
-<a name="week9-11"></a>
+<a name="week4"></a>
 ## Weeks 9-11
 
 During this weeks i tried to improve the behavior of the AR camera, i calculated a plane using the points provided by SD-SLAM to put the grid of the AR object in it. I had some issues with this calculations because it seems that the Y and Z coords of SD-SLAM are in the opposite direction to the Y and Z coords of GLESv2 (the library controling the AR camera).
@@ -29,6 +29,7 @@ In the following video we can see better what I'm trying to say.
 
 [![](http://img.youtube.com/vi/rmWQLTqQMNg/0.jpg)](http://www.youtube.com/watch?v=rmWQLTqQMNg "")
 
+<a name="week3"></a>
 ## Weeks 6-8
 
 In this period i tried to join SD-SLAM for Android and the AR program, with the objetive to use the calculations of SD-SLAM to perform the required changes in the AR program to seems that the object rendered is at a point of the space captured by the camera.
@@ -41,7 +42,7 @@ Therefore, it will be necessary to make some calculations before transferring th
 
 [![](http://img.youtube.com/vi/cGTfwEcq_pI/0.jpg)](http://www.youtube.com/watch?v=cGTfwEcq_pI "")
 
-
+<a name="week2"></a>
 ## Weeks 2-5
 
 In these weeks i have implemented my first AR program for Android and i have also installed SD-SLAM for Android. These programs have been put into different activities along with the initial program that showed an example of OpenCV use. In the future I will be modifying this program and removing these functionalities, since they are not the objective of the work, but for the moment I will keep them in case they could be of help for someone.
@@ -60,7 +61,7 @@ In the next video, we can see how this program works:
 
 [![](http://img.youtube.com/vi/shRlWhWcSqk/0.jpg)](http://www.youtube.com/watch?v=shRlWhWcSqk "")
 
-
+<a name="week1"></a>
 ## Week 1
 To start I read the work of Eduardo Perdices: "Study of Convolutional Neural Networks using Keras Framework".
 
