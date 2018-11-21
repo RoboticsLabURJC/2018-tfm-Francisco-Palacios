@@ -63,13 +63,13 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
     private final int mPositionDataSize = 3;
 
 
-    private float cx = 644.2552f;
+    private float cx = 384.323789f;
 
-    private float cy = 347.0074f;
+    private float cy = 227.457859f;
 
-    private float fx = 1080.3387f;
+    private float fx = 673.861075f;
 
-    private float fy = 1081.3989f;
+    private float fy = 677.584410f;
 
     private Mat cameraRotation;
     private Mat planeEquation;
@@ -130,62 +130,45 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         //Una rotacion de ese estilo pondria los parametros de Y y Z en direccion contraria, ya que
         //estamos dando media vuelta alrededor de la X.
 
+
+
+        //-------------------------------Modelo translacion rotacion--------------------------------
         float[] normal = {mPlaneParams[0],-mPlaneParams[1],-mPlaneParams[2]};
 
 
         Matrix.translateM(mModelMatrix,0, point[0], point[1], point[2]);
         float[] modelRotation = parallelizeVectors(new float[] {0.0f,1.0f,0.0f}, normal);
-        System.out.println("Modelo: "+Arrays.toString(modelRotation));
         Matrix.rotateM(mModelMatrix, 0, modelRotation[3]*57.2958f, modelRotation[0],
                 modelRotation[1],modelRotation[2]);
 
         Matrix.scaleM(mModelMatrix,0,0.25f,0.25f,0.25f);
 
-
-
-        Matrix.setIdentityM(mCurrentRotationTranslation, 0);
+        //------------------------------------------------------------------------------------------
 
 
 
         //System.out.println("Modelo: "+Arrays.toString(mModelMatrix))
 
 
-/*
-        Matrix.translateM(mCurrentRotationTranslation, 0, (float) cameraTranslation.get(0,0)[0],
-                (float) cameraTranslation.get(0,1)[0],
-                (float) -cameraTranslation.get(0,2)[0]);
-
-        System.out.println("Solo translacion: "+Arrays.toString(mCurrentRotationTranslation));
-
-        camTrail.AddTrailData(new float[] {(float) cameraTranslation.get(0,0)[0],
-                                            (float) cameraTranslation.get(0,1)[0],
-                                            (float) -cameraTranslation.get(0,2)[0]});
-                                            */
-/*
-        Matrix.rotateM(mCurrentRotationTranslation, 0, (float) cameraRotation.get(0,0)[0], -1.0f,
-                0.0f, 0.0f);
-        Matrix.rotateM(mCurrentRotationTranslation, 0, (float) cameraRotation.get(0,1)[0], 0.0f,
-                1.0f, 0.0f);
-        Matrix.rotateM(mCurrentRotationTranslation, 0, (float) cameraRotation.get(0,2)[0], 0.0f,
-                0.0f, 1.0f);
-*/
         for (int i = 0;i<mViewMatrix.length;i++) {
             mViewMatrix[i] = (float) cameraPose.get(i % cameraPose.cols(),
                     i / cameraPose.cols())[0];
         }
+/*
+        camTrail.AddTrailData(new float[] { -mViewMatrix[12],
+                                            mViewMatrix[13],
+                                            mViewMatrix[14]});
+*/
 
-       // mCurrentRotationTranslation[15] = 1.0f;
+
+        // mCurrentRotationTranslation[15] = 1.0f;
 
         //Matrix.setIdentityM(mCurrentRotationTranslation, 0);
         //Matrix.rotateM(mCurrentRotationTranslation,0, -180,1.0f,0.0f,0.0f);
 
         //Matrix.rotateM(mViewMatrix,0, -180,1.0f,0.0f,0.0f);
 
-       /*
-        camTrail.AddTrailData(new float[] { mCurrentRotationTranslation[12],
-                mCurrentRotationTranslation[13],
-                mCurrentRotationTranslation[14]});
-                */
+
 
        // Matrix.setIdentityM(mCurrentRotationTranslation, 0);
 
@@ -201,13 +184,8 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         }
         */
 
-        System.out.println(Arrays.toString(mViewMatrix));
 
 
-
-        //System.out.println("XYZ: "+cameraPose.get(0, 3)[0]+ " , " + cameraPose.get(1, 3)[0] + " , " + cameraPose.get(2,3)[0]);
-
-       // System.out.println("Tranlacion y rotacion desde pose: "+Arrays.toString(mCurrentRotationTranslation));
 
 
 
@@ -371,7 +349,8 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
 
 
-        GLES20.glEnableVertexAttribArray(mPositionHandle);
+        GLES20.glEnableVertexAttribArray(mPositionHandle); //Necesario para camTrail
+
 
 
         GLES20.glVertexAttribPointer(mPositionHandle, mPositionDataSize, GLES20.GL_FLOAT, false,
@@ -383,9 +362,15 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
                 mStrideBytes, CubeBuffer);
         GLES20.glDrawArrays(GLES20.GL_POINTS, 0, 8);
 
+
+
         GLES20.glVertexAttribPointer(mPositionHandle, mPositionDataSize, GLES20.GL_FLOAT, false,
                 mStrideBytes, CoordinatesBuffer);
-        GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0);
+
+        GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0); //Necesario para camTrail
+
+
+
         GLES20.glUniform4fv(mColorHandle, 1, new float[]{1.0f,0.0f,0.0f,1.0f}, 0);
         GLES20.glDrawArrays(GLES20.GL_LINES, 0, 2);
         GLES20.glUniform4fv(mColorHandle, 1, new float[]{0.0f,1.0f,0.0f,1.0f}, 0);
@@ -393,11 +378,14 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         GLES20.glUniform4fv(mColorHandle, 1, new float[]{0.0f,0.0f,1.0f,1.0f}, 0);
         GLES20.glDrawArrays(GLES20.GL_LINES, 4, 2);
 
+/*
         GLES20.glVertexAttribPointer(mPositionHandle, mPositionDataSize, GLES20.GL_FLOAT, false,
                 mStrideBytes, TrailBuffer);
-        GLES20.glUniform4fv(mColorHandle, 1, new float[]{0.0f,1.0f,0.0f,1.0f}, 0);
-        GLES20.glDrawArrays(GLES20.GL_LINES, 0, (int) camTrail.getTrail().length/3);
 
+
+        GLES20.glUniform4fv(mColorHandle, 1, new float[]{0.0f,1.0f,0.0f,1.0f}, 0);
+        GLES20.glDrawArrays(GLES20.GL_LINE_STRIP, 0, (int) camTrail.getTrail().length/3);
+*/
 
         GLES20.glDisableVertexAttribArray(mPositionHandle);
         GLES20.glDisable(mColorHandle);

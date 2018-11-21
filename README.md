@@ -1,19 +1,65 @@
 # 2018-tfm-Francisco-Palacios
-## Week 1
-To start I read the work of Eduardo Perdices: "Study of Convolutional Neural Networks using Keras Framework".
 
-After that i installed the SD-SLAM packages and run it using my own camera to test how it worked.
+## Table of contents
 
-Finally, I started an Android application. As this work will use SD-SLAM + AR in a mobile environment, I started to create an application for Android that uses C code (since SD-SLAM is written in C), adding OpenCV libraries that will probably be very helpful. In the video below, we can see the results of the final app, using the canny method through the OpenCV libraries.
+- [Week 1 - Testing SD-SLAM and first mobile app](#week1)
+- [Weeks 2-5 - Testing GLESv2 AR and SD-SLAM in a mobile app](#week2)
+- [Weeks 6-8 - Integrating SD-SLAM and GLESv2 AR together](#week3)
+- [Weeks 9-11 - Improving the AR app](#week4)
+- [Weeks 12-13 - Pattern initialization and resolution reduction](#week5)
 
-### Canny example in android using OpenCV libraries:
 
-[![](http://img.youtube.com/vi/IWV2fLG0j7k/0.jpg)](http://www.youtube.com/watch?v=IWV2fLG0j7k "")
 
-### SD-SLAM Test:
+<a name="week5"></a>
+## Weeks 12-13
 
-[![](http://img.youtube.com/vi/L_nHDsnPDD0/0.jpg)](http://www.youtube.com/watch?v=L_nHDsnPDD0 "")
+In these weeks I have changed the initialization from SD-SLAM to pattern initialization. To do this, it was necessary to create a couple of "set" functions in the SD-SLAM code so it would be easier to access the variables that choose the type of initialization as well as the size of the cells of the pattern.
 
+In addition, I have also reduced the resolution of the images supplied to SD-SLAM which has meant an increase in program efficiency and quality. It has increased both the frame rate and the data measurement. As we can see in the following video, the rendered object no longer seems to float as much as in previous versions.
+
+I have also created a function that renders a line as the wake of the camera positions. We can see it in the second video.
+
+### SD-SLAM and AR in Android, Pattern initialization and resolution reduction:
+
+[![](http://img.youtube.com/vi/BQ4DcIcNh6k/0.jpg)](https://www.youtube.com/watch?v=BQ4DcIcNh6k "")
+
+### SD-SLAM and AR in Android, CamTrail:
+
+[![](http://img.youtube.com/vi/062dlFRNw3s/0.jpg)](https://www.youtube.com/watch?v=062dlFRNw3s "")
+
+<a name="week4"></a>
+## Weeks 9-11
+
+During this weeks i tried to improve the behavior of the AR camera, i calculated a plane using the points provided by SD-SLAM to put the grid of the AR object in it. I had some issues with this calculations because it seems that the Y and Z coords of SD-SLAM are in the opposite direction to the Y and Z coords of GLESv2 (the library controling the AR camera).
+
+So i needed to rotate 180º along the x-axis and with this i made some mistakes trying to create the appropriated roation matrix, but they are all solved.
+
+I also changed the projection matrix used by the AR camera using the calibration parameters of the camera that i am using to make the tests of the code.
+
+And finally i included a small dot in the up left corner of the images provided by SD-SLAM to know what is the state of the tracker (green -> not initialized, blue -> ok, red -> lost) and that the tests are simpler.
+
+The results are not yet what is expected, because de point calculated to translate the AR object seems to be floating and not close to the flat surface on which I am trying to initialize it.
+
+In the following video we can see better what I'm trying to say.
+
+### SD-SLAM and AR in Android, second try including plane calculation and calibration parameters:
+
+[![](http://img.youtube.com/vi/rmWQLTqQMNg/0.jpg)](http://www.youtube.com/watch?v=rmWQLTqQMNg "")
+
+<a name="week3"></a>
+## Weeks 6-8
+
+In this period i tried to join SD-SLAM for Android and the AR program, with the objetive to use the calculations of SD-SLAM to perform the required changes in the AR program to seems that the object rendered is at a point of the space captured by the camera.
+
+These changes consisted in using the translations and rotations provided by SD-SLAM and reflecting them in the AR camera. However, those changes didn't reflect well the movement of the object on the screen, so i tried to get a 3D point calculated by SD-SLAM and translate the AR object to it. This also, didn't reflect the movement well and the 3D point calculated appears out of the bounds of projection in the AR program.
+
+Therefore, it will be necessary to make some calculations before transferring the data from SD-SLAM to the AR program. In the next video we can see the behaivor of this changes.
+
+### SD-SLAM and AR in Android, first try:
+
+[![](http://img.youtube.com/vi/cGTfwEcq_pI/0.jpg)](http://www.youtube.com/watch?v=cGTfwEcq_pI "")
+
+<a name="week2"></a>
 ## Weeks 2-5
 
 In these weeks i have implemented my first AR program for Android and i have also installed SD-SLAM for Android. These programs have been put into different activities along with the initial program that showed an example of OpenCV use. In the future I will be modifying this program and removing these functionalities, since they are not the objective of the work, but for the moment I will keep them in case they could be of help for someone.
@@ -32,35 +78,22 @@ In the next video, we can see how this program works:
 
 [![](http://img.youtube.com/vi/shRlWhWcSqk/0.jpg)](http://www.youtube.com/watch?v=shRlWhWcSqk "")
 
+<a name="week1"></a>
+## Week 1
+To start I read the work of Eduardo Perdices: "Techniques for robust visual localization
+of real-time robots with and without maps" (https://gsyc.urjc.es/jmplaza/pfcs/phd-eduardo_perdices-2017.pdf).
 
-## Weeks 6-8
+After that i installed the SD-SLAM packages and run it using my own camera to test how it worked.
 
-In this period i tried to join SD-SLAM for Android and the AR program, with the objetive to use the calculations of SD-SLAM to perform the required changes in the AR program to seems that the object rendered is at a point of the space captured by the camera.
+Finally, I started an Android application. As this work will use SD-SLAM + AR in a mobile environment, I started to create an application for Android that uses C code (since SD-SLAM is written in C), adding OpenCV libraries that will probably be very helpful. In the video below, we can see the results of the final app, using the canny method through the OpenCV libraries.
 
-These changes consisted in using the translations and rotations provided by SD-SLAM and reflecting them in the AR camera. However, those changes didn't reflect well the movement of the object on the screen, so i tried to get a 3D point calculated by SD-SLAM and translate the AR object to it. This also, didn't reflect the movement well and the 3D point calculated appears out of the bounds of projection in the AR program.
+### Canny example in android using OpenCV libraries:
 
-Therefore, it will be necessary to make some calculations before transferring the data from SD-SLAM to the AR program. In the next video we can see the behaivor of this changes.
+[![](http://img.youtube.com/vi/IWV2fLG0j7k/0.jpg)](http://www.youtube.com/watch?v=IWV2fLG0j7k "")
 
-### SD-SLAM and AR in Android, first try:
+### SD-SLAM Test:
 
-[![](http://img.youtube.com/vi/cGTfwEcq_pI/0.jpg)](http://www.youtube.com/watch?v=cGTfwEcq_pI "")
+[![](http://img.youtube.com/vi/L_nHDsnPDD0/0.jpg)](http://www.youtube.com/watch?v=L_nHDsnPDD0 "")
 
-## Weeks 9-11
-
-During this weeks i tried to improve the behavior of the AR camera, i calculated a plane using the points provided by SD-SLAM to put the grid of the AR object in it. I had some issues with this calculations because it seems that the Y and Z coords of SD-SLAM are in the opposite direction to the Y and Z coords of GLESv2 (the library controling the AR camera).
-
-So i needed to rotate 180º along the x-axis and with this i made some mistakes trying to create the appropriated roation matrix, but they are all solved.
-
-I also changed the projection matrix used by the AR camera using the calibration parameters of the camera that i am using to make the tests of the code.
-
-And finally i included a small dot in the up left corner of the images provided by SD-SLAM to know what is the state of the tracker (green -> not initialized, blue -> ok, red -> lost) and that the tests are simpler.
-
-The results are not yet what is expected, because de point calculated to translate the AR object seems to be floating and not close to the flat surface on which I am trying to initialize it
-
-In the following video we can see better what I'm trying to say.
-
-### SD-SLAM and AR in Android, second try including plane calculation and calibration parameters:
-
-[![](http://img.youtube.com/vi/rmWQLTqQMNg/0.jpg)](http://www.youtube.com/watch?v=rmWQLTqQMNg "")
 
 

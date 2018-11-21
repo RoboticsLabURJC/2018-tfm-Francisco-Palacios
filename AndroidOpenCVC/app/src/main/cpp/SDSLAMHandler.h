@@ -11,7 +11,7 @@
 #include <System.h>
 #include <Config.h>
 #include <android/log.h>
-#include <ORBmatcher.h>
+#include <PatternDetector.h>
 
 using std::vector;
 

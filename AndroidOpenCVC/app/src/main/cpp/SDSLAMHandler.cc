@@ -57,13 +57,13 @@ namespace SLAM {
     SDSLAMHandler::SDSLAMHandler() {
         counter_ = 0;
 
-
         // Set camera config
         SD_SLAM::Config &config = SD_SLAM::Config::GetInstance();
-        config.SetCameraIntrinsics(1280, 720, 1080.3387, 1081.3989,
-                                   644.2552, 347.0074);
-        config.SetCameraDistortion(0.139084, -0.99893,
-                                   0.000932, 0.000038, 2.231184);
+        config.SetCameraIntrinsics(640, 360, 673.861075, 677.584410,
+                                   384.323789, 227.457859);
+        config.SetCameraDistortion(-0.350240, 1.384144,
+                                   -0.008788, -0.022544, -2.385009);
+        config.SetUsePattern(true);
         selectKP = true;
         nKeyFrames = 0;
 
@@ -75,7 +75,11 @@ namespace SLAM {
         // Convert to gray to track
         cv::Mat gray;
         cv::cvtColor(img, gray, cv::COLOR_RGB2GRAY);
+        SD_SLAM::Config &config = SD_SLAM::Config::GetInstance();
+
+
         Eigen::Matrix4d ePose = slam->TrackMonocular(gray);
+
         // Draw in image
         DrawFrame(slam, img, pose, plane);
 
@@ -112,7 +116,6 @@ namespace SLAM {
             std::vector<cv::KeyPoint> vCurrentKeys = currentFrame.mvKeys;
             //std::vector<SD_SLAM::MapPoint *> vCurrentMP = currentFrame.mvpMapPoints;
             nKeyFrames = slam->GetMap()->GetAllKeyFrames().size();
-
             Eigen::Matrix4d mTcw = currentFrame.GetPose();
             Eigen::Matrix3d mRcw = mTcw.block<3, 3>(0, 0);
             Eigen::Vector3d mtcw = mTcw.block<3, 1>(0, 3);
@@ -137,7 +140,7 @@ namespace SLAM {
                 pose.at<double>(i%4,i/4) = newPose(i);
             }
 
-            if (selectKP && nKeyFrames > 5) {
+            if (selectKP) {
                 selectKP = false;
                 vector<Eigen::Vector3d> vPoints;
                 std::vector<SD_SLAM::MapPoint *> vNotNullMPs;

@@ -7,6 +7,8 @@ import android.util.Log;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
+import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
 
 import java.sql.Timestamp;
 
@@ -53,33 +55,32 @@ public class CameraHandler implements CameraBridgeViewBase.CvCameraViewListener2
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
 
         Mat image = inputFrame.rgba();
-        /*int irows = image.rows();
+        int irows = image.rows();
         int icols = image.cols();
-
+/*
         int rows = 480;
         int cols = rows*icols/irows;
-
+*/
         Mat resized = new Mat();
-        Size size = new Size(cols,rows);
+        Size size = new Size(640,360);
         Imgproc.resize(image,resized,size);
 
         Log.d("SD-SLAM", "Image resized to ");
 
 
-        */
 
         cameraRotation = new Mat(1,3, CV_64F, Scalar.all(0.0));
         // Process frame
-        String res = slamHandler.TrackFrame(image, cameraRotation, planeEq, cameraPose);
+        String res = slamHandler.TrackFrame(resized, cameraRotation, planeEq, cameraPose);
         Log.d("SD-SLAM", "Pose es " + res);
         mGLView.putCameraRotation(cameraRotation);
         mGLView.putPlaneEquation(planeEq);
         mGLView.putCameraPose(cameraPose);
 
         // Resize to original size
-        /*Size isize = new Size(icols, irows);
+        Size isize = new Size(icols, irows);
         Imgproc.resize(resized, image, isize);
-           */
+
 
 
 
