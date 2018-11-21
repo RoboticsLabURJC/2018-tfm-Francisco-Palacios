@@ -6,7 +6,6 @@
 - [Weeks 2-5 - Testing GLESv2 AR and SD-SLAM in a mobile app](#week2)
 - [Weeks 6-8 - Integrating SD-SLAM and GLESv2 AR together](#week3)
 - [Weeks 9-11 - Improving the AR app](#week4)
-<<<<<<< HEAD
 - [Weeks 12-13 - Pattern initialization and resolution reduction](#week5)
 
 
@@ -47,10 +46,6 @@ In the following video we can see better what I'm trying to say.
 
 [![](http://img.youtube.com/vi/rmWQLTqQMNg/0.jpg)](http://www.youtube.com/watch?v=rmWQLTqQMNg "")
 
-=======
-
-
-
 
 <a name="week4"></a>
 ## Weeks 9-11
@@ -71,7 +66,7 @@ In the following video we can see better what I'm trying to say.
 
 [![](http://img.youtube.com/vi/rmWQLTqQMNg/0.jpg)](http://www.youtube.com/watch?v=rmWQLTqQMNg "")
 
->>>>>>> e805930cd4b7886a638af7b8a52d9823032a70eb
+
 <a name="week3"></a>
 ## Weeks 6-8
 
@@ -84,6 +79,7 @@ Therefore, it will be necessary to make some calculations before transferring th
 ### SD-SLAM and AR in Android, first try:
 
 [![](http://img.youtube.com/vi/cGTfwEcq_pI/0.jpg)](http://www.youtube.com/watch?v=cGTfwEcq_pI "")
+
 
 <a name="week2"></a>
 ## Weeks 2-5
@@ -101,7 +97,7 @@ To use SD-SLAM in mobile, I have used and followed as a guide the work of Eduard
 In the next video, we can see how this program works:
 
 ### SD-SLAM in android:
-<<<<<<< HEAD
+
 
 [![](http://img.youtube.com/vi/shRlWhWcSqk/0.jpg)](http://www.youtube.com/watch?v=shRlWhWcSqk "")
 
@@ -133,7 +129,7 @@ To start I read the work of Eduardo Perdices: "Study of Convolutional Neural Net
 After that i installed the SD-SLAM packages and run it using my own camera to test how it worked.
 
 Finally, I started an Android application. As this work will use SD-SLAM + AR in a mobile environment, I started to create an application for Android that uses C code (since SD-SLAM is written in C), adding OpenCV libraries that will probably be very helpful. In the video below, we can see the results of the final app, using the canny method through the OpenCV libraries.
->>>>>>> e805930cd4b7886a638af7b8a52d9823032a70eb
+
 
 ### Canny example in android using OpenCV libraries:
 
