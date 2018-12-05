@@ -42,7 +42,9 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
     private int mColorHandle;
 
 
-    private ObjectInit init;
+    private InitShaders init;
+	
+	private CoordsObject coordsObject;
 
     /**
      * How many bytes per float.
@@ -81,6 +83,8 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         cameraRotation = new Mat(1,3, CV_64F, Scalar.all(0.0));
         planeEquation = new Mat(1,4, CV_32F, Scalar.all(0.0));
         cameraPose = new Mat(4,4, CV_64F, Scalar.all(0.0));
+		init = new InitShaders();
+		coordsObject = new CoordsObject();
         camTrail = new CamTrail();
     }
 
@@ -160,7 +164,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
 
 
-        drawObject(init.getObjectcoordinates(),init.getGrid(),init.getCube(), camTrail.getFloatBufferTrail());
+        draw();
 
 
     }
@@ -191,7 +195,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
     @Override
     public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
 
-        init = new ObjectInit();
+        init = new InitShaders();
 
         GLES20.glDisable(GL10.GL_DITHER);
         GLES20.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT,
@@ -305,8 +309,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
 	}
 
-    public void draw(final FloatBuffer CoordinatesBuffer, final FloatBuffer GridBuffer,
-                           final FloatBuffer CubeBuffer, final FloatBuffer TrailBuffer){
+    public void draw(){
 
 
         Matrix.multiplyMM(mMVPMatrix, 0, mViewMatrix, 0, mModelMatrix, 0);
@@ -321,11 +324,12 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
         GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0); //Necesario para camTrail
 
-		
+		FloatBuffer GridBuffer = coordsObject.getGrid();
 		drawObject(GridBuffer, new float[]{1.0f,1.0f,1.0f,1.0f},GLES20.GL_LINES,40);
-		
+		FloatBuffer CubeBuffer = coordsObject.getCube();
 		drawObject(CubeBuffer, new float[]{1.0f,1.0f,1.0f,1.0f},GLES20.GL_POINTS,8);
-
+		
+		FloatBuffer CoordinatesBuffer = coordsObject.getObjectcoordinates();
 		drawObject(CoordinatesBuffer.get(new float[]{0,2}), new float[]{1.0f,0.0f,0.0f,1.0f},GLES20.GL_LINES,2);
 		drawObject(CoordinatesBuffer.get(new float[]{2,4}), new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_LINES,2);
 		drawObject(CoordinatesBuffer.get(new float[]{4,6}), new float[]{0.0f,0.0f,1.0f,1.0f},GLES20.GL_LINES,2);
@@ -349,8 +353,8 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 		
 		
 /*
-		
-		drawObject(TrailBuffer, new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_LINE_STRIP,2);
+		FloatBuffer trailBuffer = getFloatBufferTrail();
+		drawObject(trailBuffer, new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_LINE_STRIP,2);
 
 */
 

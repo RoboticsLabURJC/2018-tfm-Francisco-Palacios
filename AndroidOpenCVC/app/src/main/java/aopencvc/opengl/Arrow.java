@@ -22,7 +22,7 @@ public class Arrow {
    public Object[] GetArrows(){
         float[] posArray;
         posArray = new float[positions.size()];
-        for (int i = 0; i<trail.size();i++){
+        for (int i = 0; i<positions.size();i++){
             posArray[i] = positions.get(i);
         }
 		
@@ -31,9 +31,20 @@ public class Arrow {
         for (int i = 0; i<directions.size();i++){
             dirArray[i] = directions.get(i);
         }
-
         return new Object[] {posArray,dirArray};
-    }	
+    }
+	
+	
+	public void AddArrow(float [] newPoints, float[] newDirections){
+        for (int i = 0;i<newPoints.length;i++){
+            positions.add(newPoints[i]);
+        }
+		
+		for (int i = 0;i<newDirections.length;i++){
+            directions.add(newDirections[i]);
+        }
+
+    }
 
 	public FlotarBuffer[] getFloatBufferArrow(){
 		
