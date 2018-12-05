@@ -155,7 +155,16 @@ namespace SLAM {
                     //180º todos los puntos.
                     //Por ello utilizamos las coordenadas sin rectificar ya que para las coordenadas
                     //estos se encuentran en el mismo sitio.
+					
+					/// SEGURO??? quizas si que haya que rotar los puntos.
+					// rotacion de los puntos. Esto lo he puesto en una de las ultimas actus y no estaba
+					
+					
+					
                     Eigen::Vector3d cameraPos = mTcw.block<3, 3>(0, 0)*worldPos + mTcw.block<3, 1>(0, 3);
+					
+					cameraPos = rotMat * cameraPos;
+
                     vPoints.push_back(cameraPos);
                 }
 
@@ -168,62 +177,16 @@ namespace SLAM {
                     plane.at<float>(0,3) = result.at<float>(0,3);
                 }
 
-                /*
-                std::vector<SD_SLAM::MapPoint *> vCurrentMP = currentFrame.mvpMapPoints;
-                std::vector<cv::KeyPoint> vCurrentKeys = currentFrame.mvKeys;
-                float response = 0;
-                for (unsigned int i = 0; i < vCurrentKeys.size(); i++) {
-                    if (vCurrentKeys[i].response > response) {
-                        response = vCurrentKeys[i].response;
 
-                    }
-
-                    if (vCurrentMP[i] != nullptr) {
-                        CurrentMP = vCurrentMP[i];
-                    }
-                    else{
-                        selectKP = true;
-                    }
-                    */
                 }
                 circle(img, cv::Point(50,50),5, cv::Scalar(0,0,255),CV_FILLED, 8,0);
 
-            /*
-            if (worldPosHighResponse(0) == 0.0 && worldPosHighResponse(1) == 0.0 && worldPosHighResponse(2) == 0.0){
-                selectKP = false;
-            }else{
-                worldPosHighResponse = tempVect;
-            }
-             */
+
             }
             if (trackerStatus == SD_SLAM::Tracking::LOST) {
                 circle(img, cv::Point(50,50),5, cv::Scalar(255,0,0),CV_FILLED, 8,0);
             }
-            //std::vector<float> a = currentFrame.mvScaleFactors;
 
-
-
-/*
-            cv::Mat bitWiseXor;
-            int bestDist = 256;
-            int dist = 0;
-
-            for (unsigned int i=0; i<OrbDescriptors.rows; i++) {
-                dist = SD_SLAM::ORBmatcher::DescriptorDistance(OrbDescriptors.row(i),OrbSelected);
-                if (dist<bestDist){
-                    bestDist = dist;
-                    selectKP = i;
-                }
-            }
-            __android_log_print(ANDROID_LOG_VERBOSE, APPNAME, "The value of 1 + 1 is %d", 1+1);
-
-            int tracked = 0;
-            if (currentFrame.mvpMapPoints[indexKeyPoint] && !currentFrame.mvbOutlier[indexKeyPoint]) {
-                cv::circle(img, vCurrentKeys[indexKeyPoint].pt, 3, cv::Scalar(255, 0, 0), 2);
-                tracked++;
-
-            }
-            */
 
 
 

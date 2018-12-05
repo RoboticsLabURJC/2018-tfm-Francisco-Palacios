@@ -127,11 +127,13 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
         //Una rotacion de ese estilo pondria los parametros de Y y Z en direccion contraria, ya que
         //estamos dando media vuelta alrededor de la X.
-
+		/// Hemos rotado los puntos en el codigo C. Vamos a probar asi a ver que tal.
 
 
         //-------------------------------Modelo translacion rotacion--------------------------------
-        float[] normal = {mPlaneParams[0],-mPlaneParams[1],-mPlaneParams[2]};
+		
+		//float[] normal = {mPlaneParams[0],-mPlaneParams[1],-mPlaneParams[2]};
+        float[] normal = {mPlaneParams[0],mPlaneParams[1],mPlaneParams[2]};
 
 
         Matrix.translateM(mModelMatrix,0, point[0], point[1], point[2]);
@@ -214,7 +216,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         // We are looking toward the distance
         final float lookX = 0.0f;
         final float lookY = 0.0f;
-        final float lookZ = 1.0f;
+        final float lookZ = -1.0f;
 
         // Set our up vector. This is where our head would be pointing were we holding the camera.
         final float upX = 0.0f;
