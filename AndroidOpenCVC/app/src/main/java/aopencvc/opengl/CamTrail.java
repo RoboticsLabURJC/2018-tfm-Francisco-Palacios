@@ -47,5 +47,6 @@ public class CamTrail {
         return trailBuffer;
     }
 
+	
 
 }

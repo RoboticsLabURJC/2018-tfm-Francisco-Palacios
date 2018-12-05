@@ -41,9 +41,6 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
     /** This will be used to pass in model color information. */
     private int mColorHandle;
 
-    private int width = 1280;
-
-    private int height = 720;
 
     private ObjectInit init;
 
@@ -62,7 +59,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
     /** Size of the position data in elements. */
     private final int mPositionDataSize = 3;
 
-
+/////////////////////////////////////Cambiar valores intrinsecos////////////////////////////////////////////////////////
     private float cx = 384.323789f;
 
     private float cy = 227.457859f;
@@ -70,7 +67,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
     private float fx = 673.861075f;
 
     private float fy = 677.584410f;
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private Mat cameraRotation;
     private Mat planeEquation;
     private Mat cameraPose;
@@ -106,11 +103,9 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
         Matrix.setIdentityM(mModelMatrix, 0);
 
-       // System.out.println("Ortho: " +Arrays.toString(mOrthoMatrix));
         float[] mPlaneParams = new float[4];
         for (int i = 0;mPlaneParams.length>i;i++){
             mPlaneParams[i] = (float) planeEquation.get(0,i)[0];
-            //System.out.println("Punto param z: " + (float) planeEquation.get(0,i)[0]);
         }
         planeEquation.get(0,0,mPlaneParams);
 
@@ -121,7 +116,6 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         float[] point = {0.0f,0.0f,-mPlaneParams[2]/mPlaneParams[3]};
 
 
-        System.out.println("Valor de z del modelo: " + point[2]);
 
         //Debemos rotar la normal 180º alrededor de la X como hicimos con la pose. Esto es por que
         //aun que anteriormente no rotamos lo puntos, ahora la normal esta mal calculada y esta apuntando e
@@ -147,7 +141,6 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
 
 
-        //System.out.println("Modelo: "+Arrays.toString(mModelMatrix))
 
 
         for (int i = 0;i<mViewMatrix.length;i++) {
@@ -158,35 +151,11 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         camTrail.AddTrailData(new float[] { -mViewMatrix[12],
                                             mViewMatrix[13],
                                             mViewMatrix[14]});
-*/
-
-
-        // mCurrentRotationTranslation[15] = 1.0f;
-
-        //Matrix.setIdentityM(mCurrentRotationTranslation, 0);
-        //Matrix.rotateM(mCurrentRotationTranslation,0, -180,1.0f,0.0f,0.0f);
-
-        //Matrix.rotateM(mViewMatrix,0, -180,1.0f,0.0f,0.0f);
-
-
-
-       // Matrix.setIdentityM(mCurrentRotationTranslation, 0);
-
-/*
-        for (int i = 0;i<mCurrentRotationTranslation.length;i++){
-            if(i%cameraPose.cols() == 0 || i%cameraPose.cols() == 3) {
-                mCurrentRotationTranslation[i] = (float) cameraPose.get(i % cameraPose.cols(),
-                        i / cameraPose.cols())[0];
-            }else{
-                mCurrentRotationTranslation[i] = -(float) cameraPose.get(i % cameraPose.cols(),
-                        i / cameraPose.cols())[0];
-            }
-        }
-        */
-
-
-
-
+*/											
+	/*		
+		Esto se supone que cambia NDC de left-handed a right-handed, necesitare probarlo.
+		glDepthRange(1.0f, 0.0f)
+		*/
 
 
 
@@ -205,7 +174,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
     //v1 es el vector de (0,0,1)
     //Este metodo paraleliza el vector 1 con el vector 2.
-    public float[] parallelizeVectors(float[] v1, float[] v2){
+    public static float[] parallelizeVectors(float[] v1, float[] v2){
         float modV1 = (float) Math.sqrt(Math.pow(v1[0],2)+Math.pow(v1[1],2)+Math.pow(v1[2],2));
         float modV2 = (float) Math.sqrt(Math.pow(v2[0],2)+Math.pow(v2[1],2)+Math.pow(v2[2],2));
 
@@ -262,7 +231,9 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
     public void onSurfaceChanged(GL10 unused, int width, int height) {
         // Set the OpenGL viewport to the same size as the surface.
-        GLES20.glViewport(0, 0, width, height);
+		//En vez de 0,0 quizas poner cx y cy????
+		//cx y cy estaban en 0 y 0 para esta funcion.
+        GLES20.glViewport(cx, cy, width, height);
 
 
         final float ratio = (float) width / height;
@@ -274,35 +245,8 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         float zfar = 100.0f;
         float znear = 0.5f;
 
-        float L = -cx * znear/fx;
-        float R = (width-cx) * znear/fx;
-        float T = -cy * znear/fy;
-        float B = (height-cy) * znear/fy;
-
-        Matrix.frustumM(mProjectionMatrix, 0, left, right, bottom, top, znear, zfar);
-
-/*
-        mProjectionMatrix[0] = 2*znear/(R-L);
-        mProjectionMatrix[1] = 0.0f;
-        mProjectionMatrix[2] = 0.0f;
-        mProjectionMatrix[3] = 0.0f;
-
-        mProjectionMatrix[4] = 0.0f;
-        mProjectionMatrix[5] = 2*znear/(T-B);
-        mProjectionMatrix[6] = cy;
-        mProjectionMatrix[7] = 0.0f;
-
-        mProjectionMatrix[8] = (R+L)/(L-R);
-        mProjectionMatrix[9] = (T+B)/(B-T);
-        mProjectionMatrix[10] = (zfar+znear)/(zfar-znear);
-        mProjectionMatrix[11] = 1.0f;
-
-        mProjectionMatrix[12] = 0.0f;
-        mProjectionMatrix[13] = 0.0f;
-        mProjectionMatrix[14] = 2.0f * zfar * znear / (znear-zfar);
-        mProjectionMatrix[15] = 0.0f;
-*/
-        System.out.println( width + "x" + height);
+		
+		
 
         mProjectionMatrix[0] = 2*fx/width;
         mProjectionMatrix[1] = 0.0f;
@@ -326,65 +270,88 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
 
 
-        //Matrix.multiplyMM(mProjectionMatrix, 0, mOrthoMatrix, 0, mProjectionMatrix, 0);
-
-
-
     }
 
 
+	
+	public void drawObject(final FloatBuffer CoordsBuffer, float[] color, int paintFunction, int nPoints){
+		
+		GLES20.glVertexAttribPointer(mPositionHandle, mPositionDataSize, GLES20.GL_FLOAT, false,
+                mStrideBytes, CoordsBuffer);
+		
+		GLES20.glUniform4fv(mColorHandle, 1, color, 0);
+		GLES20.glDrawArrays(paintFunction, 0, nPoints);
 
-    public void drawObject(final FloatBuffer CoordinatesBuffer, final FloatBuffer GridBuffer,
+	}
+	
+	public void transformModel(float[] rotationVecParallel, float[] translation){
+		
+		GLES20.glLoadIdentity();
+		
+		Matrix.setIdentityM(mModelMatrix, 0);
+
+		
+		Matrix.translateM(mModelMatrix,0,translation[0], translation[1], translation[2]);
+        float[] modelRotation = parallelizeVectors(rotationVecParallel, rotationVecParallel);
+        Matrix.rotateM(mModelMatrix, 0, modelRotation[3]*57.2958f, modelRotation[0],
+                modelRotation[1],modelRotation[2]);
+				
+		Matrix.multiplyMM(mMVPMatrix, 0, mViewMatrix, 0, mModelMatrix, 0);
+
+
+        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mMVPMatrix, 0);?
+		
+		GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0); //Necesario para camTrail
+
+	}
+
+    public void draw(final FloatBuffer CoordinatesBuffer, final FloatBuffer GridBuffer,
                            final FloatBuffer CubeBuffer, final FloatBuffer TrailBuffer){
 
 
         Matrix.multiplyMM(mMVPMatrix, 0, mViewMatrix, 0, mModelMatrix, 0);
 
-        //Matrix.multiplyMM(mMVPMatrix, 0, mCurrentRotationTranslation, 0, mMVPMatrix, 0);
 
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mMVPMatrix, 0);
 
         GLES20.glLineWidth(3.0f);
 
 
-
-
         GLES20.glEnableVertexAttribArray(mPositionHandle); //Necesario para camTrail
-
-
-
-        GLES20.glVertexAttribPointer(mPositionHandle, mPositionDataSize, GLES20.GL_FLOAT, false,
-                mStrideBytes, GridBuffer);
-        GLES20.glUniform4fv(mColorHandle, 1, new float[]{1.0f,1.0f,1.0f,1.0f}, 0);
-        GLES20.glDrawArrays(GLES20.GL_LINES, 0, 40);
-
-        GLES20.glVertexAttribPointer(mPositionHandle, mPositionDataSize, GLES20.GL_FLOAT, false,
-                mStrideBytes, CubeBuffer);
-        GLES20.glDrawArrays(GLES20.GL_POINTS, 0, 8);
-
-
-
-        GLES20.glVertexAttribPointer(mPositionHandle, mPositionDataSize, GLES20.GL_FLOAT, false,
-                mStrideBytes, CoordinatesBuffer);
 
         GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0); //Necesario para camTrail
 
+		
+		drawObject(GridBuffer, new float[]{1.0f,1.0f,1.0f,1.0f},GLES20.GL_LINES,40);
+		
+		drawObject(CubeBuffer, new float[]{1.0f,1.0f,1.0f,1.0f},GLES20.GL_POINTS,8);
 
+		drawObject(CoordinatesBuffer.get(new float[]{0,2}), new float[]{1.0f,0.0f,0.0f,1.0f},GLES20.GL_LINES,2);
+		drawObject(CoordinatesBuffer.get(new float[]{2,4}), new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_LINES,2);
+		drawObject(CoordinatesBuffer.get(new float[]{4,6}), new float[]{0.0f,0.0f,1.0f,1.0f},GLES20.GL_LINES,2);
 
-        GLES20.glUniform4fv(mColorHandle, 1, new float[]{1.0f,0.0f,0.0f,1.0f}, 0);
-        GLES20.glDrawArrays(GLES20.GL_LINES, 0, 2);
-        GLES20.glUniform4fv(mColorHandle, 1, new float[]{0.0f,1.0f,0.0f,1.0f}, 0);
-        GLES20.glDrawArrays(GLES20.GL_LINES, 2, 2);
-        GLES20.glUniform4fv(mColorHandle, 1, new float[]{0.0f,0.0f,1.0f,1.0f}, 0);
-        GLES20.glDrawArrays(GLES20.GL_LINES, 4, 2);
+		
+		/*
+		Object[] arrows = Arrow.GetArrows();
 
+		FloatBuffer arrowBuffer = Arrows.getFloatBufferArrow();
+		for (int i = 0; i<nArrows;i++){
+			
+			transformModel(directions, points);
+			
+			drawObject(arrowBuffer[0], new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_TRIANGLES,3);
+			drawObject(arrowBuffer[1], new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_LINES,2);
+			
+			
+		}
+		
+		*/
+		
+		
 /*
-        GLES20.glVertexAttribPointer(mPositionHandle, mPositionDataSize, GLES20.GL_FLOAT, false,
-                mStrideBytes, TrailBuffer);
+		
+		drawObject(TrailBuffer, new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_LINE_STRIP,2);
 
-
-        GLES20.glUniform4fv(mColorHandle, 1, new float[]{0.0f,1.0f,0.0f,1.0f}, 0);
-        GLES20.glDrawArrays(GLES20.GL_LINE_STRIP, 0, (int) camTrail.getTrail().length/3);
 */
 
         GLES20.glDisableVertexAttribArray(mPositionHandle);
