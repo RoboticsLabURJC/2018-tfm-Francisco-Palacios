@@ -63,13 +63,13 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
     private final int mPositionDataSize = 3;
 
 
-    private float cx = 384.323789f;
+    private float cx = 644.2552668090187f;
 
-    private float cy = 227.457859f;
+    private float cy = 347.007496696664f;
 
-    private float fx = 673.861075f;
+    private float fx = 1080.33874061861f;
 
-    private float fy = 677.584410f;
+    private float fy = 1081.398961189691f;
 
     private Mat cameraRotation;
     private Mat planeEquation;
@@ -114,14 +114,10 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         }
         planeEquation.get(0,0,mPlaneParams);
 
-        for (int i = 0;mPlaneParams.length>i;i++){
-            System.out.println("Params plano: " + mPlaneParams[i]);
-        }
 
         float[] point = {0.0f,0.0f,-mPlaneParams[2]/mPlaneParams[3]};
 
 
-        System.out.println("Valor de z del modelo: " + point[2]);
 
         //Debemos rotar la normal 180º alrededor de la X como hicimos con la pose. Esto es por que
         //aun que anteriormente no rotamos lo puntos, ahora la normal esta mal calculada y esta apuntando e
@@ -133,6 +129,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
 
         //-------------------------------Modelo translacion rotacion--------------------------------
+        /*
         float[] normal = {mPlaneParams[0],-mPlaneParams[1],-mPlaneParams[2]};
 
 
@@ -142,7 +139,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
                 modelRotation[1],modelRotation[2]);
 
         Matrix.scaleM(mModelMatrix,0,0.25f,0.25f,0.25f);
-
+        */
         //------------------------------------------------------------------------------------------
 
 
@@ -154,35 +151,16 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
             mViewMatrix[i] = (float) cameraPose.get(i % cameraPose.cols(),
                     i / cameraPose.cols())[0];
         }
-/*
+
         camTrail.AddTrailData(new float[] { -mViewMatrix[12],
                                             mViewMatrix[13],
                                             mViewMatrix[14]});
-*/
 
 
-        // mCurrentRotationTranslation[15] = 1.0f;
+        //X left positive, y down positive, z approach positive
 
-        //Matrix.setIdentityM(mCurrentRotationTranslation, 0);
-        //Matrix.rotateM(mCurrentRotationTranslation,0, -180,1.0f,0.0f,0.0f);
+        System.out.println("Modelo: x: " + mViewMatrix[12] + " y: " + mViewMatrix[13] + " z: " + mViewMatrix[14]);
 
-        //Matrix.rotateM(mViewMatrix,0, -180,1.0f,0.0f,0.0f);
-
-
-
-       // Matrix.setIdentityM(mCurrentRotationTranslation, 0);
-
-/*
-        for (int i = 0;i<mCurrentRotationTranslation.length;i++){
-            if(i%cameraPose.cols() == 0 || i%cameraPose.cols() == 3) {
-                mCurrentRotationTranslation[i] = (float) cameraPose.get(i % cameraPose.cols(),
-                        i / cameraPose.cols())[0];
-            }else{
-                mCurrentRotationTranslation[i] = -(float) cameraPose.get(i % cameraPose.cols(),
-                        i / cameraPose.cols())[0];
-            }
-        }
-        */
 
 
 
@@ -352,7 +330,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         GLES20.glEnableVertexAttribArray(mPositionHandle); //Necesario para camTrail
 
 
-
+/*
         GLES20.glVertexAttribPointer(mPositionHandle, mPositionDataSize, GLES20.GL_FLOAT, false,
                 mStrideBytes, GridBuffer);
         GLES20.glUniform4fv(mColorHandle, 1, new float[]{1.0f,1.0f,1.0f,1.0f}, 0);
@@ -366,10 +344,10 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
         GLES20.glVertexAttribPointer(mPositionHandle, mPositionDataSize, GLES20.GL_FLOAT, false,
                 mStrideBytes, CoordinatesBuffer);
-
+*/
         GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0); //Necesario para camTrail
 
-
+/*
 
         GLES20.glUniform4fv(mColorHandle, 1, new float[]{1.0f,0.0f,0.0f,1.0f}, 0);
         GLES20.glDrawArrays(GLES20.GL_LINES, 0, 2);
@@ -377,15 +355,15 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         GLES20.glDrawArrays(GLES20.GL_LINES, 2, 2);
         GLES20.glUniform4fv(mColorHandle, 1, new float[]{0.0f,0.0f,1.0f,1.0f}, 0);
         GLES20.glDrawArrays(GLES20.GL_LINES, 4, 2);
+*/
 
-/*
         GLES20.glVertexAttribPointer(mPositionHandle, mPositionDataSize, GLES20.GL_FLOAT, false,
                 mStrideBytes, TrailBuffer);
 
 
         GLES20.glUniform4fv(mColorHandle, 1, new float[]{0.0f,1.0f,0.0f,1.0f}, 0);
         GLES20.glDrawArrays(GLES20.GL_LINE_STRIP, 0, (int) camTrail.getTrail().length/3);
-*/
+
 
         GLES20.glDisableVertexAttribArray(mPositionHandle);
         GLES20.glDisable(mColorHandle);

@@ -26,6 +26,8 @@ public class CameraHandler implements CameraBridgeViewBase.CvCameraViewListener2
     private Mat planeEq;
     private Mat cameraPose;
     private SurfaceViewer mGLView;
+    private long sumTime;
+    private int countTime;
 
     public CameraHandler(Context context, SLAMHandler slamHandler, SurfaceViewer mGLView) {
         this.context = context;
@@ -34,7 +36,8 @@ public class CameraHandler implements CameraBridgeViewBase.CvCameraViewListener2
         planeEq = new Mat(1,4, CV_32F, new Scalar(0.0));
         cameraPose = new Mat(4,4, CV_64F, new Scalar(0.0));
         this.mGLView = mGLView;
-
+        sumTime = 0;
+        countTime= 0;
 
 
     }
@@ -71,8 +74,20 @@ public class CameraHandler implements CameraBridgeViewBase.CvCameraViewListener2
 
         cameraRotation = new Mat(1,3, CV_64F, Scalar.all(0.0));
         // Process frame
+        //long startTime = System.currentTimeMillis();
         String res = slamHandler.TrackFrame(resized, cameraRotation, planeEq, cameraPose);
+        /*
+        //long finalTime = System.currentTimeMillis();
+        //long elapsedTime = finalTime - startTime;
+
+       // System.out.println("Frame " + countTime + ": " + elapsedTime + " ms");
+        //sumTime += elapsedTime;
+        //countTime++;
+        //float avgTime = sumTime/countTime;
+        //System.out.println("AverageTime: " + avgTime + " ms");
+        */
         Log.d("SD-SLAM", "Pose es " + res);
+
         mGLView.putCameraRotation(cameraRotation);
         mGLView.putPlaneEquation(planeEq);
         mGLView.putCameraPose(cameraPose);
