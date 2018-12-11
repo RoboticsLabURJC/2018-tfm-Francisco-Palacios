@@ -1,5 +1,7 @@
+package aopencvc.opengl;
 
 
+import android.opengl.GLES20;
 
 
 public class InitShaders{
@@ -47,6 +49,8 @@ public class InitShaders{
 
 	
 	private void loadVShaders(){
+
+	    System.out.print("as");
         vertexShaderHandle = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
 
         if (vertexShaderHandle != 0)

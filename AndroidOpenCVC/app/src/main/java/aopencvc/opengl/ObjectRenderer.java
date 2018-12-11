@@ -62,13 +62,13 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
     private final int mPositionDataSize = 3;
 
 /////////////////////////////////////Cambiar valores intrinsecos////////////////////////////////////////////////////////
-    private float cx = 384.323789f;
+    private float cx = 644.255266f;
 
-    private float cy = 227.457859f;
+    private float cy = 347.007496f;
 
-    private float fx = 673.861075f;
+    private float fx = 1080.338740f;
 
-    private float fy = 677.584410f;
+    private float fy = 1081.398961f;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private Mat cameraRotation;
     private Mat planeEquation;
@@ -180,7 +180,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
     //v1 es el vector de (0,0,1)
     //Este metodo paraleliza el vector 1 con el vector 2.
-    public static float[] parallelizeVectors(float[] v1, float[] v2){
+    public float[] parallelizeVectors(float[] v1, float[] v2){
         float modV1 = (float) Math.sqrt(Math.pow(v1[0],2)+Math.pow(v1[1],2)+Math.pow(v1[2],2));
         float modV2 = (float) Math.sqrt(Math.pow(v2[0],2)+Math.pow(v2[1],2)+Math.pow(v2[2],2));
 
@@ -239,7 +239,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         // Set the OpenGL viewport to the same size as the surface.
 		//En vez de 0,0 quizas poner cx y cy????
 		//cx y cy estaban en 0 y 0 para esta funcion.
-        GLES20.glViewport(cx, cy, width, height);
+        GLES20.glViewport((int)cx, (int)cy, width, height);
 
 
         final float ratio = (float) width / height;
@@ -291,9 +291,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 	}
 	
 	public void transformModel(float[] rotationVecParallel, float[] translation){
-		
-		GLES20.glLoadIdentity();
-		
+
 		Matrix.setIdentityM(mModelMatrix, 0);
 
 		
@@ -305,7 +303,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 		Matrix.multiplyMM(mMVPMatrix, 0, mViewMatrix, 0, mModelMatrix, 0);
 
 
-        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mMVPMatrix, 0);?
+        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mMVPMatrix, 0);
 		
 		GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0); //Necesario para camTrail
 

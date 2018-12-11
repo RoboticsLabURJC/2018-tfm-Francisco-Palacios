@@ -2,7 +2,11 @@ package aopencvc.opengl;
 
 
 import android.opengl.GLES20;
- 
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+import java.util.ArrayList;
 
 
 public class Arrow {
@@ -46,7 +50,7 @@ public class Arrow {
 
     }
 
-	public FlotarBuffer[] getFloatBufferArrow(){
+	public FloatBuffer[] getFloatBufferArrow(){
 		
 		
 		float[] arrowHead = new float[]{
