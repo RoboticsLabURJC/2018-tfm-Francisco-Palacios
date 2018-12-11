@@ -80,10 +80,10 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
 
     public ObjectRenderer(){
+        init = new InitShaders();
         cameraRotation = new Mat(1,3, CV_64F, Scalar.all(0.0));
         planeEquation = new Mat(1,4, CV_32F, Scalar.all(0.0));
         cameraPose = new Mat(4,4, CV_64F, Scalar.all(0.0));
-		init = new InitShaders();
 		coordsObject = new CoordsObject();
         camTrail = new CamTrail();
     }
