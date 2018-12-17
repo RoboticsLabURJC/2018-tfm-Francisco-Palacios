@@ -161,9 +161,12 @@ namespace SLAM {
 					
 					
 					
-                    Eigen::Vector3d cameraPos = mTcw.block<3, 3>(0, 0)*worldPos + mTcw.block<3, 1>(0, 3);
-					
-					cameraPos = rotMat * cameraPos;
+                    Eigen::Vector3d cameraPos = mRcw*worldPos + mtcw;
+					double a = cameraPos[2];
+                    if (a>0){
+
+                    }
+					//cameraPos = rotMat * cameraPos;
 
                     vPoints.push_back(cameraPos);
                 }

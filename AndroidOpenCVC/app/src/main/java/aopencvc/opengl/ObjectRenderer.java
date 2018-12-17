@@ -61,7 +61,6 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
     /** Size of the position data in elements. */
     private final int mPositionDataSize = 3;
 
-/////////////////////////////////////Cambiar valores intrinsecos////////////////////////////////////////////////////////
     private float cx = 644.255266f;
 
     private float cy = 347.007496f;
@@ -69,18 +68,17 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
     private float fx = 1080.338740f;
 
     private float fy = 1081.398961f;
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     private Mat cameraRotation;
     private Mat planeEquation;
     private Mat cameraPose;
 
     private CamTrail camTrail;
 
-
+    private float last = 0;
 
 
     public ObjectRenderer(){
-        init = new InitShaders();
         cameraRotation = new Mat(1,3, CV_64F, Scalar.all(0.0));
         planeEquation = new Mat(1,4, CV_32F, Scalar.all(0.0));
         cameraPose = new Mat(4,4, CV_64F, Scalar.all(0.0));
@@ -112,12 +110,12 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
             mPlaneParams[i] = (float) planeEquation.get(0,i)[0];
         }
         planeEquation.get(0,0,mPlaneParams);
-
+/*
         for (int i = 0;mPlaneParams.length>i;i++){
             System.out.println("Params plano: " + mPlaneParams[i]);
         }
-
-        float[] point = {0.0f,0.0f,-mPlaneParams[2]/mPlaneParams[3]};
+*/
+        float[] point = {0.0f,0.3f,2};
 
 
 
@@ -133,7 +131,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         //-------------------------------Modelo translacion rotacion--------------------------------
 		
 		//float[] normal = {mPlaneParams[0],-mPlaneParams[1],-mPlaneParams[2]};
-        float[] normal = {mPlaneParams[0],mPlaneParams[1],mPlaneParams[2]};
+        float[] normal = {mPlaneParams[0],-mPlaneParams[1],-mPlaneParams[2]};
 
 
         Matrix.translateM(mModelMatrix,0, point[0], point[1], point[2]);
@@ -153,11 +151,18 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
             mViewMatrix[i] = (float) cameraPose.get(i % cameraPose.cols(),
                     i / cameraPose.cols())[0];
         }
-/*
-        camTrail.AddTrailData(new float[] { -mViewMatrix[12],
+        if (last != mViewMatrix[14]){
+            last = mViewMatrix[14];
+            System.out.println(mViewMatrix[12] +", "+mViewMatrix[13] + ", " + mViewMatrix[14]);
+        }
+            //Matrix.setIdentityM(mViewMatrix, 0);
+
+
+
+        camTrail.AddTrailData(new float[] { mViewMatrix[12],
                                             mViewMatrix[13],
                                             mViewMatrix[14]});
-*/											
+
 	/*		
 		Esto se supone que cambia NDC de left-handed a right-handed, necesitare probarlo.
 		glDepthRange(1.0f, 0.0f)
@@ -216,7 +221,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         // We are looking toward the distance
         final float lookX = 0.0f;
         final float lookY = 0.0f;
-        final float lookZ = -1.0f;
+        final float lookZ = 1.0f;
 
         // Set our up vector. This is where our head would be pointing were we holding the camera.
         final float upX = 0.0f;
@@ -225,7 +230,10 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
 
 
-        Matrix.setLookAtM(mViewMatrix, 0, eyeX, eyeY, eyeZ, lookX, lookY, lookZ, upX, upY, upZ);
+       // Matrix.setLookAtM(mViewMatrix, 0, eyeX, eyeY, eyeZ, lookX, lookY, lookZ, upX, upY, upZ);
+
+        Matrix.setIdentityM(mViewMatrix, 0);
+
         int programHandle = init.getProgramHandle();
         mMVPMatrixHandle = GLES20.glGetUniformLocation(programHandle, "u_MVPMatrix");
         mPositionHandle = GLES20.glGetAttribLocation(programHandle, "a_Position");
@@ -239,7 +247,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         // Set the OpenGL viewport to the same size as the surface.
 		//En vez de 0,0 quizas poner cx y cy????
 		//cx y cy estaban en 0 y 0 para esta funcion.
-        GLES20.glViewport((int)cx, (int)cy, width, height);
+        GLES20.glViewport(0, 0, width, height);
 
 
         final float ratio = (float) width / height;
@@ -280,13 +288,13 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
 
 	
-	public void drawObject(final FloatBuffer CoordsBuffer, float[] color, int paintFunction, int nPoints){
+	public void drawObject(final FloatBuffer CoordsBuffer, float[] color, int paintFunction, int nPoints, int offset){
 		
 		GLES20.glVertexAttribPointer(mPositionHandle, mPositionDataSize, GLES20.GL_FLOAT, false,
                 mStrideBytes, CoordsBuffer);
 		
 		GLES20.glUniform4fv(mColorHandle, 1, color, 0);
-		GLES20.glDrawArrays(paintFunction, 0, nPoints);
+		GLES20.glDrawArrays(paintFunction, offset, nPoints);
 
 	}
 	
@@ -325,14 +333,14 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0); //Necesario para camTrail
 
 		FloatBuffer GridBuffer = coordsObject.getGrid();
-		drawObject(GridBuffer, new float[]{1.0f,1.0f,1.0f,1.0f},GLES20.GL_LINES,40);
+		drawObject(GridBuffer, new float[]{1.0f,1.0f,1.0f,1.0f},GLES20.GL_LINES,40, 0);
 		FloatBuffer CubeBuffer = coordsObject.getCube();
-		drawObject(CubeBuffer, new float[]{1.0f,1.0f,1.0f,1.0f},GLES20.GL_POINTS,8);
+		drawObject(CubeBuffer, new float[]{1.0f,1.0f,1.0f,1.0f},GLES20.GL_POINTS,8, 0);
 		
 		FloatBuffer CoordinatesBuffer = coordsObject.getObjectcoordinates();
-		drawObject(CoordinatesBuffer.get(new float[]{0,2}), new float[]{1.0f,0.0f,0.0f,1.0f},GLES20.GL_LINES,2);
-		drawObject(CoordinatesBuffer.get(new float[]{2,4}), new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_LINES,2);
-		drawObject(CoordinatesBuffer.get(new float[]{4,6}), new float[]{0.0f,0.0f,1.0f,1.0f},GLES20.GL_LINES,2);
+		drawObject(CoordinatesBuffer, new float[]{1.0f,0.0f,0.0f,1.0f},GLES20.GL_LINES,2, 0);
+		drawObject(CoordinatesBuffer, new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_LINES,2, 2);
+		drawObject(CoordinatesBuffer, new float[]{0.0f,0.0f,1.0f,1.0f},GLES20.GL_LINES,2, 4);
 
 		
 		/*
@@ -353,10 +361,10 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 		
 		
 /*
-		FloatBuffer trailBuffer = getFloatBufferTrail();
-		drawObject(trailBuffer, new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_LINE_STRIP,2);
-
+		FloatBuffer trailBuffer = camTrail.getFloatBufferTrail();
+		drawObject(trailBuffer, new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_LINE_STRIP,camTrail.getNumPoints(),0);
 */
+
 
         GLES20.glDisableVertexAttribArray(mPositionHandle);
         GLES20.glDisable(mColorHandle);
