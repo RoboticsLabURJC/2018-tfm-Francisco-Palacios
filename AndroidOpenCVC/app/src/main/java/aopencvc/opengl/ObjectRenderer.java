@@ -159,7 +159,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
         //X left positive, y down positive, z approach positive
 
-        System.out.println("Modelo: x: " + mViewMatrix[12] + " y: " + mViewMatrix[13] + " z: " + mViewMatrix[14]);
+        //System.out.println("Modelo: x: " + mViewMatrix[12] + " y: " + mViewMatrix[13] + " z: " + mViewMatrix[14]);
 
 
 

@@ -3,4 +3,6 @@
     <string name="title_activity_canny">Canny</string>
     <string name="title_activity_arcamera">ARCamera</string>
     <string name="title_activity_sdslam">SDSLAM</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_screen_recorder">ScreenRecorder</string>
 </resources>

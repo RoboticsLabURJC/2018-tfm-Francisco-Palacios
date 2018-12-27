@@ -18,6 +18,12 @@
             android:id="@+id/sd-slam"
             android:text="AR"
             android:onClick="launchAR" />
+        <CheckBox android:id="@+id/checkbox_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Activate recording"
+            android:onClick="record"/>
+
     </LinearLayout>
 
 
