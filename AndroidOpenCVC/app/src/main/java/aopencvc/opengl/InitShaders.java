@@ -1,31 +1,13 @@
 package aopencvc.opengl;
 
+
 import android.opengl.GLES20;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
 
-class ObjectInit {
-    // New class members
-    /**
-     * Store our model data in a float buffer.
-     */
-    private final FloatBuffer coordinates;
-
-    private final FloatBuffer grid;
-
-    private final FloatBuffer cube;
-
-    /**
-     * How many bytes per float.
-     */
-    private final int mBytesPerFloat = 4;
-
-    /**
-     * Initialize the model data.
-     */
-    final String vertexShader =
+public class InitShaders{
+	
+	
+	final String vertexShader =
             "uniform mat4 u_MVPMatrix;      \n"     // A constant representing the combined model/view/projection matrix.
 
             + "attribute vec4 a_Position;     \n" // Per-vertex position information we will pass in.
@@ -56,130 +38,19 @@ class ObjectInit {
     private int vertexShaderHandle;
     private int fragmentShaderHandle;
     private int programHandle;
-    private float[] gridColor;
-
-    public ObjectInit() {
-        // Drawing lines
-        final float[] coordinatesData = {
-                // X, Y, Z
-                0.0f, 0.0f, 0.0f,
-
-                1.5f, 0.0f, 0.0f,
-
-                0.0f, 0.0f, 0.0f,
-
-                0.0f, 1.5f, 0.0f,
-
-                0.0f, 0.0f, 0.0f,
-
-                0.0f, 0.0f, 1.5f};
-
-        final float[] gridData = {
-                0.0f, 0.0f, 0.0f,
-                2.16f, 0.0f, 0.0f,
-                0.0f, 0.0f, 0.24f,
-                2.16f, 0.0f, 0.24f,
-                0.0f, 0.0f, 0.48f,
-                2.16f, 0.0f, 0.48f,
-                0.0f, 0.0f, 0.72f,
-                2.16f, 0.0f, 0.72f,
-                0.0f, 0.0f, 0.96f,
-                2.16f, 0.0f, 0.96f,
-                0.0f, 0.0f, 1.20f,
-                2.16f, 0.0f, 1.20f,
-                0.0f, 0.0f, 1.44f,
-                2.16f, 0.0f, 1.44f,
-                0.0f, 0.0f, 1.68f,
-                2.16f, 0.0f, 1.68f,
-                0.0f, 0.0f, 1.92f,
-                2.16f, 0.0f, 1.92f,
-                0.0f, 0.0f, 2.16f,
-                2.16f, 0.0f, 2.16f,
-
-
-                0.0f, 0.0f, 0.0f,
-                0.0f, 0.0f, 2.16f,
-                0.24f, 0.0f, 0.0f,
-                0.24f, 0.0f, 2.16f,
-                0.48f, 0.0f, 0.0f,
-                0.48f, 0.0f, 2.16f,
-                0.72f, 0.0f, 0.0f,
-                0.72f, 0.0f, 2.16f,
-                0.96f, 0.0f, 0.0f,
-                0.96f, 0.0f, 2.16f,
-                1.20f, 0.0f, 0.0f,
-                1.20f, 0.0f, 2.16f,
-                1.44f, 0.0f, 0.0f,
-                1.44f, 0.0f, 2.16f,
-                1.68f, 0.0f, 0.0f,
-                1.68f, 0.0f, 2.16f,
-                1.92f, 0.0f, 0.0f,
-                1.92f, 0.0f, 2.16f,
-                2.16f, 0.0f, 0.0f,
-                2.16f, 0.0f, 2.16f
-        };
-
-        final float[] cubeData = {
-                0.75f,0.75f, 0.0f,
-                1.35f, 0.75f, 0.0f,
-                0.75f,1.35f, 0.0f,
-                1.35f, 1.35f, 0.0f,
-
-                0.75f,0.75f, -0.6f,
-                1.35f, 0.75f, -0.6f,
-                0.75f,1.35f, -0.6f,
-                1.35f, 1.35f, -0.6f
-        };
-
-
-
-        // Initialize the buffers.
-        coordinates = ByteBuffer.allocateDirect(coordinatesData.length * mBytesPerFloat)
-                .order(ByteOrder.nativeOrder()).asFloatBuffer();
-
-
-        coordinates.put(coordinatesData).position(0);
-
-        grid = ByteBuffer.allocateDirect(gridData.length * mBytesPerFloat)
-                .order(ByteOrder.nativeOrder()).asFloatBuffer();
-
-
-        grid.put(gridData).position(0);
-
-
-        cube = ByteBuffer.allocateDirect(cubeData.length * mBytesPerFloat)
-                .order(ByteOrder.nativeOrder()).asFloatBuffer();
-
-
-        cube.put(cubeData).position(0);
-
-
+	
+	
+	public InitShaders(){
         loadVShaders();
         loadFShaders();
         bindShaders();
+	}
+	
 
+	
+	private void loadVShaders(){
 
-    }
-
-
-    public float[] getGridColor() {
-        return gridColor;
-    }
-
-    public FloatBuffer getObjectcoordinates(){
-        return coordinates;
-    }
-
-    public FloatBuffer getGrid() {
-        return grid;
-    }
-
-    public FloatBuffer getCube() {
-        return cube;
-    }
-
-
-    private void loadVShaders(){
+	    System.out.print("as");
         vertexShaderHandle = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
 
         if (vertexShaderHandle != 0)
@@ -282,5 +153,7 @@ class ObjectInit {
     public int getProgramHandle(){
         return programHandle;
     }
-
+	
+	
+	
 }

@@ -12,10 +12,11 @@ public class CamTrail {
 
     private final int mBytesPerFloat = 4;
 
-
+    private int numPoints;
 
     public CamTrail(){
         trail = new ArrayList<Float>();
+        numPoints = 0;
     }
 
 
@@ -34,7 +35,11 @@ public class CamTrail {
         for (int i = 0;i<newPoints.length;i++){
             trail.add(newPoints[i]);
         }
+        numPoints++;
+    }
 
+    public int getNumPoints(){
+        return numPoints;
     }
 
     public FloatBuffer getFloatBufferTrail(){
@@ -47,5 +52,6 @@ public class CamTrail {
         return trailBuffer;
     }
 
+	
 
 }
