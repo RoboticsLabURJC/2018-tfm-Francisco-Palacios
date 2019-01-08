@@ -162,6 +162,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
 
 
+
 	/*		
 		Esto se supone que cambia NDC de left-handed a right-handed, necesitare probarlo.
 		glDepthRange(1.0f, 0.0f)
@@ -258,9 +259,6 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         float zfar = 100.0f;
         float znear = 0.5f;
 
-		
-		
-
         mProjectionMatrix[0] = 2*fx/width;
         mProjectionMatrix[1] = 0.0f;
         mProjectionMatrix[2] = 0.0f;
@@ -280,8 +278,6 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         mProjectionMatrix[13] = 0.0f;
         mProjectionMatrix[14] = -2.0f * zfar * znear / (zfar-znear);
         mProjectionMatrix[15] = 0.0f;
-
-
 
     }
 

@@ -11,6 +11,8 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
+    private boolean record;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,14 +20,22 @@ public class MainActivity extends AppCompatActivity {
         System.loadLibrary("opencv_java3");
         System.loadLibrary("SD_SLAM");
         System.loadLibrary("SLAM");
+        record = false;
 
     }
 
 
     public void launchAR(View view){
         Intent intent = new Intent(this,ARCamera.class);
+        Bundle params = new Bundle();
+        params.putBoolean("recording", record);
+        intent.putExtras(params);
         startActivity(intent);
 
+    }
+
+    public void record(View view){
+        record = !record;
     }
 
 }
