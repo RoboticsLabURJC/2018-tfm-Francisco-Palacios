@@ -14,6 +14,7 @@ public class Arrow {
 	
 	    private ArrayList<Float> directions;
 		private ArrayList<Float> positions;
+		private int nArrows;
 
 	
 	public Arrow(){
@@ -37,6 +38,24 @@ public class Arrow {
         }
         return new Object[] {posArray,dirArray};
     }
+
+    public float[] getPoints(){
+		float[] posArray;
+		posArray = new float[positions.size()];
+		for (int i = 0; i<positions.size();i++){
+			posArray[i] = positions.get(i);
+		}
+		return posArray;
+	}
+
+	public float[] getDirections(){
+		float[] dirArray;
+		dirArray = new float[directions.size()];
+		for (int i = 0; i<directions.size();i++){
+			dirArray[i] = directions.get(i);
+		}
+		return dirArray;
+	}
 	
 	
 	public void AddArrow(float [] newPoints, float[] newDirections){
@@ -47,8 +66,13 @@ public class Arrow {
 		for (int i = 0;i<newDirections.length;i++){
             directions.add(newDirections[i]);
         }
+        nArrows++;
 
     }
+
+    public int getNArrows(){
+		return nArrows;
+	}
 
 	public FloatBuffer[] getFloatBufferArrow(){
 		

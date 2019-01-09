@@ -7,7 +7,7 @@ cmake_minimum_required(VERSION 3.4.1)
 project(SLAM)
 
 #OpenCV
-include_directories(/opt/OpenCV-android-sdk/sdk/native/jni/include)
+include_directories(../../../ModulosAndroid/OpenCV-android-sdk/sdk/native/jni/include)
 add_library( lib_opencv SHARED IMPORTED )
 set_target_properties(lib_opencv PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/src/main/jniLibs/${ANDROID_ABI}/libopencv_java3.so)
 
@@ -17,7 +17,7 @@ include_directories(/usr/include/eigen3)
 
 
 #SD-SLAM
-include_directories(/opt/SD-SLAM/src)
+include_directories(/opt/SD_SLAM/src)
 add_library(lib_SD_SLAM SHARED IMPORTED)
 set_target_properties(lib_SD_SLAM PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/src/main/jniLibs/${ANDROID_ABI}/libSD_SLAM.so)
 

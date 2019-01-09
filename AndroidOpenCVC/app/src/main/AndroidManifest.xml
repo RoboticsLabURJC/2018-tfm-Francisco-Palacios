@@ -35,9 +35,6 @@
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <service
-            android:name=".Recorder"
-            android:exported="false"></service>
     </application>
 
 </manifest>

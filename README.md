@@ -7,8 +7,20 @@
 - [Weeks 6-8 - Integrating SD-SLAM and GLESv2 AR together](#week3)
 - [Weeks 9-11 - Improving the AR app](#week4)
 - [Weeks 12-13 - Pattern initialization and resolution reduction](#week5)
+- [Weeks 14-18 - Adding some new features](#week6)
 
+<a name="week6"></a>
+## Weeks 14-18
 
+Since my last update, i did a little changes in the code to clean the draw functions, creating 2 new classes for this task (CoordsObject and InitShaders). I also increased the resolution of the openGL renders, since it seems to don't reduce the performance and it look better.
+
+I also create an Arrow class with the purpose of try to create a path between 2 points using the arrows as directions that i must follow to go from point A to point B. I'm working currently in this features and i'm having some issues drawing more than 1 object.
+
+Finally, i create a new class (Recorder) to record the tablet screen i'm testing with. I was using an app to do this job all this time, so since i'm using it a lot, I decided to program a recorder. I need configurate some of the variables, to try increase the performance, but it works pretty well. We can se an example in the video below. Also in the video, there is an example of the relocalization of SD_SLAM.
+
+### SD-SLAM and AR in Android, Pattern initialization and resolution reduction:
+
+[![](http://img.youtube.com/vi/xx2N_K1n-pw/0.jpg)](https://www.youtube.com/watch?v=xx2N_K1n-pw "")
 
 <a name="week5"></a>
 ## Weeks 12-13

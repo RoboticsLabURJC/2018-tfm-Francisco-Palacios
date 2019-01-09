@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.support.annotation.RequiresApi;
 import android.util.DisplayMetrics;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -42,6 +43,12 @@ public class Recorder extends IntentService {
         projection_manager = (MediaProjectionManager) getSystemService
                 (Context.MEDIA_PROJECTION_SERVICE);
         recorder = new MediaRecorder();
+        File video = new File(Environment
+                .getExternalStoragePublicDirectory(Environment
+                        .DIRECTORY_DOWNLOADS) + "/video.mp4");
+        if (video.exists()){
+            video.delete();
+        }
         initRecorder();
         shareScreen();
     }

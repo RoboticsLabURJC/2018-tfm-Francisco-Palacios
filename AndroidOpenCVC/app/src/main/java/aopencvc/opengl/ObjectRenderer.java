@@ -70,6 +70,12 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
     private float fy = 1081.398961189691f;
 
 
+    private float[][] directions = {{1,0,0},{0,0,1},{1,0,0},{0,1,0}};
+    private float[][] points = {{0,0,2f},{1.2f,-1.3f,0},{1.2f,-1.3f,-2.32f},{4.3f,-0.07f,-2.32f}};
+
+    private float[] objectPoint = {4.3f,-0.07f,2.32f};
+
+    private Arrow arrows;
     private Mat cameraRotation;
     private Mat planeEquation;
     private Mat cameraPose;
@@ -85,6 +91,10 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         cameraPose = new Mat(4,4, CV_64F, Scalar.all(0.0));
 		coordsObject = new CoordsObject();
         camTrail = new CamTrail();
+        arrows = new Arrow();
+        for (int i = 0;i<directions[0].length;i++){
+            arrows.AddArrow(points[i],directions[i]);
+        }
     }
 
     public void putCameraRotation(Mat cr){
@@ -113,7 +123,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         planeEquation.get(0,0,mPlaneParams);
 
 
-        float[] point = {0.0f,0.0f,-mPlaneParams[2]/mPlaneParams[3]};
+        float[] point = {0.0f,0.0f,2f};
 
 
 
@@ -128,7 +138,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
 
         //-------------------------------Modelo translacion rotacion--------------------------------
-        /*
+
         float[] normal = {mPlaneParams[0],-mPlaneParams[1],-mPlaneParams[2]};
 
 
@@ -138,7 +148,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
                 modelRotation[1],modelRotation[2]);
 
         Matrix.scaleM(mModelMatrix,0,0.25f,0.25f,0.25f);
-        */
+
         //------------------------------------------------------------------------------------------
 
 
@@ -228,6 +238,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         final float upY = 1.0f;
         final float upZ = 0.0f;
 
+        //Añadiendo las flechas que se renderizaran despues
 
 
        // Matrix.setLookAtM(mViewMatrix, 0, eyeX, eyeY, eyeZ, lookX, lookY, lookZ, upX, upY, upZ);
@@ -299,7 +310,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
 		
 		Matrix.translateM(mModelMatrix,0,translation[0], translation[1], translation[2]);
-        float[] modelRotation = parallelizeVectors(rotationVecParallel, rotationVecParallel);
+        float[] modelRotation = parallelizeVectors(new float[]{0.0f,0.0f,1.0f}, rotationVecParallel);
         Matrix.rotateM(mModelMatrix, 0, modelRotation[3]*57.2958f, modelRotation[0],
                 modelRotation[1],modelRotation[2]);
 				
@@ -307,14 +318,17 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
 
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mMVPMatrix, 0);
-		
-		GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0); //Necesario para camTrail
+
+        GLES20.glEnableVertexAttribArray(mPositionHandle);
+		GLES20.glUniformMatrix4fv(mPositionHandle, 1, false, mMVPMatrix, 0); //Necesario para camTrail
 
 	}
 
     public void draw(){
 
 
+/// Crear un shadder por cada objeto que se desee crear, despues linkear los programas correspondientes y
+// y cargar el programa. Sobre ese programa hacer los calculos de translacion que se quieran.
 
         Matrix.multiplyMM(mMVPMatrix, 0, mViewMatrix, 0, mModelMatrix, 0);
 
@@ -328,32 +342,40 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
         GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0); //Necesario para camTrail
 
+
+		int nArrows = arrows.getNArrows();
+        float[] directionsArr = arrows.getDirections();
+        float[] pointsArr = arrows.getPoints();
+		FloatBuffer[] arrowBuffer = arrows.getFloatBufferArrow();
+		for (int i = 0; i<nArrows*3;i=i+3){
+			
+			transformModel(new float[]{directionsArr[i],directionsArr[i+1],directionsArr[i+2]},
+                    new float[]{pointsArr[i],pointsArr[i+1],pointsArr[i+2]});
+			
+			drawObject(arrowBuffer[0], new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_TRIANGLES,3,0);
+			drawObject(arrowBuffer[1], new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_LINES,2,0);
+			
+			System.out.println("index: "+i);
+		}
+
+/*
+        FloatBuffer[] arrowBuffer = arrows.getFloatBufferArrow();
+
+        drawObject(arrowBuffer[0], new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_TRIANGLES,3,0);
+        drawObject(arrowBuffer[1], new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_LINES,2,0);
+        */
+        /*
 		FloatBuffer GridBuffer = coordsObject.getGrid();
 		drawObject(GridBuffer, new float[]{1.0f,1.0f,1.0f,1.0f},GLES20.GL_LINES,40, 0);
 		FloatBuffer CubeBuffer = coordsObject.getCube();
 		drawObject(CubeBuffer, new float[]{1.0f,1.0f,1.0f,1.0f},GLES20.GL_POINTS,8, 0);
-		
+
 		FloatBuffer CoordinatesBuffer = coordsObject.getObjectcoordinates();
 		drawObject(CoordinatesBuffer, new float[]{1.0f,0.0f,0.0f,1.0f},GLES20.GL_LINES,2, 0);
 		drawObject(CoordinatesBuffer, new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_LINES,2, 2);
 		drawObject(CoordinatesBuffer, new float[]{0.0f,0.0f,1.0f,1.0f},GLES20.GL_LINES,2, 4);
+*/
 
-		
-		/*
-		Object[] arrows = Arrow.GetArrows();
-
-		FloatBuffer arrowBuffer = Arrows.getFloatBufferArrow();
-		for (int i = 0; i<nArrows;i++){
-			
-			transformModel(directions, points);
-			
-			drawObject(arrowBuffer[0], new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_TRIANGLES,3);
-			drawObject(arrowBuffer[1], new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_LINES,2);
-			
-			
-		}
-		
-		*/
 
 /*
 		FloatBuffer trailBuffer = camTrail.getFloatBufferTrail();
