@@ -13,31 +13,21 @@ public class Arrow {
 	
 	
 	    private ArrayList<Float> directions;
+
 		private ArrayList<Float> positions;
+
 		private int nArrows;
+
+		private ArrayList<Integer> arrowsShad;
 
 	
 	public Arrow(){
 		
         directions = new ArrayList<Float>();
 		positions = new ArrayList<Float>();
+		arrowsShad = new ArrayList<Integer>();
 
-	}	
-	
-   public Object[] GetArrows(){
-        float[] posArray;
-        posArray = new float[positions.size()];
-        for (int i = 0; i<positions.size();i++){
-            posArray[i] = positions.get(i);
-        }
-		
-		float[] dirArray;
-        dirArray = new float[directions.size()];
-        for (int i = 0; i<directions.size();i++){
-            dirArray[i] = directions.get(i);
-        }
-        return new Object[] {posArray,dirArray};
-    }
+	}
 
     public float[] getPoints(){
 		float[] posArray;
@@ -67,6 +57,8 @@ public class Arrow {
             directions.add(newDirections[i]);
         }
         nArrows++;
+
+        arrowsShad.add(new Shaders().getProgramHandle());
 
     }
 
@@ -106,5 +98,9 @@ public class Arrow {
 		return new FloatBuffer[]{head,line};
 	}
 	
-	
+
+	public ArrayList<Integer> getArrowsShad(){
+		return arrowsShad;
+	}
+
 }

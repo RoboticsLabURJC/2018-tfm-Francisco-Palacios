@@ -18,12 +18,16 @@ public class  CoordsObject {
 
     private final FloatBuffer cube;
 
+    private final Shaders objShad;
+
     /**
      * How many bytes per float.
      */
     private final int mBytesPerFloat = 4;
 	
 	public CoordsObject() {
+
+		objShad = new Shaders();
 		// Drawing lines
 		final float[] coordinatesData = {
 				// X, Y, Z
@@ -134,5 +138,9 @@ public class  CoordsObject {
     public FloatBuffer getCube() {
         return cube;
     }
+
+    public int getProgramHanlde(){
+		return objShad.getProgramHandle();
+	}
 	
 }

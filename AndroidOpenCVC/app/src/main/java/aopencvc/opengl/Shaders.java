@@ -4,7 +4,7 @@ package aopencvc.opengl;
 import android.opengl.GLES20;
 
 
-public class InitShaders{
+public class Shaders {
 	
 	
 	final String vertexShader =
@@ -40,7 +40,7 @@ public class InitShaders{
     private int programHandle;
 	
 	
-	public InitShaders(){
+	public Shaders(){
         loadVShaders();
         loadFShaders();
         bindShaders();

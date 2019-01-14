@@ -5,14 +5,12 @@ import javax.microedition.khronos.egl.EGLConfig;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
-import android.os.SystemClock;
 
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
 
-import java.lang.reflect.Array;
 import java.nio.FloatBuffer;
-import java.util.Arrays;
+import java.util.ArrayList;
 
 
 import javax.microedition.khronos.opengles.GL10;
@@ -42,8 +40,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
     private int mColorHandle;
 
 
-    private InitShaders init;
-	
+
 	private CoordsObject coordsObject;
 
     /**
@@ -186,6 +183,16 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
     }
 
+    public void ChangeUseProgram(int programHandle){
+
+        mMVPMatrixHandle = GLES20.glGetUniformLocation(programHandle, "u_MVPMatrix");
+        mPositionHandle = GLES20.glGetAttribLocation(programHandle, "a_Position");
+        mColorHandle = GLES20.glGetUniformLocation(programHandle, "v_Color");
+
+        // Tell OpenGL to use this program when rendering.
+        GLES20.glUseProgram(programHandle);
+    }
+
 
     public float[] vectorialProduct(float[] v1, float[] v2){
         float[] vProdV1V2 = {v1[1]*v2[2]-v1[2]*v2[1],-(v1[0]*v2[2]-v1[2]*v2[0]),v1[0]*v2[1]-v1[1]*v2[0]};
@@ -212,7 +219,6 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
     @Override
     public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
 
-        init = new InitShaders();
 
         GLES20.glDisable(GL10.GL_DITHER);
         GLES20.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT,
@@ -244,20 +250,10 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
        // Matrix.setLookAtM(mViewMatrix, 0, eyeX, eyeY, eyeZ, lookX, lookY, lookZ, upX, upY, upZ);
 
         Matrix.setIdentityM(mViewMatrix, 0);
-
-        int programHandle = init.getProgramHandle();
-        mMVPMatrixHandle = GLES20.glGetUniformLocation(programHandle, "u_MVPMatrix");
-        mPositionHandle = GLES20.glGetAttribLocation(programHandle, "a_Position");
-        mColorHandle = GLES20.glGetUniformLocation(programHandle, "v_Color");
-
-        // Tell OpenGL to use this program when rendering.
-        GLES20.glUseProgram(programHandle);
     }
 
     public void onSurfaceChanged(GL10 unused, int width, int height) {
-        // Set the OpenGL viewport to the same size as the surface.
-		//En vez de 0,0 quizas poner cx y cy????
-		//cx y cy estaban en 0 y 0 para esta funcion.
+
         GLES20.glViewport(0, 0, width, height);
 
 
@@ -324,6 +320,8 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
 	}
 
+
+
     public void draw(){
 
 
@@ -342,19 +340,22 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
         GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0); //Necesario para camTrail
 
-
+        // Paint arrows
 		int nArrows = arrows.getNArrows();
         float[] directionsArr = arrows.getDirections();
         float[] pointsArr = arrows.getPoints();
 		FloatBuffer[] arrowBuffer = arrows.getFloatBufferArrow();
+        ArrayList<Integer> arrowsPH = arrows.getArrowsShad();
 		for (int i = 0; i<nArrows*3;i=i+3){
-			
+            ChangeUseProgram(arrowsPH.get((int) i/3));
+
 			transformModel(new float[]{directionsArr[i],directionsArr[i+1],directionsArr[i+2]},
                     new float[]{pointsArr[i],pointsArr[i+1],pointsArr[i+2]});
 			
 			drawObject(arrowBuffer[0], new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_TRIANGLES,3,0);
 			drawObject(arrowBuffer[1], new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_LINES,2,0);
-			
+
+            GLES20.glDisableVertexAttribArray(mPositionHandle);
 			System.out.println("index: "+i);
 		}
 
@@ -364,7 +365,12 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         drawObject(arrowBuffer[0], new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_TRIANGLES,3,0);
         drawObject(arrowBuffer[1], new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_LINES,2,0);
         */
-        /*
+/*
+
+        // Draw coords object
+        ChangeUseProgram(coordsObject.getProgramHandle());
+
+
 		FloatBuffer GridBuffer = coordsObject.getGrid();
 		drawObject(GridBuffer, new float[]{1.0f,1.0f,1.0f,1.0f},GLES20.GL_LINES,40, 0);
 		FloatBuffer CubeBuffer = coordsObject.getCube();
@@ -374,16 +380,20 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 		drawObject(CoordinatesBuffer, new float[]{1.0f,0.0f,0.0f,1.0f},GLES20.GL_LINES,2, 0);
 		drawObject(CoordinatesBuffer, new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_LINES,2, 2);
 		drawObject(CoordinatesBuffer, new float[]{0.0f,0.0f,1.0f,1.0f},GLES20.GL_LINES,2, 4);
+		GLES20.glDisableVertexAttribArray(mPositionHandle);
 */
 
 
 /*
+        // Draw camera trail
+        ChangeUseProgram(camTrail.getProgramHandle());
 		FloatBuffer trailBuffer = camTrail.getFloatBufferTrail();
 		drawObject(trailBuffer, new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_LINE_STRIP,camTrail.getNumPoints(),0);
+		GLES20.glDisableVertexAttribArray(mPositionHandle);
 */
 
 
-        GLES20.glDisableVertexAttribArray(mPositionHandle);
+
         GLES20.glDisable(mColorHandle);
 
     }
