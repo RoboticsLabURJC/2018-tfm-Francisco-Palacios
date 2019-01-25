@@ -18,7 +18,9 @@ public class  CoordsObject {
 
     private final FloatBuffer cube;
 
-    private final Shaders objShad;
+    private float[] point;
+
+    private float[] modelRotation;
 
     /**
      * How many bytes per float.
@@ -27,7 +29,6 @@ public class  CoordsObject {
 	
 	public CoordsObject() {
 
-		objShad = new Shaders();
 		// Drawing lines
 		final float[] coordinatesData = {
 				// X, Y, Z
@@ -125,7 +126,22 @@ public class  CoordsObject {
 
 	}
 	
-	
+	public void putPoint(float [] _point){
+		point = _point;
+	}
+
+	public float[] getPoint(){
+		return point;
+	}
+
+	public void putModelRotation(float[] _modelRotation){
+		modelRotation = _modelRotation;
+	}
+
+	public float[] getModelRotation(){
+		return modelRotation;
+	}
+
 	
     public FloatBuffer getObjectcoordinates(){
         return coordinates;
@@ -139,8 +155,4 @@ public class  CoordsObject {
         return cube;
     }
 
-    public int getProgramHanlde(){
-		return objShad.getProgramHandle();
-	}
-	
 }

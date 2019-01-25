@@ -18,14 +18,12 @@ public class Arrow {
 
 		private int nArrows;
 
-		private ArrayList<Integer> arrowsShad;
 
 	
 	public Arrow(){
 		
         directions = new ArrayList<Float>();
 		positions = new ArrayList<Float>();
-		arrowsShad = new ArrayList<Integer>();
 
 	}
 
@@ -58,7 +56,6 @@ public class Arrow {
         }
         nArrows++;
 
-        arrowsShad.add(new Shaders().getProgramHandle());
 
     }
 
@@ -67,13 +64,34 @@ public class Arrow {
 	}
 
 	public FloatBuffer[] getFloatBufferArrow(){
-		
-		
-		float[] arrowHead = new float[]{
-			0.0f,0.0f,1.0f,
-			0.3f, 0.0f,0.0f,
-			-0.3f, 0.0f, 0.0f
-		};
+
+
+        float[] arrowHead = new float[]{
+                0.0f,0.0f,1.0f,
+                0.3f, 0.3f,0.0f,
+                -0.3f, 0.3f, 0.0f,
+
+				0.0f,0.0f,1.0f,
+				0.3f, -0.3f,0.0f,
+				-0.3f, -0.3f, 0.0f,
+
+				0.0f,0.0f,1.0f,
+				0.3f, 0.3f,0.0f,
+				0.3f, -0.3f, 0.0f,
+
+				0.0f,0.0f,1.0f,
+				-0.3f, 0.3f,0.0f,
+				-0.3f, -0.3f, 0.0f,
+
+				0.3f, 0.3f,0.0f,
+				-0.3f, 0.3f, 0.0f,
+				-0.3f, -0.3f, 0.0f,
+
+				0.3f, 0.3f,0.0f,
+				0.3f, -0.3f, 0.0f,
+				-0.3f, -0.3f, 0.0f
+
+        };
 		
 		float[] arrowLine = new float[]{
 			0.0f,0.0f,0.0f,
@@ -99,8 +117,5 @@ public class Arrow {
 	}
 	
 
-	public ArrayList<Integer> getArrowsShad(){
-		return arrowsShad;
-	}
 
 }

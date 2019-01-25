@@ -14,12 +14,10 @@ public class CamTrail {
 
     private int numPoints;
 
-    private Shaders trailShad;
 
     public CamTrail(){
         trail = new ArrayList<Float>();
         numPoints = 0;
-        trailShad = new Shaders();
     }
 
 
@@ -54,11 +52,5 @@ public class CamTrail {
         trailBuffer.put(trailArray).position(0);
         return trailBuffer;
     }
-
-
-    public int getProgramHandle(){
-        return trailShad.getProgramHandle();
-    }
-	
 
 }

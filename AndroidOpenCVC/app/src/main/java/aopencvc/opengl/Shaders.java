@@ -50,7 +50,7 @@ public class Shaders {
 	
 	private void loadVShaders(){
 
-	    System.out.print("as");
+	    System.out.println("LoadvSshadere");
         vertexShaderHandle = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
 
         if (vertexShaderHandle != 0)
