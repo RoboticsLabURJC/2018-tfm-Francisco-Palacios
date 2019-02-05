@@ -9,6 +9,9 @@
 - [Weeks 12-13 - Pattern initialization and resolution reduction](#week5)
 - [Weeks 14-18 - Adding some new features](#week6)
 
+## References
+The contents of android-AccelerometerPlay are from [https://github.com/googlesamples/android-AccelerometerPlay/].
+
 <a name="week6"></a>
 ## Weeks 14-18
 
