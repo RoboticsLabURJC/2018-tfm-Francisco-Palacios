@@ -35,6 +35,7 @@ import org.opencv.core.Mat;
 import java.io.IOException;
 
 import aopencvc.opengl.SurfaceViewer;
+import aopencvc.utils.ActivitySingleton;
 import aopencvc.utils.CameraHandler;
 import aopencvc.utils.SLAMHandler;
 
@@ -46,14 +47,8 @@ public class ARCamera extends AppCompatActivity{
     private FrameLayout mFrame;
     private static final String TAG = "OCVARCamera::Activity";
     private CameraBridgeViewBase mOpenCvCameraView;
-
-    private MediaRecorder recorder;
-    private MediaProjection projection;
-    private MediaProjectionManager projection_manager;
-    private VirtualDisplay virtual_display;
-    private int density;
     private int  REQUEST_CODE = 1000;
-
+    private Recorder recorder;
 
 
 
@@ -85,6 +80,7 @@ public class ARCamera extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         Log.i(TAG, "called onCreate");
         Bundle params = getIntent().getExtras();
+
         boolean record;
         if (params != null){
             record = params.getBoolean("recording");
@@ -95,21 +91,7 @@ public class ARCamera extends AppCompatActivity{
         }
 
         if (record){
-            if (ContextCompat.checkSelfPermission(ARCamera.this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(ARCamera.this,
-                        new String[]{Manifest.permission
-                                .WRITE_EXTERNAL_STORAGE}, 10);
-            }
-
-            DisplayMetrics metrics = new DisplayMetrics();
-            getWindowManager().getDefaultDisplay().getMetrics(metrics);
-            density = metrics.densityDpi;
-            projection_manager = (MediaProjectionManager) getSystemService
-                    (Context.MEDIA_PROJECTION_SERVICE);
-            recorder = new MediaRecorder();
-            initRecorder();
-            shareScreen();
+            recorder = new Recorder(this);
         }
 
 
@@ -140,46 +122,6 @@ public class ARCamera extends AppCompatActivity{
 
     }
 
-    private void initRecorder() {
-        try {
-
-            recorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
-            recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-            recorder.setOutputFile(Environment
-                    .getExternalStoragePublicDirectory(Environment
-                            .DIRECTORY_DOWNLOADS) + "/video.mp4");
-            recorder.setVideoSize(1280, 720);
-            recorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-            recorder.setVideoEncodingBitRate(512 * 1000);
-            recorder.setVideoFrameRate(30);
-            recorder.prepare();
-            System.out.println("En init recorder");
-
-            //recorder.start();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void shareScreen(){
-        if (projection == null) {
-            System.out.println("projection");
-            startActivityForResult(projection_manager.createScreenCaptureIntent(),REQUEST_CODE);
-            return;
-        }
-        virtual_display = createVirtualDisplay();
-        recorder.start();
-        System.out.println("despues start");
-
-    }
-
-    private VirtualDisplay createVirtualDisplay() {
-        return projection.createVirtualDisplay("ARCamera",
-                1280, 720, density,
-                DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
-                recorder.getSurface(), null, null);
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -194,9 +136,8 @@ public class ARCamera extends AppCompatActivity{
             return;
         }
 
-        projection = projection_manager.getMediaProjection(resultCode, data);
-        virtual_display = createVirtualDisplay();
-        recorder.start();
+
+        recorder.startRecorder(resultCode,data);
     }
 
     @Override
@@ -225,23 +166,10 @@ public class ARCamera extends AppCompatActivity{
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         if (mOpenCvCameraView != null)
             mOpenCvCameraView.disableView();
-
-        if (recorder != null) {
-            recorder.stop();
-            recorder.release();
-            recorder = null;
-        }
-        if (projection != null) {
-            projection.stop();
-            projection = null;
-        }
-        if (virtual_display != null){
-            virtual_display.release();
-            virtual_display = null;
-        }
+        recorder.onDestroy();
+        super.onDestroy();
 
     }
 }

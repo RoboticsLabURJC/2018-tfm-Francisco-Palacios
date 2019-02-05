@@ -1,8 +1,12 @@
 package com.example.aopencvc.androidopencvc;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.hardware.display.VirtualDisplay;
 import android.media.MediaRecorder;
 import android.media.projection.MediaProjection;
@@ -11,10 +15,14 @@ import android.hardware.display.DisplayManager;
 import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 
 import java.io.File;
 import java.io.IOException;
+
+import aopencvc.utils.ActivitySingleton;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -23,26 +31,33 @@ import java.io.IOException;
  * TODO: Customize class - update intent actions, extra parameters and static
  * helper methods.
  */
-public class Recorder extends IntentService {
+public class Recorder {
 
     private MediaRecorder recorder;
     private MediaProjection projection;
     private MediaProjectionManager projection_manager;
     private VirtualDisplay virtual_display;
+    private Activity mainActivity;
     private int density;
+    private int REQUEST_CODE = 1000;
 
 
-    public Recorder() {
-        super("Recorder");
-    }
+    public Recorder(Activity _mainActivity){
+        mainActivity = _mainActivity;
+        if (ContextCompat.checkSelfPermission(mainActivity,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(mainActivity,
+                    new String[]{Manifest.permission
+                            .WRITE_EXTERNAL_STORAGE}, 10);
+        }
 
-
-    public void onCreate(){
-        super.onCreate();
-
-        projection_manager = (MediaProjectionManager) getSystemService
+        DisplayMetrics metrics = new DisplayMetrics();
+        mainActivity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        density = metrics.densityDpi;
+        projection_manager = (MediaProjectionManager) mainActivity.getSystemService
                 (Context.MEDIA_PROJECTION_SERVICE);
         recorder = new MediaRecorder();
+
         File video = new File(Environment
                 .getExternalStoragePublicDirectory(Environment
                         .DIRECTORY_DOWNLOADS) + "/video.mp4");
@@ -57,13 +72,13 @@ public class Recorder extends IntentService {
         try {
 
             recorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
-            recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+            recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
             recorder.setOutputFile(Environment
                     .getExternalStoragePublicDirectory(Environment
                             .DIRECTORY_DOWNLOADS) + "/video.mp4");
             recorder.setVideoSize(1280, 720);
             recorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-            recorder.setVideoEncodingBitRate(512 * 1000);
+            recorder.setVideoEncodingBitRate(512 * 2000);
             recorder.setVideoFrameRate(30);
             recorder.prepare();
             System.out.println("En init recorder");
@@ -75,11 +90,16 @@ public class Recorder extends IntentService {
         }
     }
 
+
     private void shareScreen(){
         if (projection == null) {
-            startActivity(projection_manager.createScreenCaptureIntent());
-
+            mainActivity.startActivity(projection_manager.createScreenCaptureIntent());
+            mainActivity.startActivityForResult(projection_manager.createScreenCaptureIntent(),REQUEST_CODE);
         }
+    }
+
+    public void startRecorder(int resultCode, Intent data){
+        projection = projection_manager.getMediaProjection(resultCode, data);
         virtual_display = createVirtualDisplay();
         recorder.start();
     }
@@ -96,7 +116,6 @@ public class Recorder extends IntentService {
 
 
     public void onDestroy(){
-        super.onDestroy();
         if (recorder != null) {
             recorder.stop();
             recorder.release();
@@ -106,19 +125,12 @@ public class Recorder extends IntentService {
             projection.stop();
             projection = null;
         }
-        virtual_display.release();
-        virtual_display = null;
-    }
-
-
-
-    @Override
-    protected void onHandleIntent(Intent intent) {
-        if (intent != null) {
-            density = intent.getExtras().getInt("density");
-
+        if (virtual_display != null) {
+            virtual_display.release();
+            virtual_display = null;
         }
     }
+
 
 
 }
