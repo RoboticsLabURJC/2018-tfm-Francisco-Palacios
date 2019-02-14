@@ -7,6 +7,17 @@
 
 class System;
 
+
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_aopencvc_utils_SLAMHandler_getKeyFramePositions(JNIEnv *env, jobject instance, jlong slam,
+                                                    jlong keyFramePos) {
+
+
+
+}
+
 using namespace Eigen;
 
 
@@ -28,17 +39,17 @@ extern "C"{
 extern "C"{
     jstring JNICALL Java_aopencvc_utils_SLAMHandler_TrackFrame(JNIEnv *env, jobject instance,
                                                                jlong slam, jint param, jlong img,
-                                                                jlong cameraRotation, jlong planeEq,
+                                                                jlong vKeyFramesPos, jlong planeEq,
                                                                jlong cameraPose) {
         std::stringstream ss;
         ss << "Hello from C++: ";
 
         try {
             cv::Mat * cimg = (cv::Mat*) img;
-            cv::Mat * cRot = (cv::Mat*) cameraRotation;
+            cv::Mat * vKFPs = (cv::Mat*) vKeyFrames;
             cv::Mat * plane = (cv::Mat*) planeEq;
             cv::Mat * pose = (cv::Mat*) cameraPose;
-            ss << ((SLAM::SDSLAMHandler*)slam)->TrackMonocular(*cimg, *cRot, *plane, *pose);
+            ss << ((SLAM::SDSLAMHandler*)slam)->TrackMonocular(*cimg, *vKFPs, *plane, *pose);
         } catch (...) {
             jclass je = env->FindClass("java/lang/Exception");
             env->ThrowNew(je, "Unknown exception in JNI code of TrackFrame()");
@@ -65,12 +76,10 @@ namespace SLAM {
                                    -0.008788, -0.022544, -2.385009);
         config.SetUsePattern(true);
         selectKP = true;
-        nKeyFrames = 0;
-
         slam = new SD_SLAM::System(SD_SLAM::System::MONOCULAR);
     }
 
-    int SDSLAMHandler::TrackMonocular(cv::Mat &img, cv::Mat &rotation,
+    int SDSLAMHandler::TrackMonocular(cv::Mat &img, cv::Mat &KFpos,
                                       cv::Mat &plane, cv::Mat &pose) {
         // Convert to gray to track
         cv::Mat gray;
@@ -79,9 +88,13 @@ namespace SLAM {
 
 
         Eigen::Matrix4d ePose = slam->TrackMonocular(gray);
-
+        tracker = slam->GetTracker();
+        trackerStatus = tracker->GetLastState();
         // Draw in image
-        DrawFrame(slam, img, pose, plane);
+        GetPose(pose);
+        GetPlaneEquation(plane, pose);
+        GetKFPositions(KFpos);
+        DrawFrame(img);
 
         counter_++;
         return img.cols*1000 + img.rows*1000000 + counter_;
@@ -89,108 +102,108 @@ namespace SLAM {
     }
 
 
-    SD_SLAM::MapPoint * SDSLAMHandler::getMapPoints(){
-        return CurrentMP;
-    }
-
-    SD_SLAM::Tracking::eTrackingState SDSLAMHandler::getTrackingStatus(){
-        return trackerStatus;
-    }
-
-    void SDSLAMHandler::DrawFrame(SD_SLAM::System * slam, cv::Mat &img, cv::Mat &pose,
-                                  cv::Mat &plane) {
-        SD_SLAM::Tracking * tracker = slam->GetTracker();
-        trackerStatus = tracker->GetLastState();
-        // Not initialized
-        if (trackerStatus == SD_SLAM::Tracking::NOT_INITIALIZED) {
-            std::vector<int> vMatches = tracker->GetInitialMatches();
-            std::vector<cv::KeyPoint> vIniKeys = tracker->GetInitialFrame().mvKeys;
-            std::vector<cv::KeyPoint> vCurrentKeys = tracker->GetCurrentFrame().mvKeys;
-
-            circle(img, cv::Point(50,50),5, cv::Scalar(0,255,0),CV_FILLED, 8,0);
+    void SDSLAMHandler::GetKFPositions(cv::Mat &KFPos){
+        std::vector<SD_SLAM::KeyFrame *> vKF = slam->GetMap()->GetAllKeyFrames();
+        KFPos = *new cv::Mat(vKF.size(), 3, CV_64F);
+        for (int i = 0; i< vKF.size();i++){
+            SD_SLAM::KeyFrame * KF = vKF.at(i);
+            Matrix4d KFpose = KF->GetPose();
+            KFPos.at<float>(i,0) = KFpose(12);
+            KFPos.at<float>(i,1) = KFpose(13);
+            KFPos.at<float>(i,2) = KFpose(14);
         }
+    }
 
-        // Status OK
-        if (trackerStatus == SD_SLAM::Tracking::OK) {
-            SD_SLAM::Frame &currentFrame = tracker->GetCurrentFrame();
-            std::vector<cv::KeyPoint> vCurrentKeys = currentFrame.mvKeys;
-            //std::vector<SD_SLAM::MapPoint *> vCurrentMP = currentFrame.mvpMapPoints;
-            nKeyFrames = slam->GetMap()->GetAllKeyFrames().size();
-            Eigen::Matrix4d mTcw = currentFrame.GetPose();
-            Eigen::Matrix3d mRcw = mTcw.block<3, 3>(0, 0);
-            Eigen::Vector3d mtcw = mTcw.block<3, 1>(0, 3);
 
-            Eigen::Matrix3d rotMat;
-            rotMat.setZero();
-            rotMat(0,0) = 1;
-            rotMat(1,1) = -1;
-            rotMat(2,2) = -1;
-            Eigen::Matrix3d mRcwRotated = rotMat * mRcw;
-            Eigen::Vector3d mtcwRotated = rotMat * mtcw;
+
+    void SDSLAMHandler::GetPose(cv::Mat &pose){
+
+        Eigen::Matrix4d mTcw = tracker->GetCurrentFrame().GetPose();
+        Eigen::Matrix3d mRcw = mTcw.block<3, 3>(0, 0);
+        Eigen::Vector3d mtcw = mTcw.block<3, 1>(0, 3);
+        Eigen::Matrix3d rotMat;
+        rotMat.setZero();
+        rotMat(0,0) = 1;
+        rotMat(1,1) = -1;
+        rotMat(2,2) = -1;
+        Eigen::Matrix3d mRcwRotated = rotMat * mRcw;
+        Eigen::Vector3d mtcwRotated = rotMat * mtcw;
+
+        pose = *new cv::Mat(1, 4, CV_64F);
+
+
+        Eigen::Matrix4d newPose;
+        newPose.setZero();
+        newPose.block<3, 3>(0, 0) = mRcwRotated;
+        newPose.block<3, 1>(0, 3) = mtcwRotated;
+        newPose.block<1,4>(3,0) = mTcw.block<1,4>(3,0);
+        for (int i = 0;i<pose.rows * pose.cols;i++){
+            pose.at<double>(i%4,i/4) = newPose(i);
+        }
+    }
+
+    void SDSLAMHandler::GetPlaneEquation(cv::Mat &planeEq, cv::Mat pose){
+        if(selectKP) {
+            SD_SLAM::Frame currentFrame = tracker->GetCurrentFrame();
+            vector<Eigen::Vector3d> vPoints;
+            std::vector<SD_SLAM::MapPoint *> vNotNullMPs;
+            FindMP(currentFrame.mvpMapPoints, vNotNullMPs);
+            vPoints.reserve(vNotNullMPs.size());
+            Eigen::Matrix4d mTcw = tracker->GetCurrentFrame().GetPose();
+            for (size_t i = 0; i < vNotNullMPs.size(); i++) {
+                SD_SLAM::MapPoint *pMP = vNotNullMPs[i];
+                Eigen::Vector3d worldPos = pMP->GetWorldPos();
+
+                //La posicion de puntos no la rotamos, ya que si se lo aplicamos estariamos haciendo
+                //una doble rotacion: rotamos 1 vez por X 180º las coordenadas y luego ademas
+                //180º todos los puntos.
+                //Por ello utilizamos las coordenadas sin rectificar ya que para las coordenadas
+                //estos se encuentran en el mismo sitio.
+
+                /// SEGURO??? quizas si que haya que rotar los puntos.
+                // rotacion de los puntos. Esto lo he puesto en una de las ultimas actus y no estaba
+                cv::Range colRange = cv::Range(0, pose.cols - 1);
+
+                Eigen::Matrix3d mRcw = mTcw.block<3, 3>(0, 0);
+                Eigen::Vector3d mtcw = mTcw.block<3, 1>(0, 3);
+
+                Eigen::Vector3d cameraPos = mRcw * worldPos + mtcw;
+                double a = cameraPos[2];
+                if (a > 0) {
+
+                }
+                //cameraPos = rotMat * cameraPos;
+
+                vPoints.push_back(cameraPos);
+            }
 
             cv::Mat result = *new cv::Mat(1, 4, CV_64F);
-
-
-            Eigen::Matrix4d newPose;
-            newPose.setZero();
-            newPose.block<3, 3>(0, 0) = mRcwRotated;
-            newPose.block<3, 1>(0, 3) = mtcwRotated;
-            newPose.block<1,4>(3,0) = mTcw.block<1,4>(3,0);
-            for (int i = 0;i<pose.rows * pose.cols;i++){
-                pose.at<double>(i%4,i/4) = newPose(i);
+            if (!DetectPlane(vPoints, result)) {
+                selectKP = true;
+            } else {
+                planeEq.at<float>(0, 0) = result.at<float>(0, 0);
+                planeEq.at<float>(0, 1) = result.at<float>(0, 1);
+                planeEq.at<float>(0, 2) = result.at<float>(0, 2);
+                planeEq.at<float>(0, 3) = result.at<float>(0, 3);
             }
+        }
 
-            if (selectKP) {
-                selectKP = false;
-                vector<Eigen::Vector3d> vPoints;
-                std::vector<SD_SLAM::MapPoint *> vNotNullMPs;
-                FindMP(currentFrame.mvpMapPoints,vNotNullMPs);
-                vPoints.reserve(vNotNullMPs.size());
-                for (size_t i = 0; i < vNotNullMPs.size(); i++) {
-                    SD_SLAM::MapPoint *pMP = vNotNullMPs[i];
-                    Eigen::Vector3d worldPos = pMP->GetWorldPos();
-
-                    //La posicion de puntos no la rotamos, ya que si se lo aplicamos estariamos haciendo
-                    //una doble rotacion: rotamos 1 vez por X 180º las coordenadas y luego ademas
-                    //180º todos los puntos.
-                    //Por ello utilizamos las coordenadas sin rectificar ya que para las coordenadas
-                    //estos se encuentran en el mismo sitio.
-					
-					/// SEGURO??? quizas si que haya que rotar los puntos.
-					// rotacion de los puntos. Esto lo he puesto en una de las ultimas actus y no estaba
-					
-					
-					
-                    Eigen::Vector3d cameraPos = mRcw*worldPos + mtcw;
-					double a = cameraPos[2];
-                    if (a>0){
-
-                    }
-					//cameraPos = rotMat * cameraPos;
-
-                    vPoints.push_back(cameraPos);
-                }
-
-                if (!DetectPlane(vPoints, result)) {
-                    selectKP = true;
-                }else{
-                    plane.at<float>(0,0) = result.at<float>(0,0);
-                    plane.at<float>(0,1) = result.at<float>(0,1);
-                    plane.at<float>(0,2) = result.at<float>(0,2);
-                    plane.at<float>(0,3) = result.at<float>(0,3);
-                }
+    }
 
 
-                }
-                circle(img, cv::Point(50,50),5, cv::Scalar(0,0,255),CV_FILLED, 8,0);
+    void SDSLAMHandler::DrawFrame(cv::Mat &img) {
 
-
-            }
-            if (trackerStatus == SD_SLAM::Tracking::LOST) {
-                circle(img, cv::Point(50,50),5, cv::Scalar(255,0,0),CV_FILLED, 8,0);
-            }
-
-
+        // Not initialized
+        if (trackerStatus == SD_SLAM::Tracking::NOT_INITIALIZED) {
+            circle(img, cv::Point(50,50),5, cv::Scalar(0,255,0),CV_FILLED, 8,0);
+        }
+        // Status OK
+        if (trackerStatus == SD_SLAM::Tracking::OK) {
+            circle(img, cv::Point(50,50),5, cv::Scalar(0,0,255),CV_FILLED, 8,0);
+        }
+        if (trackerStatus == SD_SLAM::Tracking::LOST) {
+            circle(img, cv::Point(50,50),5, cv::Scalar(255,0,0),CV_FILLED, 8,0);
+        }
 
 
     }
