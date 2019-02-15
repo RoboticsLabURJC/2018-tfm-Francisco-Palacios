@@ -160,8 +160,6 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
 
         draw();
-
-
     }
 
     public void useProgram(int programHandle){
@@ -361,18 +359,6 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
     public void draw(){
 
         GLES20.glEnableVertexAttribArray(mPositionHandle);
-/*
-        Matrix.multiplyMM(mMVPMatrix, 0, mViewMatrix, 0, mModelMatrix, 0);
-
-
-        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mMVPMatrix, 0);
-
-
-        GLES20.glLineWidth(3.0f);
-        //Necesario para camTrail
-
-        GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0); //Necesario para camTrail
-*/
 
         // Paint arrows
 		int nArrows = arrows.getNArrows();
@@ -425,7 +411,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
 
         transformModel(null, null, null);
-        FloatBuffer trailBuffer = camTrail.getFloatBufferTrail();
+        FloatBuffer trailBuffer = camTrail.getFloatBufferTrail(vKeyFramesPos);
         drawObject(trailBuffer, new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_LINE_STRIP,camTrail.getNumPoints(),0);
 */
         GLES20.glDisable(mColorHandle);

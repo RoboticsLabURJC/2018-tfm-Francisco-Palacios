@@ -46,7 +46,7 @@ extern "C"{
 
         try {
             cv::Mat * cimg = (cv::Mat*) img;
-            cv::Mat * vKFPs = (cv::Mat*) vKeyFrames;
+            cv::Mat * vKFPs = (cv::Mat*) vKeyFramesPos;
             cv::Mat * plane = (cv::Mat*) planeEq;
             cv::Mat * pose = (cv::Mat*) cameraPose;
             ss << ((SLAM::SDSLAMHandler*)slam)->TrackMonocular(*cimg, *vKFPs, *plane, *pose);
@@ -98,7 +98,6 @@ namespace SLAM {
 
         counter_++;
         return img.cols*1000 + img.rows*1000000 + counter_;
-        //return (int) pose(0,3);
     }
 
 
@@ -168,10 +167,6 @@ namespace SLAM {
                 Eigen::Vector3d mtcw = mTcw.block<3, 1>(0, 3);
 
                 Eigen::Vector3d cameraPos = mRcw * worldPos + mtcw;
-                double a = cameraPos[2];
-                if (a > 0) {
-
-                }
                 //cameraPos = rotMat * cameraPos;
 
                 vPoints.push_back(cameraPos);
