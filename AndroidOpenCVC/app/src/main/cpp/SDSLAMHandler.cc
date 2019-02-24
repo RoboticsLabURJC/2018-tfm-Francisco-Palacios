@@ -50,6 +50,38 @@ extern "C"{
 }
 
 
+extern "C"
+std::string jstring2string(JNIEnv *env, jstring jStr) {
+    if (!jStr)
+        return "";
+
+    const jclass stringClass = env->GetObjectClass(jStr);
+    const jmethodID getBytes = env->GetMethodID(stringClass, "getBytes", "(Ljava/lang/String;)[B");
+    const jbyteArray stringJbytes = (jbyteArray) env->CallObjectMethod(jStr, getBytes, env->NewStringUTF("UTF-8"));
+
+    size_t length = (size_t) env->GetArrayLength(stringJbytes);
+    jbyte* pBytes = env->GetByteArrayElements(stringJbytes, NULL);
+
+    std::string ret = std::string((char *)pBytes, length);
+    env->ReleaseByteArrayElements(stringJbytes, pBytes, JNI_ABORT);
+
+    env->DeleteLocalRef(stringJbytes);
+    env->DeleteLocalRef(stringClass);
+    return ret;
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_aopencvc_utils_SLAMHandler_SaveTrajectory(JNIEnv *env, jobject instance, jstring filepath_, jlong slam) {
+    //const char *filepath = env->GetStringUTFChars(filepath_, 0);
+    std::string filePathStd = jstring2string(env,filepath_);
+
+    ((SLAM::SDSLAMHandler*)slam)->SaveTrajectory(filePathStd);
+    //env->ReleaseStringUTFChars(filepath_, filepath);
+}
+
+
+
 using std::vector;
 
 namespace SLAM {
@@ -286,5 +318,101 @@ namespace SLAM {
 
         return true;
 
+    }
+
+
+
+    void SDSLAMHandler::SaveTrajectory(std::string filePath) {
+        int counter;
+        std::string output = "%YAML:1.0\n";
+
+        std::cout << "Saving trajectory to " << filePath << " ..." << std::endl;
+        SD_SLAM::Map * mpMap = slam->GetMap();
+        vector<SD_SLAM::KeyFrame*> vpKFs = mpMap->GetAllKeyFrames();
+        sort(vpKFs.begin(), vpKFs.end(), SD_SLAM::KeyFrame::lId);
+
+        std::ofstream f;
+        f.open(filePath.c_str());
+
+        // Save camera parameters
+        output += "camera:\n";
+        output += "  fx: " + ToString(SD_SLAM::Config::fx()) + "\n";
+        output += "  fy: " + ToString(SD_SLAM::Config::fy()) + "\n";
+        output += "  cx: " + ToString(SD_SLAM::Config::cx()) + "\n";
+        output += "  cy: " + ToString(SD_SLAM::Config::cy()) + "\n";
+        output += "  k1: " + ToString(SD_SLAM::Config::k1()) + "\n";
+        output += "  k2: " + ToString(SD_SLAM::Config::k2()) + "\n";
+        output += "  p1: " + ToString(SD_SLAM::Config::p1()) + "\n";
+        output += "  p2: " + ToString(SD_SLAM::Config::p2()) + "\n";
+        output += "  k3: " + ToString(SD_SLAM::Config::k3()) + "\n";
+
+        // Save keyframes
+        output += "keyframes:\n";
+
+        for(size_t i=0; i<vpKFs.size(); i++) {
+            SD_SLAM::KeyFrame* pKF = vpKFs[i];
+
+            if(pKF->isBad())
+                continue;
+
+            Eigen::Matrix4d pose = pKF->GetPoseInverse();
+            Eigen::Quaterniond q(pose.block<3, 3>(0, 0));
+            Eigen::Vector3d t = pose.block<3, 1>(0, 3);
+            output += "  - id: " + ToString(pKF->mnId) + "\n";
+            output += "    filename: \"" + pKF->mFilename + "\"\n";
+            output += "    pose:\n";
+            output += "      - " + ToString(q.w()) + "\n";
+            output += "      - " + ToString(q.x()) + "\n";
+            output += "      - " + ToString(q.y()) + "\n";
+            output += "      - " + ToString(q.z()) + "\n";
+            output += "      - " + ToString(t(0)) + "\n";
+            output += "      - " + ToString(t(1)) + "\n";
+            output += "      - " + ToString(t(2)) + "\n";
+        }
+
+        // Save map points
+        output += "points:\n";
+        counter = 0;
+
+        const vector<SD_SLAM::MapPoint*> &vpMPs = mpMap->GetAllMapPoints();
+        for (size_t i = 0, iend=vpMPs.size(); i < iend; i++) {
+            if (vpMPs[i]->isBad())
+                continue;
+            Eigen::Vector3d pos = vpMPs[i]->GetWorldPos();
+
+            output += "  - id: " +ToString(counter) + "\n";
+            output += "    pose:\n";
+            output += "      - " + ToString(pos(0)) + "\n";
+            output += "      - " + ToString(pos(1)) + "\n";
+            output += "      - " + ToString(pos(2)) + "\n";
+            output += "    observations:\n";
+
+            // Observations
+            std::map<SD_SLAM::KeyFrame*, size_t> observations = vpMPs[i]->GetObservations();
+
+            for (std::map<SD_SLAM::KeyFrame*, size_t>::iterator mit=observations.begin(), mend=observations.end(); mit != mend; mit++) {
+                SD_SLAM::KeyFrame* kf = mit->first;
+                const cv::KeyPoint &kp = kf->mvKeys[mit->second];
+
+                output += "      - kf: " + ToString(kf->mnId) + "\n";
+                output += "        pixel:\n";
+                output += "          - "+ ToString(kp.pt.x) + "\n";
+                output += "          - "+ ToString(kp.pt.y) + "\n";
+            }
+
+            counter++;
+        }
+
+        f << output;
+        f.close();
+        std::cout << "Trajectory saved!" << std::endl;
+    }
+
+    template <typename T>
+    std::string SDSLAMHandler::ToString(T value)
+    {
+        std::ostringstream os ;
+        os << value ;
+        return os.str() ;
     }
 }

@@ -30,6 +30,8 @@ namespace SLAM{
 
             SD_SLAM::Tracking::eTrackingState getTrackingStatus();
 
+            void SaveTrajectory(std::string filePath);
+
 
 
 
@@ -42,6 +44,9 @@ namespace SLAM{
         void FindMP(const std::vector<SD_SLAM::MapPoint*> &vMPs,std::vector<SD_SLAM::MapPoint *> &result);
 
         SD_SLAM::Tracking::eTrackingState trackerStatus;
+
+        template <typename T>
+        std::string ToString(T value);
 
         bool selectKP;
 

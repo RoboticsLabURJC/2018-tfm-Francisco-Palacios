@@ -5,13 +5,6 @@ import android.Manifest;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.hardware.display.DisplayManager;
-import android.hardware.display.VirtualDisplay;
-import android.media.MediaRecorder;
-import android.media.MediaScannerConnection;
-import android.media.projection.MediaProjection;
-import android.media.projection.MediaProjectionManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
@@ -49,6 +42,7 @@ public class ARCamera extends AppCompatActivity{
     private CameraBridgeViewBase mOpenCvCameraView;
     private int  REQUEST_CODE = 1000;
     private Recorder recorder;
+    private SLAMHandler slamHandler;
 
 
 
@@ -103,7 +97,7 @@ public class ARCamera extends AppCompatActivity{
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
 
-        SLAMHandler slamHandler = new SLAMHandler();
+        slamHandler = new SLAMHandler();
         CameraHandler cameraHandler = new CameraHandler(this.getBaseContext(), slamHandler, mGLView);
 
 
@@ -166,9 +160,14 @@ public class ARCamera extends AppCompatActivity{
 
     @Override
     public void onDestroy() {
+        slamHandler.SaveTraj();
         if (mOpenCvCameraView != null)
             mOpenCvCameraView.disableView();
-        recorder.onDestroy();
+        if (recorder != null){
+            recorder.onDestroy();
+        }
+
+
         super.onDestroy();
 
     }
