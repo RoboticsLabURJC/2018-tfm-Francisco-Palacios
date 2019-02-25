@@ -142,7 +142,6 @@ public class  CoordsObject {
 		return modelRotation;
 	}
 
-	
     public FloatBuffer getObjectcoordinates(){
         return coordinates;
     }

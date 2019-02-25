@@ -168,7 +168,7 @@ public class ARCamera extends AppCompatActivity{
     public void onDestroy() {
         if (mOpenCvCameraView != null)
             mOpenCvCameraView.disableView();
-        recorder.onDestroy();
+        recorder.onDestroy(this);
         super.onDestroy();
 
     }
