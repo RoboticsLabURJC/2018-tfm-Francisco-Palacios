@@ -23,8 +23,6 @@ public class SLAMHandler {
 
 
     // Native methods implemented by SLAM native library.
-
-    public native void getKeyFramePositions(long slam, long keyFramePos);
     private native long CreateSLAM();
     public native String TrackFrame(long slam, int param, long img, long vKFPs,
                                     long planeEq, long wPPoint);

@@ -8,16 +8,6 @@
 class System;
 
 
-
-extern "C"
-JNIEXPORT void JNICALL
-Java_aopencvc_utils_SLAMHandler_getKeyFramePositions(JNIEnv *env, jobject instance, jlong slam,
-                                                    jlong keyFramePos) {
-
-
-
-}
-
 using namespace Eigen;
 
 
