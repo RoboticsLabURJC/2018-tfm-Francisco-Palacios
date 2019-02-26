@@ -9,9 +9,11 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.hardware.display.VirtualDisplay;
 import android.media.MediaRecorder;
+import android.media.MediaScannerConnection;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
 import android.hardware.display.DisplayManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.RequiresApi;
@@ -115,7 +117,7 @@ public class Recorder {
 
 
 
-    public void onDestroy(){
+    public void onDestroy(Context context){
         if (recorder != null) {
             recorder.stop();
             recorder.release();
@@ -129,6 +131,14 @@ public class Recorder {
             virtual_display.release();
             virtual_display = null;
         }
+        MediaScannerConnection.scanFile(context,new String[]{Environment
+                .getExternalStoragePublicDirectory(Environment
+                        .DIRECTORY_DOWNLOADS) + "/video.mp4"},null,new MediaScannerConnection.OnScanCompletedListener() {
+            @Override
+            public void onScanCompleted(String path, Uri uri) {
+
+            }
+        });
     }
 
 

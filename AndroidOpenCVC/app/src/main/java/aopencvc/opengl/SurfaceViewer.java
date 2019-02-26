@@ -32,8 +32,8 @@ public class SurfaceViewer extends GLSurfaceView {
 
     }
 
-    public void putCameraRotation(Mat cr){
-        renderer.putCameraRotation(cr);
+    public void putVKeyFramesPos(Mat vKFPs){
+        renderer.putVKeyFramesPos(vKFPs);
     }
 
     public void putPlaneEquation(Mat pe){

@@ -23,7 +23,7 @@ namespace SLAM{
             SDSLAMHandler();
 
 
-            int TrackMonocular(cv::Mat &img, cv::Mat &rotation,
+            int TrackMonocular(cv::Mat &img, cv::Mat &KFpos,
                                cv::Mat &mOw, cv::Mat &pose);
 
             SD_SLAM::MapPoint * getMapPoints();
@@ -35,13 +35,20 @@ namespace SLAM{
 
 
 
+
     private:
 
-        void DrawFrame(SD_SLAM::System * slam, cv::Mat &img, cv::Mat &pose, cv::Mat &plane);
+        void DrawFrame(cv::Mat &img);
 
         bool DetectPlane(const vector<Eigen::Vector3d> vPoints, cv::Mat &result);
 
         void FindMP(const std::vector<SD_SLAM::MapPoint*> &vMPs,std::vector<SD_SLAM::MapPoint *> &result);
+
+        void GetPose(cv::Mat &pose);
+
+        void GetKFPositions(cv::Mat &KFPos);
+
+        void GetPlaneEquation(cv::Mat &planeEq, cv::Mat pose);
 
         SD_SLAM::Tracking::eTrackingState trackerStatus;
 
@@ -52,7 +59,8 @@ namespace SLAM{
 
         int counter_;
 
-        long nKeyFrames;
+        SD_SLAM::Tracking * tracker;
+
 
         SD_SLAM::MapPoint * CurrentMP;
 

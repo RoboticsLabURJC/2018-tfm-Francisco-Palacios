@@ -77,7 +77,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
     private float[] objectPoint = {4.3f,-0.07f,2.32f};
 
     private Arrow arrows;
-    private Mat cameraRotation;
+    private Mat vKeyFramesPos;
     private Mat planeEquation;
     private Mat cameraPose;
 
@@ -87,14 +87,13 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
 
     public ObjectRenderer(){
-        cameraRotation = new Mat(1,3, CV_64F, Scalar.all(0.0));
         planeEquation = new Mat(1,4, CV_32F, Scalar.all(0.0));
         cameraPose = new Mat(4,4, CV_64F, Scalar.all(0.0));
 
     }
 
-    public void putCameraRotation(Mat cr){
-        cameraRotation = cr;
+    public void putVKeyFramesPos(Mat vKFPs){
+        vKeyFramesPos = vKFPs;
     }
 
     public void putPlaneEquation(Mat pe){
@@ -156,31 +155,11 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
             mViewMatrix[i] = (float) cameraPose.get(i % cameraPose.cols(),
                     i / cameraPose.cols())[0];
         }
-
-        camTrail.AddTrailData(new float[] { -mViewMatrix[12],
-                                            mViewMatrix[13],
-                                            mViewMatrix[14]});
-
-
-        if (last != mViewMatrix[14]){
-            last = mViewMatrix[14];
-            //System.out.println(mViewMatrix[12] +", "+mViewMatrix[13] + ", " + mViewMatrix[14]);
-        }
-
-
-
-
-	/*		
-		Esto se supone que cambia NDC de left-handed a right-handed, necesitare probarlo.
-		glDepthRange(1.0f, 0.0f)
-		*/
-
+        
 
 
 
         draw();
-
-
     }
 
     public void useProgram(int programHandle){
@@ -380,18 +359,6 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
     public void draw(){
 
         GLES20.glEnableVertexAttribArray(mPositionHandle);
-/*
-        Matrix.multiplyMM(mMVPMatrix, 0, mViewMatrix, 0, mModelMatrix, 0);
-
-
-        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mMVPMatrix, 0);
-
-
-        GLES20.glLineWidth(3.0f);
-        //Necesario para camTrail
-
-        GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0); //Necesario para camTrail
-*/
 
         // Paint arrows
 		int nArrows = arrows.getNArrows();
@@ -444,7 +411,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
 /*
         transformModel(null, null, null);
-        FloatBuffer trailBuffer = camTrail.getFloatBufferTrail();
+        FloatBuffer trailBuffer = camTrail.getFloatBufferTrail(vKeyFramesPos);
         drawObject(trailBuffer, new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_LINE_STRIP,camTrail.getNumPoints(),0);
 
         GLES20.glDisable(mColorHandle);

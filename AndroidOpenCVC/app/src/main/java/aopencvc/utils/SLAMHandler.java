@@ -1,5 +1,8 @@
 package aopencvc.utils;
 
+import android.content.Context;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Environment;
 
 import org.opencv.core.Mat;
@@ -16,18 +19,17 @@ public class SLAMHandler {
     }
 
 
-    public String TrackFrame(Mat image, Mat cameraRotation, Mat planeEq, Mat worldPosPoint) {
 
+    public String TrackFrame(Mat image, Mat vKeyFramesPos, Mat planeEq, Mat worldPosPoint) {
         String a = this.TrackFrame(this.nativeSLAM, 33, image.getNativeObjAddr(),
-                cameraRotation.getNativeObjAddr(), planeEq.getNativeObjAddr(),
+                vKeyFramesPos.getNativeObjAddr(), planeEq.getNativeObjAddr(),
                 worldPosPoint.getNativeObjAddr());
-        //System.out.println("Punto param z: " + planeEq.toString());
 
         return a;
     }
 
 
-    public void SaveTraj(){
+    public void SaveTraj(Context context){
         String filepath = Environment.getExternalStoragePublicDirectory(Environment
                 .DIRECTORY_DOWNLOADS) + "/trajectory.yaml";
 
@@ -43,15 +45,25 @@ public class SLAMHandler {
         }
 */
         SaveTrajectory(filepath, this.nativeSLAM);
+
+        MediaScannerConnection.scanFile(context,new String[]{filepath},null,new MediaScannerConnection.OnScanCompletedListener() {
+            @Override
+            public void onScanCompleted(String path, Uri uri) {
+
+            }
+        });
     }
 
 
     // Native methods implemented by SLAM native library.
 
+
     private native void SaveTrajectory(String filepath, long slam);
 
+    // Native methods implemented by SLAM native library.
     private native long CreateSLAM();
-    private native String TrackFrame(long slam, int param, long img, long rotation,
+
+    public native String TrackFrame(long slam, int param, long img, long vKFPs,
                                     long planeEq, long wPPoint);
 
 }

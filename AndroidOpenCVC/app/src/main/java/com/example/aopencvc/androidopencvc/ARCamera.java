@@ -160,12 +160,13 @@ public class ARCamera extends AppCompatActivity{
 
     @Override
     public void onDestroy() {
-        slamHandler.SaveTraj();
+        slamHandler.SaveTraj(this);
         if (mOpenCvCameraView != null)
             mOpenCvCameraView.disableView();
         if (recorder != null){
-            recorder.onDestroy();
+            recorder.onDestroy(this);
         }
+
         super.onDestroy();
 
     }
