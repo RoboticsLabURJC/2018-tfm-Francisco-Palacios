@@ -144,7 +144,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
        //         modelRotation[1],modelRotation[2]);
 
         //Matrix.scaleM(mModelMatrix,0,0.25f,0.25f,0.25f);
-        coordsObject.putPoint(point);
+        coordsObject.putPoint(objectPoint);
         coordsObject.putModelRotation(modelRotation);
         //------------------------------------------------------------------------------------------
 
@@ -421,7 +421,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
 
 
-/*
+
         transformModel(null,coordsObject.getPoint(),coordsObject.getModelRotation());
 
         // Draw coords object
@@ -442,14 +442,14 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
 
 
-
+/*
         transformModel(null, null, null);
         FloatBuffer trailBuffer = camTrail.getFloatBufferTrail();
         drawObject(trailBuffer, new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_LINE_STRIP,camTrail.getNumPoints(),0);
-*/
+
         GLES20.glDisable(mColorHandle);
         GLES20.glDisableVertexAttribArray(mPositionHandle);
-
+*/
     }
 
 
