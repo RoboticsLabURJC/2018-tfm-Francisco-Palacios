@@ -19,7 +19,9 @@ public class CamTrail {
     }
 
 
-
+    /**
+    Execute only after getFloatBufferTrail(Mat vKeyFramesPos)
+     **/
     public int getNumPoints(){
         return numPoints;
     }

@@ -71,7 +71,7 @@ public class CameraHandler implements CameraBridgeViewBase.CvCameraViewListener2
 
 
 
-        vKeyFrames = new Mat(1,3, CV_64F, Scalar.all(0.0));
+        //vKeyFrames = new Mat(1,3, CV_64F, Scalar.all(0.0));
         // Process frame
         //long startTime = System.currentTimeMillis();
         String res = slamHandler.TrackFrame(resized, vKeyFrames, planeEq, cameraPose);
