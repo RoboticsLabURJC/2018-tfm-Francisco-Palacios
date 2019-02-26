@@ -109,7 +109,7 @@ namespace SLAM {
         SD_SLAM::Config &config = SD_SLAM::Config::GetInstance();
 
 
-        Eigen::Matrix4d ePose = slam->TrackMonocular(gray);
+        slam->TrackMonocular(gray);
         tracker = slam->GetTracker();
         trackerStatus = tracker->GetLastState();
         // Draw in image
@@ -139,7 +139,8 @@ namespace SLAM {
 
     void SDSLAMHandler::GetPose(cv::Mat &pose){
 
-        Eigen::Matrix4d mTcw = tracker->GetCurrentFrame().GetPose();
+        Eigen::Matrix4d mTwc = tracker->GetCurrentFrame().GetPoseInverse();
+        /*
         Eigen::Matrix3d mRcw = mTcw.block<3, 3>(0, 0);
         Eigen::Vector3d mtcw = mTcw.block<3, 1>(0, 3);
         Eigen::Matrix3d rotMat;
@@ -158,8 +159,9 @@ namespace SLAM {
         newPose.block<3, 3>(0, 0) = mRcwRotated;
         newPose.block<3, 1>(0, 3) = mtcwRotated;
         newPose.block<1,4>(3,0) = mTcw.block<1,4>(3,0);
+         */
         for (int i = 0;i<pose.rows * pose.cols;i++){
-            pose.at<double>(i%4,i/4) = newPose(i);
+            pose.at<double>(i%4,i/4) = mTwc(i);
         }
     }
 
