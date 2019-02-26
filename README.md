@@ -8,9 +8,27 @@
 - [Weeks 9-11 - Improving the AR app](#week4)
 - [Weeks 12-13 - Pattern initialization and resolution reduction](#week5)
 - [Weeks 14-18 - Adding some new features](#week6)
-
+- [Weeks 19-24 - Solving problems: SelfRecorder, CamTrail and Arrows](#week7)
 ## References
 The contents of android-AccelerometerPlay are from https://github.com/googlesamples/android-AccelerometerPlay/.
+
+<a name="week7"></a>
+## Weeks 19-24
+
+### #In progress
+It's been a while since my last report. In this time, i found some problems with the functionalities implemented in the program.
+
+- SelfRecorder: Due to the characteristics of the device in which I do the tests, make a recording of what the app shows becomes very tedious, due to the consumption of resources that the app + self recordings do. So I've created a half way method that stores the trajectory followed during a test. With that I intend to alleviate the overload and still have something to show.
+
+- CamTrail: Until now the camera trail was static, every time the ACUTAL pose was modified, its position was saved in a list that was later rendered with GLES. This presented some problems when using it, often creating errors in how it was represented. I have modified this, so that what is rendered is the positions of the KeyFrames collected by SD-SLAM. This will cause this trail to be dynamic and change according to the information collected by SD-SLAM and making it more precise.
+### #mysterious symbol??
+
+- Arrows: I thought I was done fighting with this functionality. Nothing further. It seems that it still had problems in locating exactly where to represent the arrows and their direction. So i...
+### #ToDo: complete Arrows report
+
+### #ToDo: what's to come
+
+### #ToDo: video
 
 <a name="week6"></a>
 ## Weeks 14-18
