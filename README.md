@@ -23,12 +23,10 @@ It's been a while since my last report. In this time, i found some problems with
 - CamTrail: Until now the camera trail was static, every time the ACUTAL pose was modified, its position was saved in a list that was later rendered with GLES. This presented some problems when using it, often creating errors in how it was represented. I have modified this, so that what is rendered is the positions of the KeyFrames collected by SD-SLAM. This will cause this trail to be dynamic and change according to the information collected by SD-SLAM and making it more precise.
 ### #mysterious symbol??
 
-- Arrows: I thought I was done fighting with this functionality. Nothing further. It seems that it still had problems in locating exactly where to represent the arrows and their direction. So i...
-### #ToDo: complete Arrows report
+- Arrows: I thought I was done fighting with this functionality. Nothing further. It seems that it still had problems in locating exactly where to represent the arrows and their direction.
 
-### #ToDo: what's to come
+In the near future, i also will be working on including the IMU sensor values to help SD-SLAM with the localization task.
 
-### #ToDo: video
 
 <a name="week6"></a>
 ## Weeks 14-18

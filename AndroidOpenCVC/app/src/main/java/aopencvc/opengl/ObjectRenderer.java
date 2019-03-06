@@ -5,6 +5,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
+import android.os.SystemClock;
 
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
@@ -13,6 +14,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 import javax.microedition.khronos.opengles.GL10;
@@ -70,18 +72,24 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
     private float fy = 1081.398961189691f;
 
-                                    //1,0,0 // 0,1.3f,0
-    private float[][] directions = {{1,0,0},{0,0,1},{1,0,0},{0,-1,0}};
-    private float[][] points = {{0,1.3f,0},{1.2f,1.3f,0},{1.2f,1.3f,-2.32f},{4.3f,0.07f,-2.32f}};
+                                 //1,0,0 // 0,1.3f,0
+    private float[][] directions = {{1,0,0},{0,0,1},{1,0,0},{0,1,0}};
+    private float[][] points = {{0,-1.3f,0},{1.2f,-1.3f,0},{1.2f,-1.3f,2.32f},{4.3f,-1.3f,2.32f}};
 
-    private float[] objectPoint = {4.3f,-0.07f,2.32f};
+/*
+    private float[][] directions = {{1,0,0},{0,-1,0},{-1,0,0},{0,1,0}};
+    private float[][] points = {{0,0.5f,-1f},{0.5f,0,-1f},{0,-0.5f,-1f},{-0.5f,0,-1f}};
+*/
+
+    private float[] objectPoint = {0.5f,0,-2.0f};
 
     private Arrow arrows;
     private Mat vKeyFramesPos;
     private Mat planeEquation;
     private Mat cameraPose;
-
+    private Float prev;
     private CamTrail camTrail;
+
 
     private float last = 0;
 
@@ -122,7 +130,6 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
 
 
-
         //Debemos rotar la normal 180º alrededor de la X como hicimos con la pose. Esto es por que
         //aun que anteriormente no rotamos lo puntos, ahora la normal esta mal calculada y esta apuntando e
         // Z positivo, cuando lo que queremos es que apunte en Z negativo.
@@ -134,7 +141,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
         //-------------------------------Modelo translacion rotacion--------------------------------
 
-        float[] normal = {mPlaneParams[0],-mPlaneParams[1],-mPlaneParams[2]};
+        float[] normal = {mPlaneParams[0],mPlaneParams[1],mPlaneParams[2]};
 
 
 //        Matrix.translateM(mModelMatrix,0, point[0], point[1], point[2]);
@@ -155,8 +162,13 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
             mViewMatrix[i] = (float) cameraPose.get(i % cameraPose.cols(),
                     i / cameraPose.cols())[0];
         }
-        
 
+        //float time = SystemClock.uptimeMillis() % 1000f;
+
+        //mViewMatrix[14] = mViewMatrix[14] + (2f * (time/1000));
+
+
+       // mViewMatrix[12] = -mViewMatrix[12];
 
 
         draw();
@@ -220,18 +232,6 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         //Coordenadas y rotacion para el objeto
         Matrix.setIdentityM(mModelMatrix, 0);
 
-        float[] mPlaneParams = new float[4];
-        for (int i = 0;mPlaneParams.length>i;i++){
-            mPlaneParams[i] = (float) planeEquation.get(0,i)[0];
-        }
-        planeEquation.get(0,0,mPlaneParams);
-
-
-        float[] point = {0.0f,0.0f,2f};
-
-
-
-
         //Debemos rotar la normal 180º alrededor de la X como hicimos con la pose. Esto es por que
         //aun que anteriormente no rotamos lo puntos, ahora la normal esta mal calculada y esta apuntando e
         // Z positivo, cuando lo que queremos es que apunte en Z negativo.
@@ -243,11 +243,6 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
         //-------------------------------Modelo translacion rotacion--------------------------------
 
-        float[] normal = {mPlaneParams[0],-mPlaneParams[1],-mPlaneParams[2]};
-
-        float[] modelRotation = parallelizeVectors(new float[] {0.0f,1.0f,0.0f}, normal);
-        coordsObject.putPoint(point);
-        coordsObject.putModelRotation(modelRotation);
 
         shaders = new Shaders();
         useProgram(shaders.getProgramHandle());
@@ -333,10 +328,23 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
             Matrix.translateM(mModelMatrix, 0, translation[0], translation[1], translation[2]);
 
             if (modelRotation == null) {
-                modelRotation = parallelizeVectors(new float[]{0.0f, 0.0f, 1.0f}, rotationVecParallel);
+                float[] vecToParallel = new float[]{0.0f, 0.0f, 1.0f};
+                if (Arrays.equals(rotationVecParallel,vecToParallel)){
+                    modelRotation = null;
+                }else if (Arrays.equals(rotationVecParallel,new float[]{0.0f, 0.0f, -1.0f})) {
+                    modelRotation = new float[]{0.0f, 1.0f, 0.0f,(float)Math.PI};
+                }else{
+                    modelRotation = parallelizeVectors(vecToParallel, rotationVecParallel);
+                }
+
             }
-            Matrix.rotateM(mModelMatrix, 0, modelRotation[3] * 57.2958f, modelRotation[0],
-                    modelRotation[1], modelRotation[2]);
+            if (modelRotation != null){
+                Matrix.rotateM(mModelMatrix, 0, modelRotation[3] * 57.2958f, modelRotation[0],
+                        modelRotation[1], modelRotation[2]);
+            }else{
+
+            }
+
 
             Matrix.scaleM(mModelMatrix, 0, 0.25f, 0.25f, 0.25f);
         }
@@ -359,7 +367,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
     public void draw(){
 
         GLES20.glEnableVertexAttribArray(mPositionHandle);
-
+/*
         // Paint arrows
 		int nArrows = arrows.getNArrows();
         float[] directionsArr = arrows.getDirections();
@@ -373,7 +381,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
             drawObject(arrowBuffer[1], new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_LINES,2,0);
 
 		}
-
+*/
 /*
         transformModel(new float[]{1,0,0},
                 new float[]{0,1.3f,1}, null);
@@ -387,9 +395,9 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 */
 
 
+/*
 
-
-        transformModel(null,coordsObject.getPoint(),coordsObject.getModelRotation());
+        transformModel(new float[]{0.0f,1.0f,0.0f},coordsObject.getPoint(),null); //coordsObject.getModelRotation());
 
         // Draw coords object
         //transformModel(null,coordsObject.getPoint(),coordsObject.getModelRotation());
@@ -407,13 +415,16 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 		drawObject(CoordinatesBuffer, new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_LINES,2, 2);
 		drawObject(CoordinatesBuffer, new float[]{0.0f,0.0f,1.0f,1.0f},GLES20.GL_LINES,2, 4);
 
+*/
 
 
-/*
         transformModel(null, null, null);
         FloatBuffer trailBuffer = camTrail.getFloatBufferTrail(vKeyFramesPos);
-        drawObject(trailBuffer, new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_LINE_STRIP,camTrail.getNumPoints(),0);
+        if (trailBuffer != null) {
+            drawObject(trailBuffer, new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_LINE_STRIP,camTrail.getNumPoints(),0);
+        }
 
+/*
         GLES20.glDisable(mColorHandle);
         GLES20.glDisableVertexAttribArray(mPositionHandle);
 */

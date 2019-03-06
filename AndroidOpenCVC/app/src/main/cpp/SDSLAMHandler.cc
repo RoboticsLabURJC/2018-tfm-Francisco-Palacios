@@ -122,16 +122,16 @@ namespace SLAM {
         return img.cols*1000 + img.rows*1000000 + counter_;
     }
 
-
     void SDSLAMHandler::GetKFPositions(cv::Mat &KFPos){
         std::vector<SD_SLAM::KeyFrame *> vKF = slam->GetMap()->GetAllKeyFrames();
-        KFPos = *new cv::Mat(vKF.size(), 3, CV_64F);
+        sort(vKF.begin(), vKF.end(), SD_SLAM::KeyFrame::lId);
+        KFPos = *new cv::Mat(vKF.size(), 4, CV_32F);
         for (int i = 0; i< vKF.size();i++){
             SD_SLAM::KeyFrame * KF = vKF.at(i);
-            Matrix4d KFpose = KF->GetPose();
-            KFPos.at<float>(i,0) = KFpose(12);
-            KFPos.at<float>(i,1) = KFpose(13);
-            KFPos.at<float>(i,2) = KFpose(14);
+            Matrix4d KFpose = KF->GetPoseInverse();
+            KFPos.at<float>(i,0) = (float) KFpose(0,3);
+            KFPos.at<float>(i,1) = -(float) KFpose(1,3);
+            KFPos.at<float>(i,2) = -(float) KFpose(2,3);
         }
     }
 
@@ -160,6 +160,12 @@ namespace SLAM {
         newPose.block<3, 1>(0, 3) = mtcwRotated;
         newPose.block<1,4>(3,0) = mTcw.block<1,4>(3,0);
          */
+
+
+        Eigen::Quaterniond q(mTwc.block<3, 3>(0, 0));
+        q = *new Eigen::Quaterniond(q.w(),-q.x(),q.y(),q.z());
+        mTwc.block<3, 3>(0, 0) = q.toRotationMatrix();
+        mTwc(0,3) = -mTwc(0,3);
         for (int i = 0;i<pose.rows * pose.cols;i++){
             pose.at<double>(i%4,i/4) = mTwc(i);
         }
@@ -204,6 +210,7 @@ namespace SLAM {
                 planeEq.at<float>(0, 1) = result.at<float>(0, 1);
                 planeEq.at<float>(0, 2) = result.at<float>(0, 2);
                 planeEq.at<float>(0, 3) = result.at<float>(0, 3);
+                selectKP = false;
             }
         }
 
@@ -297,8 +304,7 @@ namespace SLAM {
             const float f = 1.0f / sqrt(a * a + b * b + c * c + d * d);
 
             for (int i = 0; i < N; i++)
-                vDistances[i] =
-                        fabs(vPoints[i](0) * a + vPoints[i](1) * b + vPoints[i](2) * c + d) * f;
+                vDistances[i] = fabs(vPoints[i](0) * a + vPoints[i](1) * b + vPoints[i](2) * c + d) * f;
 
             vector<float> vSorted = vDistances;
             sort(vSorted.begin(), vSorted.end());
