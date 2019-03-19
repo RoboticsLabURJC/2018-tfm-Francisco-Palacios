@@ -81,7 +81,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
     private float[][] points = {{0,0.5f,-1f},{0.5f,0,-1f},{0,-0.5f,-1f},{-0.5f,0,-1f}};
 */
 
-    private float[] objectPoint = {0.5f,0,-2.0f};
+    private float[] objectPoint = {0f,0,-2.0f};
 
     private Arrow arrows;
     private Mat vKeyFramesPos;
@@ -126,7 +126,6 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         planeEquation.get(0,0,mPlaneParams);
 
 
-        float[] point = {0.0f,0.0f,2f};
 
 
 
@@ -273,7 +272,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
     public void onSurfaceChanged(GL10 unused, int width, int height) {
 
-        GLES20.glViewport(0, 0, width, height);
+        GLES20.glViewport(0, 0, width, -height);
 
 
         final float ratio = (float) width / height;
@@ -291,18 +290,18 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         mProjectionMatrix[3] = 0.0f;
 
         mProjectionMatrix[4] = 0.0f;
-        mProjectionMatrix[5] = 2*fy/height;
+        mProjectionMatrix[5] = -2*fy/height; //mProjectionMatrix[5] = 2*fy/height;
         mProjectionMatrix[6] = 0.0f;
         mProjectionMatrix[7] = 0.0f;
 
         mProjectionMatrix[8] = 1.0f - (2*cx/width);
-        mProjectionMatrix[9] = 2*cy/height - 1.0f;
-        mProjectionMatrix[10] = -(zfar+znear)/(zfar-znear);
-        mProjectionMatrix[11] = -1.0f;
+        mProjectionMatrix[9] = (2*cy/height) - 1.0f; //mProjectionMatrix[9] = 2*cy/height - 1.0f;
+        mProjectionMatrix[10] = (zfar+znear)/(znear-zfar); //mProjectionMatrix[10] = -(zfar+znear)/(zfar-znear);
+        mProjectionMatrix[11] = 1.0f;
 
         mProjectionMatrix[12] = 0.0f;
         mProjectionMatrix[13] = 0.0f;
-        mProjectionMatrix[14] = -2.0f * zfar * znear / (zfar-znear);
+        mProjectionMatrix[14] = 2.0f * zfar * znear / (znear-zfar); //mProjectionMatrix[14] = -2.0f * zfar * znear / (zfar-znear);
         mProjectionMatrix[15] = 0.0f;
 
     }
@@ -395,7 +394,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 */
 
 
-/*
+
 
         transformModel(new float[]{0.0f,1.0f,0.0f},coordsObject.getPoint(),null); //coordsObject.getModelRotation());
 
@@ -415,7 +414,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 		drawObject(CoordinatesBuffer, new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_LINES,2, 2);
 		drawObject(CoordinatesBuffer, new float[]{0.0f,0.0f,1.0f,1.0f},GLES20.GL_LINES,2, 4);
 
-*/
+/*
 
 
         transformModel(null, null, null);
@@ -423,7 +422,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         if (trailBuffer != null) {
             drawObject(trailBuffer, new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_LINE_STRIP,camTrail.getNumPoints(),0);
         }
-
+*/
 /*
         GLES20.glDisable(mColorHandle);
         GLES20.glDisableVertexAttribArray(mPositionHandle);

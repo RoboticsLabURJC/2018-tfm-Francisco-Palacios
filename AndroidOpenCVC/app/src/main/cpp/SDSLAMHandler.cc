@@ -163,9 +163,11 @@ namespace SLAM {
 
 
         Eigen::Quaterniond q(mTwc.block<3, 3>(0, 0));
-        q = *new Eigen::Quaterniond(q.w(),-q.x(),q.y(),q.z());
+        q = *new Eigen::Quaterniond(q.w(),q.x(),q.y(),q.z());
         mTwc.block<3, 3>(0, 0) = q.toRotationMatrix();
-        mTwc(0,3) = -mTwc(0,3);
+        mTwc(2,3) = mTwc(2,3);
+        mTwc(1,3) = mTwc(1,3);
+
         for (int i = 0;i<pose.rows * pose.cols;i++){
             pose.at<double>(i%4,i/4) = mTwc(i);
         }
