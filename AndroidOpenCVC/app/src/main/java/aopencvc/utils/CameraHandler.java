@@ -30,6 +30,7 @@ public class CameraHandler implements CameraBridgeViewBase.CvCameraViewListener2
     private SurfaceViewer mGLView;
     private long sumTime;
     private int countTime;
+    private boolean firstIt;
 
     public CameraHandler(Context context, SLAMHandler slamHandler, SurfaceViewer mGLView) {
         this.context = context;
@@ -39,7 +40,7 @@ public class CameraHandler implements CameraBridgeViewBase.CvCameraViewListener2
         this.mGLView = mGLView;
         sumTime = 0;
         countTime= 0;
-
+        firstIt = true;
     }
 
 
@@ -66,6 +67,10 @@ public class CameraHandler implements CameraBridgeViewBase.CvCameraViewListener2
 
         Mat image = inputFrame.rgba();
 
+        if (firstIt){
+            ExtrinsicsCalculator.SolvePnP(image);
+            firstIt = false;
+        }
 
         int irows = image.rows();
         int icols = image.cols();

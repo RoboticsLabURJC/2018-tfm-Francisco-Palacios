@@ -19,6 +19,8 @@ import java.util.Arrays;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import aopencvc.utils.ExtrinsicsCalculator;
+
 import static org.opencv.core.CvType.CV_32F;
 import static org.opencv.core.CvType.CV_64F;
 
@@ -72,6 +74,8 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
     private float fy = 1081.398961189691f;
 
+    private ExtrinsicsCalculator eC;
+
                                  //1,0,0 // 0,1.3f,0
     private float[][] directions = {{1,0,0},{0,0,1},{1,0,0},{0,1,0}};
     private float[][] points = {{0,-1.3f,0},{1.2f,-1.3f,0},{1.2f,-1.3f,2.32f},{4.3f,-1.3f,2.32f}};
@@ -81,7 +85,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
     private float[][] points = {{0,0.5f,-1f},{0.5f,0,-1f},{0,-0.5f,-1f},{-0.5f,0,-1f}};
 */
 
-    private float[] objectPoint = {0.5f,0,-2.0f};
+    private float[] objectPoint = {0.0f,0,-2.0f};
 
     private Arrow arrows;
     private Mat vKeyFramesPos;
@@ -91,13 +95,12 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
     private CamTrail camTrail;
 
 
-    private float last = 0;
+    private boolean usingArrows = true;
 
 
     public ObjectRenderer(){
         planeEquation = new Mat(1,4, CV_32F, Scalar.all(0.0));
         cameraPose = new Mat(4,4, CV_64F, Scalar.all(0.0));
-
     }
 
     public void putVKeyFramesPos(Mat vKFPs){
@@ -157,21 +160,56 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
 
 
-
         for (int i = 0;i<mViewMatrix.length;i++) {
             mViewMatrix[i] = (float) cameraPose.get(i % cameraPose.cols(),
                     i / cameraPose.cols())[0];
         }
 
-        //float time = SystemClock.uptimeMillis() % 1000f;
+        if (usingArrows){
+            float[] tOffSet = ExtrinsicsCalculator.getCameraTranslation();
+            mViewMatrix[12] = mViewMatrix[12] + tOffSet[0];
+            mViewMatrix[13] = mViewMatrix[13] + tOffSet[1];
+            mViewMatrix[14] = mViewMatrix[14] + tOffSet[2];
+        }
 
-        //mViewMatrix[14] = mViewMatrix[14] + (2f * (time/1000));
+        mViewMatrix = ObjectRenderer.ChangeXDirection(mViewMatrix);
 
-
-       // mViewMatrix[12] = -mViewMatrix[12];
 
 
         draw();
+    }
+
+
+    public static float[] ChangeXDirection(float[] transMatrix){
+        float[] matrixChangeXDir = new float[16];
+
+        for(int i = 0;i<matrixChangeXDir.length;i++){
+            matrixChangeXDir[i] = 0;
+        }
+        float w = (float) Math.sqrt(1.0f + transMatrix[0] + transMatrix[5] + transMatrix[11]) / 2.0f;
+        float w4 = (4.0f * w);
+        float x = (transMatrix[6] - transMatrix[9]) / w4 ;
+        float y = (transMatrix[8] - transMatrix[2]) / w4 ;
+        float z = (transMatrix[1] - transMatrix[4]) / w4 ;
+
+        x = -x;
+
+        transMatrix[0] = (1.0f - ( 2.0f *(y * y) - 2.0f * (z * z)));
+        transMatrix[1] = (2.0f *(x * y) + 2.0f *(z * w));
+        transMatrix[2] = (2.0f *(x * z) - 2.0f * (y * w));
+
+        transMatrix[4] = (2.0f *(x * y) - 2.0f * (z * w));
+        transMatrix[5] = (1.0f - (2.0f *(x * x) - 2.0f * (z * z)));
+        transMatrix[6] = (2.0f * (y * z) + 2.0f * (x * w));
+
+        transMatrix[8] = (2.0f * (x * z) + (y * w));
+        transMatrix[9] = (2.0f *(y * z) - (x * w));
+        transMatrix[10] = (1.0f - ((2.0f *x * x) - 2.0f *(y * y)));
+
+        transMatrix[12] = -transMatrix[12];
+
+        return transMatrix;
+
     }
 
     public void useProgram(int programHandle){
@@ -285,6 +323,10 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         float zfar = 100.0f;
         float znear = 0.5f;
 
+
+
+
+
         mProjectionMatrix[0] = 2*fx/width;
         mProjectionMatrix[1] = 0.0f;
         mProjectionMatrix[2] = 0.0f;
@@ -304,6 +346,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         mProjectionMatrix[13] = 0.0f;
         mProjectionMatrix[14] = -2.0f * zfar * znear / (zfar-znear);
         mProjectionMatrix[15] = 0.0f;
+
 
     }
 
@@ -395,7 +438,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 */
 
 
-/*
+
 
         transformModel(new float[]{0.0f,1.0f,0.0f},coordsObject.getPoint(),null); //coordsObject.getModelRotation());
 
@@ -415,15 +458,15 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 		drawObject(CoordinatesBuffer, new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_LINES,2, 2);
 		drawObject(CoordinatesBuffer, new float[]{0.0f,0.0f,1.0f,1.0f},GLES20.GL_LINES,2, 4);
 
-*/
 
+/*
 
         transformModel(null, null, null);
         FloatBuffer trailBuffer = camTrail.getFloatBufferTrail(vKeyFramesPos);
         if (trailBuffer != null) {
             drawObject(trailBuffer, new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_LINE_STRIP,camTrail.getNumPoints(),0);
         }
-
+*/
 /*
         GLES20.glDisable(mColorHandle);
         GLES20.glDisableVertexAttribArray(mPositionHandle);

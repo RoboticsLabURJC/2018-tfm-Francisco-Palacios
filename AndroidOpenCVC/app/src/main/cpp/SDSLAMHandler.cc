@@ -161,11 +161,12 @@ namespace SLAM {
         newPose.block<1,4>(3,0) = mTcw.block<1,4>(3,0);
          */
 
-
+/*
         Eigen::Quaterniond q(mTwc.block<3, 3>(0, 0));
         q = *new Eigen::Quaterniond(q.w(),-q.x(),q.y(),q.z());
         mTwc.block<3, 3>(0, 0) = q.toRotationMatrix();
         mTwc(0,3) = -mTwc(0,3);
+*/
         for (int i = 0;i<pose.rows * pose.cols;i++){
             pose.at<double>(i%4,i/4) = mTwc(i);
         }
@@ -365,7 +366,7 @@ namespace SLAM {
             Eigen::Quaterniond q(pose.block<3, 3>(0, 0));
             Eigen::Vector3d t = pose.block<3, 1>(0, 3);
             output += "  - id: " + ToString(pKF->mnId) + "\n";
-            output += "    filename: \"" + pKF->mFilename + "\"\n";
+           // output += "    filename: \"" + pKF->mFilename + "\"\n";
             output += "    pose:\n";
             output += "      - " + ToString(q.w()) + "\n";
             output += "      - " + ToString(q.x()) + "\n";
