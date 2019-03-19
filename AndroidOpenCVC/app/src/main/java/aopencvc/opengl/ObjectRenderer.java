@@ -164,9 +164,13 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
         if (usingArrows){
             float[] tOffSet = ExtrinsicsCalculator.getCameraTranslation();
-            mViewMatrix[12] = mViewMatrix[12] + tOffSet[0];
-            mViewMatrix[13] = mViewMatrix[13] + tOffSet[1];
-            mViewMatrix[14] = mViewMatrix[14] + tOffSet[2];
+            if (tOffSet != null){
+                mViewMatrix[12] = mViewMatrix[12] + tOffSet[0];
+                mViewMatrix[13] = mViewMatrix[13] + tOffSet[1];
+                mViewMatrix[14] = mViewMatrix[14] + tOffSet[2];
+                System.out.println("Offseeett: " +tOffSet[2]);
+            }
+
         }
 
         mViewMatrix = ObjectRenderer.ChangeXDirection(mViewMatrix);

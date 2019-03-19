@@ -32,10 +32,10 @@ public class ExtrinsicsCalculator {
      private static void init(){
          solvePnpResult = new double[4][4];
          List<Point3> objectPoints = new ArrayList<>();
-         objectPoints.add(new Point3(0,0,0)); ///leftup corner 3d
-         objectPoints.add(new Point3(0,0,0)); //rightup corner 3d
-         objectPoints.add(new Point3(0,0,0));  //leftdown corner 3d
-         objectPoints.add(new Point3(0,0,0));  //rightdown corner 3d
+         objectPoints.add(new Point3(1.086f,0.2245f,0.277f)); ///leftup corner 3d
+         objectPoints.add(new Point3(1.1715f,0.2245f,0.277f)); //rightup corner 3d
+         objectPoints.add(new Point3(1.086f,0.082f,0.277f));  //leftdown corner 3d
+         objectPoints.add(new Point3(1.1715f,0.082f,0.277f));  //rightdown corner 3d
 
          extCorner3D = new MatOfPoint3f();
          extCorner3D.fromList(objectPoints);
@@ -118,8 +118,13 @@ public class ExtrinsicsCalculator {
          }
 
          public static float[] getCameraTranslation(){
-            return new float[]{(float) -solvePnpResult[0][3],(float) -solvePnpResult[1][3],
-                    (float) -solvePnpResult[2][3]};
+            if (solvePnpResult != null){
+                return new float[]{(float) -solvePnpResult[0][3],(float) -solvePnpResult[1][3],
+                        (float) -solvePnpResult[2][3]};
+            }else{
+                return null;
+            }
+
          }
 
 

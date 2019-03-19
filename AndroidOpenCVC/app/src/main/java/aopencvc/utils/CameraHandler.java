@@ -68,7 +68,7 @@ public class CameraHandler implements CameraBridgeViewBase.CvCameraViewListener2
         Mat image = inputFrame.rgba();
 
         if (firstIt){
-            ExtrinsicsCalculator.SolvePnP(image);
+            ExtrinsicsCalculator.SolvePnP(inputFrame.gray());
             firstIt = false;
         }
 
