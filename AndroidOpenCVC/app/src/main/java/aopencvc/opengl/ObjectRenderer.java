@@ -31,8 +31,6 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
     private float[] mProjectionMatrix = new float[16];
     private float[] mModelMatrix = new float[16];
 
-    private float[] mOrthoMatrix = new float[16];
-    private float[] mCurrentRotationTranslation = new float[16];
 
 
 
@@ -74,7 +72,6 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
     private float fy = 1081.398961189691f;
 
-    private ExtrinsicsCalculator eC;
 
                                  //1,0,0 // 0,1.3f,0
     private float[][] directions = {{1,0,0},{0,0,1},{1,0,0},{0,1,0}};
