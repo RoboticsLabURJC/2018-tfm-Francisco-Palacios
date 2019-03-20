@@ -5,6 +5,7 @@ import android.Manifest;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
@@ -55,8 +56,6 @@ public class ARCamera extends AppCompatActivity{
                 {
                     Log.i(TAG, "OpenCV loaded successfully");
                     mOpenCvCameraView.enableView();
-
-
                 } break;
                 default:
                 {
@@ -74,7 +73,7 @@ public class ARCamera extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         Log.i(TAG, "called onCreate");
         Bundle params = getIntent().getExtras();
-
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         boolean record;
         if (params != null){
             record = params.getBoolean("recording");
@@ -160,7 +159,7 @@ public class ARCamera extends AppCompatActivity{
 
     @Override
     public void onDestroy() {
-        slamHandler.SaveTraj(this);
+        slamHandler.saveTraj(this);
         if (mOpenCvCameraView != null)
             mOpenCvCameraView.disableView();
         if (recorder != null){

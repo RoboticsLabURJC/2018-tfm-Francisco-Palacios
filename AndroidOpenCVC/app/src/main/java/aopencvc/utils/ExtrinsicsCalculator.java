@@ -73,7 +73,7 @@ public class ExtrinsicsCalculator {
 //Average error was: 0.1867
 
 
-     public static void SolvePnP(Mat image){
+     public static void solvePnP(Mat image){
          init();
          MatOfPoint2f corners = new MatOfPoint2f();
          Calib3d.findChessboardCorners(image,new Size(4,6),corners);

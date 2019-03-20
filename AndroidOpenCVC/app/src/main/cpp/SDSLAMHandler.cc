@@ -12,7 +12,7 @@ using namespace Eigen;
 
 
 extern "C"{
-    jlong JNICALL Java_aopencvc_utils_SLAMHandler_CreateSLAM(JNIEnv *env, jobject instance) {
+    jlong JNICALL Java_aopencvc_utils_SLAMHandler_createSLAM(JNIEnv *env, jobject instance) {
         jlong result = 0;
 
         try {
@@ -27,7 +27,7 @@ extern "C"{
     }
 }
 extern "C"{
-    jstring JNICALL Java_aopencvc_utils_SLAMHandler_TrackFrame(JNIEnv *env, jobject instance,
+    jstring JNICALL Java_aopencvc_utils_SLAMHandler_trackFrame(JNIEnv *env, jobject instance,
                                                                jlong slam, jint param, jlong img,
                                                                 jlong vKeyFramesPos, jlong planeEq,
                                                                jlong cameraPose) {
@@ -73,7 +73,7 @@ std::string jstring2string(JNIEnv *env, jstring jStr) {
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_aopencvc_utils_SLAMHandler_SaveTrajectory(JNIEnv *env, jobject instance, jstring filepath_, jlong slam) {
+Java_aopencvc_utils_SLAMHandler_saveTrajectory(JNIEnv *env, jobject instance, jstring filepath_, jlong slam) {
     //const char *filepath = env->GetStringUTFChars(filepath_, 0);
     std::string filePathStd = jstring2string(env,filepath_);
 

@@ -24,16 +24,16 @@ public class CoordinateConversor {
 
     }
 
-    private static Mat MultiplicateMatrixes(Mat a, Mat b){
+    private static Mat matrixesMultiplication(Mat a, Mat b){
         Mat c = new Mat(a.rows(),b.cols(),CV_64F, Scalar.all(0.0d));
         Core.multiply(a,b,c);
         return c;
     }
 
-    public static Mat GetCVfromReal(double[] point){
+    public static Mat getCVfromReal(double[] point){
         Mat mPoint = arrayPointToMatPoint(point);
 
-        Mat mPointRotated = MultiplicateMatrixes(rotRealToCV, mPoint);
+        Mat mPointRotated = matrixesMultiplication(rotRealToCV, mPoint);
 
         Mat transformed = new Mat(3,1,CV_64F);
         Core.add(mPointRotated,trRealToCV,transformed);
@@ -42,20 +42,20 @@ public class CoordinateConversor {
 
     }
 
-    public static Mat GetCGLfromCCV(double[] point){
+    public static Mat getCGLfromCCV(double[] point){
         Mat mPoint = arrayPointToMatPoint(point);
 
-        Mat mPointRotated = MultiplicateMatrixes(rotCCVToCGL, mPoint);
+        Mat mPointRotated = matrixesMultiplication(rotCCVToCGL, mPoint);
 
 
         return mPointRotated;
 
     }
 
-    public static Mat GetOGLfromCGL(double[] point){
+    public static Mat getOGLfromCGL(double[] point){
         Mat mPoint = arrayPointToMatPoint(point);
 
-        Mat mPointRotated = MultiplicateMatrixes(rotCGLToOGL, mPoint);
+        Mat mPointRotated = matrixesMultiplication(rotCGLToOGL, mPoint);
 
         Mat transformed = new Mat(3,1,CV_64F);
         Core.add(mPointRotated,trCGLToOGL,transformed);

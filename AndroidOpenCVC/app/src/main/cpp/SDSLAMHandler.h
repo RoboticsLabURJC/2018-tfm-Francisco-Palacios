@@ -61,10 +61,6 @@ namespace SLAM{
 
         SD_SLAM::Tracking * tracker;
 
-
-        SD_SLAM::MapPoint * CurrentMP;
-
-
         SD_SLAM::System * slam;
 
     };

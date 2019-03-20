@@ -32,8 +32,6 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
     private float[] mModelMatrix = new float[16];
 
 
-
-
     /** This will be used to pass in the transformation matrix. */
     private int mMVPMatrixHandle;
 
@@ -136,7 +134,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
         //Una rotacion de ese estilo pondria los parametros de Y y Z en direccion contraria, ya que
         //estamos dando media vuelta alrededor de la X.
-		/// Hemos rotado los puntos en el codigo C. Vamos a probar asi a ver que tal.
+		// Hemos rotado los puntos en el codigo C. Vamos a probar asi a ver que tal.
 
 
         //-------------------------------Modelo translacion rotacion--------------------------------
@@ -173,15 +171,13 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
         }
 
-        mViewMatrix = ObjectRenderer.ChangeXDirection(mViewMatrix);
-
-
+        mViewMatrix = ObjectRenderer.changeXDirection(mViewMatrix);
 
         draw();
     }
 
 
-    public static float[] ChangeXDirection(float[] transMatrix){
+    public static float[] changeXDirection(float[] transMatrix){
         float[] matrixChangeXDir = new float[16];
 
         for(int i = 0;i<matrixChangeXDir.length;i++){
@@ -264,7 +260,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         camTrail = new CamTrail();
         arrows = new Arrow();
         for (int i = 0;i<directions.length;i++){
-            arrows.AddArrow(points[i],directions[i]);
+            arrows.addArrow(points[i],directions[i]);
         }
 
 
@@ -385,8 +381,6 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
             if (modelRotation != null){
                 Matrix.rotateM(mModelMatrix, 0, modelRotation[3] * 57.2958f, modelRotation[0],
                         modelRotation[1], modelRotation[2]);
-            }else{
-
             }
 
 
@@ -394,17 +388,23 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         }
 
 
-		Matrix.multiplyMM(mMVPMatrix, 0, mViewMatrix, 0, mModelMatrix, 0);
+
+
+
+	}
+    /**
+     Execute only after transformModel(float[] rotationVecParallel, float[] translation, float[] modelRotation);
+     **/
+	private void calculateMVP(){
+        Matrix.multiplyMM(mMVPMatrix, 0, mViewMatrix, 0, mModelMatrix, 0);
 
 
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mMVPMatrix, 0);
 
         GLES20.glLineWidth(3.0f);
         //GLES20.glEnableVertexAttribArray(mPositionHandle);
-		GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0); //Necesario para camTrail
-
-
-	}
+        GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0); //Necesario para camTrail
+    }
 
 
 
@@ -420,29 +420,20 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 		for (int i = 0; i<nArrows*3;i=i+3){
 			transformModel(new float[]{directionsArr[i],directionsArr[i+1],directionsArr[i+2]},
                     new float[]{pointsArr[i],pointsArr[i+1],pointsArr[i+2]}, null);
+            calculateMVP();
 
             drawObject(arrowBuffer[0], new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_TRIANGLES,3*6,0);
             drawObject(arrowBuffer[1], new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_LINES,2,0);
 
 		}
 */
-/*
-        transformModel(new float[]{1,0,0},
-                new float[]{0,1.3f,1}, null);
 
-
-
-        FloatBuffer[] arrowBuffer = arrows.getFloatBufferArrow();
-
-        drawObject(arrowBuffer[0], new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_TRIANGLES,3,0);
-        drawObject(arrowBuffer[1], new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_LINES,2,0);
-*/
 
 
 
 
         transformModel(new float[]{0.0f,1.0f,0.0f},coordsObject.getPoint(),null); //coordsObject.getModelRotation());
-
+        calculateMVP();
         // Draw coords object
         //transformModel(null,coordsObject.getPoint(),coordsObject.getModelRotation());
 
@@ -461,8 +452,8 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
 
 /*
-
         transformModel(null, null, null);
+        calculateMVP();
         FloatBuffer trailBuffer = camTrail.getFloatBufferTrail(vKeyFramesPos);
         if (trailBuffer != null) {
             drawObject(trailBuffer, new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_LINE_STRIP,camTrail.getNumPoints(),0);

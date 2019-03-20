@@ -22,9 +22,8 @@ public class Arrow {
 	
 	public Arrow(){
 		
-        directions = new ArrayList<Float>();
-		positions = new ArrayList<Float>();
-
+        directions = new ArrayList<>();
+		positions = new ArrayList<>();
 	}
 
     public float[] getPoints(){
@@ -46,7 +45,7 @@ public class Arrow {
 	}
 	
 	
-	public void AddArrow(float [] newPoints, float[] newDirections){
+	public void addArrow(float [] newPoints, float[] newDirections){
         for (int i = 0;i<newPoints.length;i++){
             positions.add(newPoints[i]);
         }

@@ -8,20 +8,20 @@ import android.os.Environment;
 import org.opencv.core.Mat;
 
 import java.io.File;
-import java.io.IOException;
+
 
 public class SLAMHandler {
 
     private long nativeSLAM = 0;
 
     public SLAMHandler() {
-        this.nativeSLAM = CreateSLAM();
+        this.nativeSLAM = createSLAM();
     }
 
 
 
-    public String TrackFrame(Mat image, Mat vKeyFramesPos, Mat planeEq, Mat worldPosPoint) {
-        String a = this.TrackFrame(this.nativeSLAM, 33, image.getNativeObjAddr(),
+    public String trackFrame(Mat image, Mat vKeyFramesPos, Mat planeEq, Mat worldPosPoint) {
+        String a = this.trackFrame(this.nativeSLAM, 33, image.getNativeObjAddr(),
                 vKeyFramesPos.getNativeObjAddr(), planeEq.getNativeObjAddr(),
                 worldPosPoint.getNativeObjAddr());
 
@@ -29,7 +29,7 @@ public class SLAMHandler {
     }
 
 
-    public void SaveTraj(Context context){
+    public void saveTraj(Context context){
         String filepath = Environment.getExternalStoragePublicDirectory(Environment
                 .DIRECTORY_DOWNLOADS) + "/trajectory.yaml";
 
@@ -44,7 +44,7 @@ public class SLAMHandler {
             e.printStackTrace();
         }
 */
-        SaveTrajectory(filepath, this.nativeSLAM);
+        saveTrajectory(filepath, this.nativeSLAM);
 
         MediaScannerConnection.scanFile(context,new String[]{filepath},null,new MediaScannerConnection.OnScanCompletedListener() {
             @Override
@@ -58,12 +58,12 @@ public class SLAMHandler {
     // Native methods implemented by SLAM native library.
 
 
-    private native void SaveTrajectory(String filepath, long slam);
+    private native void saveTrajectory(String filepath, long slam);
 
     // Native methods implemented by SLAM native library.
-    private native long CreateSLAM();
+    private native long createSLAM();
 
-    public native String TrackFrame(long slam, int param, long img, long vKFPs,
+    public native String trackFrame(long slam, int param, long img, long vKFPs,
                                     long planeEq, long wPPoint);
 
 }
