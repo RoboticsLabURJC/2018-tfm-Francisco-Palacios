@@ -41,7 +41,7 @@ Finally, i create a new class (Recorder) to record the tablet screen i'm testing
 
 ### SD-SLAM and AR in Android, Pattern initialization and resolution reduction:
 
-[(http://img.youtube.com/vi/xx2N_K1n-pw/0.jpg)](https://www.youtube.com/watch?v=xx2N_K1n-pw "")
+[![](http://img.youtube.com/vi/xx2N_K1n-pw/0.jpg)](https://www.youtube.com/watch?v=xx2N_K1n-pw)
 
 <a name="week5"></a>
 ## Weeks 12-13
@@ -54,11 +54,11 @@ I have also created a function that renders a line as the wake of the camera pos
 
 ### SD-SLAM and AR in Android, Pattern initialization and resolution reduction:
 
-[![](http://img.youtube.com/vi/BQ4DcIcNh6k/0.jpg)](https://www.youtube.com/watch?v=BQ4DcIcNh6k "")
+[![](http://img.youtube.com/vi/BQ4DcIcNh6k/0.jpg)](https://www.youtube.com/watch?v=BQ4DcIcNh6k)
 
 ### SD-SLAM and AR in Android, CamTrail:
 
-[![](http://img.youtube.com/vi/062dlFRNw3s/0.jpg)](https://www.youtube.com/watch?v=062dlFRNw3s "")
+[![](http://img.youtube.com/vi/062dlFRNw3s/0.jpg)](https://www.youtube.com/watch?v=062dlFRNw3s)
 
 <a name="week4"></a>
 ## Weeks 9-11
@@ -77,7 +77,7 @@ In the following video we can see better what I'm trying to say.
 
 ### SD-SLAM and AR in Android, second try including plane calculation and calibration parameters:
 
-[![](http://img.youtube.com/vi/rmWQLTqQMNg/0.jpg)](http://www.youtube.com/watch?v=rmWQLTqQMNg "")
+[![](http://img.youtube.com/vi/rmWQLTqQMNg/0.jpg)](http://www.youtube.com/watch?v=rmWQLTqQMNg)
 
 
 <a name="week3"></a>
@@ -91,7 +91,7 @@ Therefore, it will be necessary to make some calculations before transferring th
 
 ### SD-SLAM and AR in Android, first try:
 
-[![](http://img.youtube.com/vi/cGTfwEcq_pI/0.jpg)](http://www.youtube.com/watch?v=cGTfwEcq_pI "")
+[![](http://img.youtube.com/vi/cGTfwEcq_pI/0.jpg)](http://www.youtube.com/watch?v=cGTfwEcq_pI)
 
 
 <a name="week2"></a>
@@ -103,7 +103,7 @@ The AR program consists of an object rendered with OpenGL (GLESv2) over the imag
 
 ### An AR mobile example using GLESv2 and android:
 
-[![](http://img.youtube.com/vi/ambrmh24XXo/0.jpg)](http://www.youtube.com/watch?v=ambrmh24XXo "")
+[![](http://img.youtube.com/vi/ambrmh24XXo/0.jpg)](http://www.youtube.com/watch?v=ambrmh24XXo)
 
 To use SD-SLAM in mobile, I have used and followed as a guide the work of Eduardo Perdices that we can find in the following link: https://gitlab.jderobot.org/slam/slam-android.
 
@@ -112,7 +112,7 @@ In the next video, we can see how this program works:
 ### SD-SLAM in android:
 
 
-[![](http://img.youtube.com/vi/shRlWhWcSqk/0.jpg)](http://www.youtube.com/watch?v=shRlWhWcSqk "")
+[![](http://img.youtube.com/vi/shRlWhWcSqk/0.jpg)](http://www.youtube.com/watch?v=shRlWhWcSqk)
 
 <a name="week1"></a>
 ## Week 1
@@ -125,7 +125,7 @@ Finally, I started an Android application. As this work will use SD-SLAM + AR in
 
 ### Canny example in android using OpenCV libraries:
 
-[![](http://img.youtube.com/vi/IWV2fLG0j7k/0.jpg)](http://www.youtube.com/watch?v=IWV2fLG0j7k "")
+[![](http://img.youtube.com/vi/IWV2fLG0j7k/0.jpg)](http://www.youtube.com/watch?v=IWV2fLG0j7k)
 
 ### SD-SLAM Test:
 
