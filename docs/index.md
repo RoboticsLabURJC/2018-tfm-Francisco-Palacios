@@ -1,4 +1,6 @@
-# 2018-tfm-Francisco-Palacios
+---
+layout: default
+---
 
 ## Table of contents
 
