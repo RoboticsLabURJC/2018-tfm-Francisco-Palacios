@@ -41,7 +41,7 @@ Finally, i create a new class (Recorder) to record the tablet screen i'm testing
 
 ### SD-SLAM and AR in Android, Pattern initialization and resolution reduction:
 
-[![](http://img.youtube.com/vi/xx2N_K1n-pw/0.jpg)](https://www.youtube.com/watch?v=xx2N_K1n-pw "")
+[(http://img.youtube.com/vi/xx2N_K1n-pw/0.jpg)](https://www.youtube.com/watch?v=xx2N_K1n-pw "")
 
 <a name="week5"></a>
 ## Weeks 12-13
