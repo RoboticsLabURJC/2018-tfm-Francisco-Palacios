@@ -14,6 +14,8 @@ import java.sql.Timestamp;
 
 import aopencvc.opengl.SurfaceViewer;
 
+import org.opencv.calib3d.Calib3d; //Solve pnp
+import org.opencv.imgproc.Imgproc;
 import static org.opencv.core.CvType.CV_32F;
 import static org.opencv.core.CvType.CV_64F;
 
@@ -38,7 +40,6 @@ public class CameraHandler implements CameraBridgeViewBase.CvCameraViewListener2
         sumTime = 0;
         countTime= 0;
 
-
     }
 
 
@@ -56,7 +57,16 @@ public class CameraHandler implements CameraBridgeViewBase.CvCameraViewListener2
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
 
+
+
+        ///Estamos devolviendo la imagen a su tamano natural.
+        ///Esto puede provocar que algunos puntos salgan mal calculados por no ternerlos en cuenta
+        ///Ahora lo voy a desactivar, pero esto estaba activo hasta el 01/03/2019, despues del
+        ///Cambio del TrailCam de pose a KFs.
+
         Mat image = inputFrame.rgba();
+
+
         int irows = image.rows();
         int icols = image.cols();
 /*
@@ -66,8 +76,6 @@ public class CameraHandler implements CameraBridgeViewBase.CvCameraViewListener2
         Mat resized = new Mat();
         Size size = new Size(640,360);
         Imgproc.resize(image,resized,size);
-
-        Log.d("SD-SLAM", "Image resized to ");
 
 
 
@@ -92,9 +100,11 @@ public class CameraHandler implements CameraBridgeViewBase.CvCameraViewListener2
         mGLView.putCameraPose(cameraPose);
 
         // Resize to original size
+        /*
+        Cambiado el resize, ver comentario principio metodo.
         Size isize = new Size(icols, irows);
         Imgproc.resize(resized, image, isize);
-
+        */
 
 
 
