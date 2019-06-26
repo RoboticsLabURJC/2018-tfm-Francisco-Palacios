@@ -30,6 +30,7 @@ public class CameraHandler implements CameraBridgeViewBase.CvCameraViewListener2
     private SurfaceViewer mGLView;
     private long sumTime;
     private int countTime;
+    private boolean firstIt;
 
     public CameraHandler(Context context, SLAMHandler slamHandler, SurfaceViewer mGLView) {
         this.context = context;
@@ -39,7 +40,7 @@ public class CameraHandler implements CameraBridgeViewBase.CvCameraViewListener2
         this.mGLView = mGLView;
         sumTime = 0;
         countTime= 0;
-
+        firstIt = true;
     }
 
 
@@ -66,6 +67,11 @@ public class CameraHandler implements CameraBridgeViewBase.CvCameraViewListener2
 
         Mat image = inputFrame.rgba();
 
+        if (firstIt){
+            System.out.println("Por first It");
+            ExtrinsicsCalculator.SolvePnP(inputFrame.gray());
+            firstIt = false;
+        }
 
         int irows = image.rows();
         int icols = image.cols();
@@ -74,7 +80,9 @@ public class CameraHandler implements CameraBridgeViewBase.CvCameraViewListener2
         int cols = rows*icols/irows;
 */
         Mat resized = new Mat();
-        Size size = new Size(640,360);
+        //tablet
+       // Size size = new Size(640,360);
+        Size size = new Size(1280,720);
         Imgproc.resize(image,resized,size);
 
 
@@ -100,11 +108,11 @@ public class CameraHandler implements CameraBridgeViewBase.CvCameraViewListener2
         mGLView.putCameraPose(cameraPose);
 
         // Resize to original size
-        /*
-        Cambiado el resize, ver comentario principio metodo.
+
+       // Cambiado el resize, ver comentario principio metodo.
         Size isize = new Size(icols, irows);
         Imgproc.resize(resized, image, isize);
-        */
+
 
 
 

@@ -92,10 +92,19 @@ namespace SLAM {
 
         // Set camera config
         SD_SLAM::Config &config = SD_SLAM::Config::GetInstance();
+        /*
+          //tablet
+
         config.SetCameraIntrinsics(640, 360, 673.861075, 677.584410,
                                    384.323789, 227.457859);
         config.SetCameraDistortion(-0.350240, 1.384144,
                                    -0.008788, -0.022544, -2.385009);
+                                   */
+
+        config.SetCameraIntrinsics(1280, 720, 1002.6052, 1011.9522,
+                                   631.9946, 376.8122);
+        config.SetCameraDistortion(0.387315, -2.021938,
+                                   -0.0174663, 0.000212, 3.905880);
         config.SetUsePattern(true);
         selectKP = true;
         slam = new SD_SLAM::System(SD_SLAM::System::MONOCULAR);
@@ -128,7 +137,7 @@ namespace SLAM {
         KFPos = *new cv::Mat(vKF.size(), 4, CV_32F);
         for (int i = 0; i< vKF.size();i++){
             SD_SLAM::KeyFrame * KF = vKF.at(i);
-            Matrix4d KFpose = KF->GetPoseInverse();
+            Matrix4d KFpose = KF->GetPose();
             KFPos.at<float>(i,0) = (float) KFpose(0,3);
             KFPos.at<float>(i,1) = -(float) KFpose(1,3);
             KFPos.at<float>(i,2) = -(float) KFpose(2,3);
@@ -161,13 +170,12 @@ namespace SLAM {
         newPose.block<1,4>(3,0) = mTcw.block<1,4>(3,0);
          */
 
-
+/*
         Eigen::Quaterniond q(mTwc.block<3, 3>(0, 0));
         q = *new Eigen::Quaterniond(q.w(),q.x(),q.y(),q.z());
         mTwc.block<3, 3>(0, 0) = q.toRotationMatrix();
-        mTwc(2,3) = mTwc(2,3);
-        mTwc(1,3) = mTwc(1,3);
 
+*/
         for (int i = 0;i<pose.rows * pose.cols;i++){
             pose.at<double>(i%4,i/4) = mTwc(i);
         }
@@ -367,7 +375,7 @@ namespace SLAM {
             Eigen::Quaterniond q(pose.block<3, 3>(0, 0));
             Eigen::Vector3d t = pose.block<3, 1>(0, 3);
             output += "  - id: " + ToString(pKF->mnId) + "\n";
-            output += "    filename: \"" + pKF->mFilename + "\"\n";
+           // output += "    filename: \"" + pKF->mFilename + "\"\n";
             output += "    pose:\n";
             output += "      - " + ToString(q.w()) + "\n";
             output += "      - " + ToString(q.x()) + "\n";
