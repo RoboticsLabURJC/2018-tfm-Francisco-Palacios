@@ -92,19 +92,20 @@ namespace SLAM {
 
         // Set camera config
         SD_SLAM::Config &config = SD_SLAM::Config::GetInstance();
-        /*
+
           //tablet
 
         config.SetCameraIntrinsics(640, 360, 673.861075, 677.584410,
                                    384.323789, 227.457859);
         config.SetCameraDistortion(-0.350240, 1.384144,
                                    -0.008788, -0.022544, -2.385009);
-                                   */
 
+/*
         config.SetCameraIntrinsics(1280, 720, 1002.6052, 1011.9522,
                                    631.9946, 376.8122);
         config.SetCameraDistortion(0.387315, -2.021938,
                                    -0.0174663, 0.000212, 3.905880);
+                                   */
         config.SetUsePattern(true);
         selectKP = true;
         slam = new SD_SLAM::System(SD_SLAM::System::MONOCULAR);

@@ -55,28 +55,25 @@ public class ExtrinsicsCalculator {
 
          listExtCorners = new ArrayList();
          cameraMatrix = new Mat(3,3,CV_32F,Scalar.all(0.0));
-         /*
 
-            config.SetCameraIntrinsics(1280, 720, 1002.6052, 1011.9522,
-                    631.9946, 376.8122);
-        config.SetCameraDistortion(0.387315, -2.021938,
-                -0.0174663, 0.000212, 3.905880);
+
+
          //tablet
          cameraMatrix.put(0,0,1080.33874061861d);
          cameraMatrix.put(0,2,644.2552668090187d);
          cameraMatrix.put(1,1,1081.398961189691d);
          cameraMatrix.put(1,2,347.007496696664d);
          cameraMatrix.put(2,2,1d);
-*/
 
+/*
          cameraMatrix.put(0,0,1002.6052d);
          cameraMatrix.put(0,2,631.9946d);
          cameraMatrix.put(1,1,1011.9522d);
          cameraMatrix.put(1,2,376.8122d);
          cameraMatrix.put(2,2,1d);
-
+*/
          List<Double> distCoeffs = new ArrayList<>();
-         /*
+
 
          //tablet
          distCoeffs.add(0.1390849622709781d);
@@ -84,13 +81,13 @@ public class ExtrinsicsCalculator {
          distCoeffs.add(0.0009328385593714286d);
          distCoeffs.add(0.00003818329618718235d);
          distCoeffs.add(2.231184493469707d);
-*/
+/*
          distCoeffs.add(0.387315d);
          distCoeffs.add(-2.021938d);
          distCoeffs.add(-0.0174663d);
          distCoeffs.add(0.000212d);
          distCoeffs.add(3.905880d);
-
+*/
          distCoeffsMat = new MatOfDouble();
          distCoeffsMat.fromList(distCoeffs);
      }

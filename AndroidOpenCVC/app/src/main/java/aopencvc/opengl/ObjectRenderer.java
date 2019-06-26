@@ -64,7 +64,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
     /** Size of the position data in elements. */
     private final int mPositionDataSize = 3;
-    /*
+
     // tablet
 
     
@@ -75,9 +75,9 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
     private float fx = 1080.33874061861f;
 
     private float fy = 1081.398961189691f;
- */
-//kabel movil
 
+//kabel movil
+/*
     private float cx = 631.9946f;
 
     private float cy = 376.8122f;
@@ -85,7 +85,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
     private float fx = 1002.6052f;
 
     private float fy = 1011.9522f;
-
+*/
     private float[][] directions = {{1,0,0},{0,0,1},{1,0,0},{0,1,0}};
     private float[][] points = {{1.1287f,0.15325f,0.277f},{1.678f,0,0.872f},
                                 {1.9765f,0,2.9335f},{4.3565f,0,2.9335f}};
@@ -430,28 +430,6 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         mProjectionMatrix[14] = (2.0f * zfar * znear) / (znear-zfar);
         mProjectionMatrix[15] = 0.0f;
 
-
-
-
-        mProjectionMatrix[0] = 2*fx/width;
-        mProjectionMatrix[1] = 0.0f;
-        mProjectionMatrix[2] = 0.0f;
-        mProjectionMatrix[3] = 0.0f;
-
-        mProjectionMatrix[4] = 0.0f;
-        mProjectionMatrix[5] = 2*fy/height;
-        mProjectionMatrix[6] = 0.0f;
-        mProjectionMatrix[7] = 0.0f;
-
-        mProjectionMatrix[8] = 1.0f - (2*cx/width);
-        mProjectionMatrix[9] = 2*cy/height - 1.0f;
-        mProjectionMatrix[10] = -(zfar+znear)/(zfar-znear);
-        mProjectionMatrix[11] = -1.0f;
-
-        mProjectionMatrix[12] = 0.0f;
-        mProjectionMatrix[13] = 0.0f;
-        mProjectionMatrix[14] = -2.0f * zfar * znear / (zfar-znear);
-        mProjectionMatrix[15] = 0.0f;
 
         System.out.println(Arrays.toString(mProjectionMatrix));
 
