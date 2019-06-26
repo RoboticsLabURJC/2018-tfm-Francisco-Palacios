@@ -64,10 +64,9 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
     /** Size of the position data in elements. */
     private final int mPositionDataSize = 3;
-
     // tablet
 
-    
+/*
     private float cx = 644.2552668090187f;
 
     private float cy = 347.007496696664f;
@@ -75,17 +74,18 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
     private float fx = 1080.33874061861f;
 
     private float fy = 1081.398961189691f;
-
-//kabel movil
-/*
-    private float cx = 631.9946f;
-
-    private float cy = 376.8122f;
-
-    private float fx = 1002.6052f;
-
-    private float fy = 1011.9522f;
 */
+//kabel movil
+
+    private float cx = 959.397404f;
+
+    private float cy = 536.0155995f;
+
+    private float fx = 1565.154521f;
+
+    private float fy = 1565.505376f;
+
+
     private float[][] directions = {{1,0,0},{0,0,1},{1,0,0},{0,1,0}};
     private float[][] points = {{1.1287f,0.15325f,0.277f},{1.678f,0,0.872f},
                                 {1.9765f,0,2.9335f},{4.3565f,0,2.9335f}};
@@ -144,6 +144,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         planeEquation.get(0,0,mPlaneParams);
 
 
+        float[] point = {0.0f,0.0f,2f};
 
         //long a = System.currentTimeMillis() % 2000;
         //objectPoint[2] = -2+( a / 2000.0f);
@@ -193,7 +194,6 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
         //Matrix.setIdentityM(mViewMatrix, 0);
 
-        System.out.println(Arrays.toString(mViewMatrix));
 
 
         //Matrix.translateM(mViewMatrix,0,0,0,0);
@@ -378,7 +378,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
     public void onSurfaceChanged(GL10 unused, int width, int height) {
 
-        GLES20.glViewport(0, 0, width, -height);
+        GLES20.glViewport(0, 0, width, height);
 
 
         final float ratio = (float) width / height;
@@ -415,7 +415,6 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         mProjectionMatrix[3] = 0.0f;
 
         mProjectionMatrix[4] = 0.0f;
-
         mProjectionMatrix[5] = 2 * fy / height;
         mProjectionMatrix[6] = 0.0f;
         mProjectionMatrix[7] = 0.0f;
@@ -429,7 +428,6 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
         mProjectionMatrix[13] = 0.0f;
         mProjectionMatrix[14] = (2.0f * zfar * znear) / (znear-zfar);
         mProjectionMatrix[15] = 0.0f;
-
 
         System.out.println(Arrays.toString(mProjectionMatrix));
 
@@ -481,7 +479,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
                         modelRotation[1], modelRotation[2]);
             }
 
-            Matrix.scaleM(mModelMatrix, 0, 0.057f, 0.057f, 0.057f);
+             Matrix.scaleM(mModelMatrix, 0, 0.057f, 0.057f, 0.057f);
 
 
         }
@@ -538,6 +536,8 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 */
 
 
+
+
         transformModel(null,coordsObject.getPoint(),null); //coordsObject.getModelRotation());
 
         // Draw coords object
@@ -555,8 +555,6 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 		drawObject(CoordinatesBuffer, new float[]{1.0f,0.0f,0.0f,1.0f},GLES20.GL_LINES,2, 0);
 		drawObject(CoordinatesBuffer, new float[]{0.0f,1.0f,0.0f,1.0f},GLES20.GL_LINES,2, 2);
 		drawObject(CoordinatesBuffer, new float[]{0.0f,0.0f,1.0f,1.0f},GLES20.GL_LINES,2, 4);
-
-/*
 
 
 

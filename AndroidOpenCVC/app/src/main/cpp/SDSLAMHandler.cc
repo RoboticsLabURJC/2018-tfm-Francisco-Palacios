@@ -89,23 +89,21 @@ namespace SLAM {
 
     SDSLAMHandler::SDSLAMHandler() {
         counter_ = 0;
-
-        // Set camera config
         SD_SLAM::Config &config = SD_SLAM::Config::GetInstance();
 
-          //tablet
-
+/*
+        // Set camera config
         config.SetCameraIntrinsics(640, 360, 673.861075, 677.584410,
-                                   384.323789, 227.457859);
+                                   315.8385, 189.6916);
         config.SetCameraDistortion(-0.350240, 1.384144,
                                    -0.008788, -0.022544, -2.385009);
+*/
 
-/*
-        config.SetCameraIntrinsics(1280, 720, 1002.6052, 1011.9522,
-                                   631.9946, 376.8122);
-        config.SetCameraDistortion(0.387315, -2.021938,
-                                   -0.0174663, 0.000212, 3.905880);
-                                   */
+        config.SetCameraIntrinsics(640, 360, 525.4634783, 525.529018,
+                                   318.754478, 176.578987);
+        config.SetCameraDistortion(0.4089838, -2.745104,
+                                   -0.0103676, 0.004119270, 12.861473);
+
         config.SetUsePattern(true);
         selectKP = true;
         slam = new SD_SLAM::System(SD_SLAM::System::MONOCULAR);
@@ -173,9 +171,9 @@ namespace SLAM {
 
 /*
         Eigen::Quaterniond q(mTwc.block<3, 3>(0, 0));
-        q = *new Eigen::Quaterniond(q.w(),q.x(),q.y(),q.z());
+        q = *new Eigen::Quaterniond(q.w(),-q.x(),q.y(),q.z());
         mTwc.block<3, 3>(0, 0) = q.toRotationMatrix();
-
+        mTwc(0,3) = -mTwc(0,3);
 */
         for (int i = 0;i<pose.rows * pose.cols;i++){
             pose.at<double>(i%4,i/4) = mTwc(i);
