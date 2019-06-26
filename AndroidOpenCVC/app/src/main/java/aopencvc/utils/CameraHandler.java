@@ -68,6 +68,7 @@ public class CameraHandler implements CameraBridgeViewBase.CvCameraViewListener2
         Mat image = inputFrame.rgba();
 
         if (firstIt){
+            System.out.println("Por first It");
             ExtrinsicsCalculator.SolvePnP(inputFrame.gray());
             firstIt = false;
         }
@@ -105,11 +106,11 @@ public class CameraHandler implements CameraBridgeViewBase.CvCameraViewListener2
         mGLView.putCameraPose(cameraPose);
 
         // Resize to original size
-        /*
-        Cambiado el resize, ver comentario principio metodo.
+
+       // Cambiado el resize, ver comentario principio metodo.
         Size isize = new Size(icols, irows);
         Imgproc.resize(resized, image, isize);
-        */
+
 
 
 

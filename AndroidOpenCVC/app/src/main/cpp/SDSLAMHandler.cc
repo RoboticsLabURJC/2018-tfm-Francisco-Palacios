@@ -128,7 +128,7 @@ namespace SLAM {
         KFPos = *new cv::Mat(vKF.size(), 4, CV_32F);
         for (int i = 0; i< vKF.size();i++){
             SD_SLAM::KeyFrame * KF = vKF.at(i);
-            Matrix4d KFpose = KF->GetPoseInverse();
+            Matrix4d KFpose = KF->GetPose();
             KFPos.at<float>(i,0) = (float) KFpose(0,3);
             KFPos.at<float>(i,1) = -(float) KFpose(1,3);
             KFPos.at<float>(i,2) = -(float) KFpose(2,3);
