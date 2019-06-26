@@ -55,19 +55,38 @@ public class ExtrinsicsCalculator {
 
          listExtCorners = new ArrayList();
          cameraMatrix = new Mat(3,3,CV_32F,Scalar.all(0.0));
+/*
+         //tablet
          cameraMatrix.put(0,0,1080.33874061861d);
          cameraMatrix.put(0,2,644.2552668090187d);
          cameraMatrix.put(1,1,1081.398961189691d);
          cameraMatrix.put(1,2,347.007496696664d);
          cameraMatrix.put(2,2,1d);
+*/
 
+         cameraMatrix.put(0,0,1565.154521d);
+         cameraMatrix.put(0,2,959.397404d);
+         cameraMatrix.put(1,1,1565.5053765d);
+         cameraMatrix.put(1,2,536.015599d);
+         cameraMatrix.put(2,2,1d);
 
          List<Double> distCoeffs = new ArrayList<>();
+
+/*
+         //tablet
          distCoeffs.add(0.1390849622709781d);
          distCoeffs.add(-0.9989370047449903d);
          distCoeffs.add(0.0009328385593714286d);
          distCoeffs.add(0.00003818329618718235d);
          distCoeffs.add(2.231184493469707d);
+         */
+
+         distCoeffs.add(0.409076d);
+         distCoeffs.add(-2.48556751d);
+         distCoeffs.add(-0.00944561d);
+         distCoeffs.add(0.004872d);
+         distCoeffs.add(8.0519885d);
+
 
          distCoeffsMat = new MatOfDouble();
          distCoeffsMat.fromList(distCoeffs);

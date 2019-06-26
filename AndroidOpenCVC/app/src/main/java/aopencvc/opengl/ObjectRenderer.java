@@ -64,7 +64,9 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
     /** Size of the position data in elements. */
     private final int mPositionDataSize = 3;
-    
+    // tablet
+
+/*
     private float cx = 644.2552668090187f;
 
     private float cy = 347.007496696664f;
@@ -72,6 +74,17 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
     private float fx = 1080.33874061861f;
 
     private float fy = 1081.398961189691f;
+*/
+//kabel movil
+
+    private float cx = 959.397404f;
+
+    private float cy = 536.0155995f;
+
+    private float fx = 1565.154521f;
+
+    private float fy = 1565.505376f;
+
 
     private float[][] directions = {{1,0,0},{0,0,1},{1,0,0},{0,1,0}};
     private float[][] points = {{1.1287f,0.15325f,0.277f},{1.678f,0,0.872f},
@@ -181,7 +194,6 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
         //Matrix.setIdentityM(mViewMatrix, 0);
 
-        System.out.println(Arrays.toString(mViewMatrix));
 
 
         //Matrix.translateM(mViewMatrix,0,0,0,0);
@@ -467,7 +479,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
                         modelRotation[1], modelRotation[2]);
             }
 
-            // Matrix.scaleM(mModelMatrix, 0, 0.057f, 0.057f, 0.057f);
+             Matrix.scaleM(mModelMatrix, 0, 0.057f, 0.057f, 0.057f);
 
 
         }

@@ -26,7 +26,7 @@ public class SurfaceViewer extends GLSurfaceView {
         setPreserveEGLContextOnPause(true);
         setEGLConfigChooser(8, 8, 8, 8, 16, 0);
         getHolder().setFormat(PixelFormat.TRANSLUCENT);
-        getHolder().setFixedSize(1280,720);
+        getHolder().setFixedSize(1920,1080);
         renderer = new ObjectRenderer();
         setRenderer(renderer);
 

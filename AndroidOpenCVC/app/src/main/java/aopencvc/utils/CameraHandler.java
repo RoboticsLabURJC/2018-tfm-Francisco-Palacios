@@ -75,10 +75,11 @@ public class CameraHandler implements CameraBridgeViewBase.CvCameraViewListener2
 
         int irows = image.rows();
         int icols = image.cols();
-/*
-        int rows = 480;
+        System.out.println("cosa"+irows);
+
+        int rows = 720;
         int cols = rows*icols/irows;
-*/
+
         Mat resized = new Mat();
         Size size = new Size(640,360);
         Imgproc.resize(image,resized,size);

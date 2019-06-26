@@ -89,13 +89,21 @@ namespace SLAM {
 
     SDSLAMHandler::SDSLAMHandler() {
         counter_ = 0;
-
-        // Set camera config
         SD_SLAM::Config &config = SD_SLAM::Config::GetInstance();
+
+/*
+        // Set camera config
         config.SetCameraIntrinsics(640, 360, 673.861075, 677.584410,
-                                   384.323789, 227.457859);
+                                   315.8385, 189.6916);
         config.SetCameraDistortion(-0.350240, 1.384144,
                                    -0.008788, -0.022544, -2.385009);
+*/
+
+        config.SetCameraIntrinsics(640, 360, 525.4634783, 525.529018,
+                                   318.754478, 176.578987);
+        config.SetCameraDistortion(0.4089838, -2.745104,
+                                   -0.0103676, 0.004119270, 12.861473);
+
         config.SetUsePattern(true);
         selectKP = true;
         slam = new SD_SLAM::System(SD_SLAM::System::MONOCULAR);
