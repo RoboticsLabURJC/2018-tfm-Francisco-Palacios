@@ -467,7 +467,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
                         modelRotation[1], modelRotation[2]);
             }
 
-            Matrix.scaleM(mModelMatrix, 0, 0.057f, 0.057f, 0.057f);
+            // Matrix.scaleM(mModelMatrix, 0, 0.057f, 0.057f, 0.057f);
 
 
         }
