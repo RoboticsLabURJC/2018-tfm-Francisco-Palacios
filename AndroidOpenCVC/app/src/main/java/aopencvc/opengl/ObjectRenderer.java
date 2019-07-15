@@ -479,7 +479,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
                         modelRotation[1], modelRotation[2]);
             }
 
-             Matrix.scaleM(mModelMatrix, 0, 0.057f, 0.057f, 0.057f);
+             //Matrix.scaleM(mModelMatrix, 0, 0.057f, 0.057f, 0.057f);
 
 
         }
@@ -546,8 +546,8 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
 
        // GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER,mPositionHandle);
 
-		//FloatBuffer GridBuffer = coordsObject.getGrid();
-		//drawObject(GridBuffer, new float[]{1.0f,1.0f,1.0f,1.0f},GLES20.GL_LINES,40, 0);
+		FloatBuffer GridBuffer = coordsObject.getGrid();
+		drawObject(GridBuffer, new float[]{1.0f,1.0f,1.0f,1.0f},GLES20.GL_LINES,28, 0);
 		//FloatBuffer CubeBuffer = coordsObject.getCube();
 		//drawObject(CubeBuffer, new float[]{1.0f,1.0f,1.0f,1.0f},GLES20.GL_POINTS,8, 0);
 

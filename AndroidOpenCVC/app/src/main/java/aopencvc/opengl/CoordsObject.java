@@ -26,7 +26,9 @@ public class  CoordsObject {
      * How many bytes per float.
      */
     private final int mBytesPerFloat = 4;
-	
+
+	public static float cellSideSice = 0.0285f;
+
 	public CoordsObject() {
 
 		// Drawing lines
@@ -34,16 +36,16 @@ public class  CoordsObject {
 				// X, Y, Z
 				0.0f, 0.0f, 0.0f,
 
-				1.5f, 0.0f, 0.0f,
+				cellSideSice*5, 0.0f, 0.0f,
 
 				0.0f, 0.0f, 0.0f,
 
-				0.0f, 1.5f, 0.0f,
+				0.0f, cellSideSice*5, 0.0f,
 
 				0.0f, 0.0f, 0.0f,
 
-				0.0f, 0.0f, 1.5f};
-
+				0.0f, 0.0f, cellSideSice*5};
+/*
 		final float[] gridData = {
 				0.0f, 0.0f, 0.0f,
 				2.16f, 0.0f, 0.0f,
@@ -87,6 +89,38 @@ public class  CoordsObject {
 				1.92f, 0.0f, 2.16f,
 				2.16f, 0.0f, 0.0f,
 				2.16f, 0.0f, 2.16f
+		};
+*/
+		final float[] gridData = {
+				0.0f, 0.0f, 0.0f,
+				0.0f, cellSideSice*8, 0.0f,
+				cellSideSice, 0.0f, 0.0f,
+				cellSideSice, cellSideSice*8, 0.0f,
+				cellSideSice*2, 0.0f, 0.0f,
+				cellSideSice*2, cellSideSice*8, 0.0f,
+				cellSideSice*3, 0.0f, 0.0f,
+				cellSideSice*3, cellSideSice*8, 0.0f,
+				cellSideSice*4, 0.0f, 0.0f,
+				cellSideSice*4, cellSideSice*8, 0.0f,
+				cellSideSice*5, 0.0f, 0.0f,
+				cellSideSice*5, cellSideSice*8, 0.0f,
+				0.0f, 0.0f, 0.0f,
+				cellSideSice*5, 0.0f, 0.0f,
+				0.0f, cellSideSice, 0.0f,
+				cellSideSice*5, cellSideSice, 0.0f,
+				0.0f, cellSideSice*2, 0.0f,
+				cellSideSice*5, cellSideSice*2, 0.0f,
+				0.0f, cellSideSice*3, 0.0f,
+				cellSideSice*5, cellSideSice*3, 0.0f,
+				0.0f, cellSideSice*4, 0.0f,
+				cellSideSice*5, cellSideSice*4, 0.0f,
+				0.0f, cellSideSice*5, 0.0f,
+				cellSideSice*5, cellSideSice*5, 0.0f,
+				0.0f, cellSideSice*6, 0.0f,
+				cellSideSice*5, cellSideSice*6, 0.0f,
+				0.0f, cellSideSice*7, 0.0f,
+				cellSideSice*5, cellSideSice*7, 0.0f
+
 		};
 
 		final float[] cubeData = {
