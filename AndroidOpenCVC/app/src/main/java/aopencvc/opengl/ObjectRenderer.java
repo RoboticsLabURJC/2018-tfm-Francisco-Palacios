@@ -100,7 +100,7 @@ public class ObjectRenderer implements GLSurfaceView.Renderer {
     private float[][] points = {{0,0.5f,-1f},{0.5f,0,-1f},{0,-0.5f,-1f},{-0.5f,0,-1f}};
 */
 
-    private float[] objectPoint = {0.0f,0.0f,0.0f};//{-0.04275f,0.10815f,0.0f};
+    private float[] objectPoint = {-CoordsObject.cellSideSice,-CoordsObject.cellSideSice,0.0f};//{-0.04275f,0.10815f,0.0f};
 
     private Arrow arrows;
     private Mat vKeyFramesPos;
