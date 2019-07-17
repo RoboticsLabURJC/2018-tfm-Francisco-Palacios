@@ -11,9 +11,22 @@ layout: default
 - [Weeks 12-13 - Pattern initialization and resolution reduction](#week5)
 - [Weeks 14-18 - Adding some new features](#week6)
 - [Weeks 19-24 - Solving problems: SelfRecorder, CamTrail and Arrows](#week7)
-- [Weeks 24-30 - Inverse and scale drift](#week8)
+- [Weeks 25-31 - Inverse and scale drift](#week8)
+- [Weeks 32-33 - Going deep in scale drift](#week9)
 ## References
 The contents of android-AccelerometerPlay are from https://github.com/googlesamples/android-AccelerometerPlay/.
+
+<a name="week9"></a>
+## Weeks 24-30
+I tryed to figure it out what is exactly the problem that we saw the last time. It seems to be a scale drift but doing some test i found this:
+
+![alt text](https://github.com/RoboticsURJC-students/2018-tfm-Francisco-Palacios/blob/master/docs/bad-projection.png "Bad projection")
+
+Like we can see there is still some issues with the projection. I'm using the same instrinsic parameters for SD-SLAM and GLES2 so this problem is doing that SD-SLAM got a bad mapping of the envioriment.
+
+I have also recorded a video trying to trying to match the AR grid and the pattern:
+
+[![](http://img.youtube.com/vi/3MLG9KbqcfU/0.jpg)](https://youtu.be/3MLG9KbqcfU)
 
 <a name="week8"></a>
 ## Weeks 24-30
@@ -24,7 +37,7 @@ After trying a lot of things, finally things ended up "clacking" in my head and 
 
 [![](http://img.youtube.com/vi/4RjHIjgaZF0/0.jpg)](https://www.youtube.com/watch?v=4RjHIjgaZF0)
 
-We can see that the render starts in the upper left corner of the checkerboard at the bottom right of the box. The goal es keep the render in that place but but I don't get it. So i tryed again with a new mobile (after proper calibration):
+We can see that the render starts in the upper left corner of the checkerboard at the bottom right of the box. The goal es keep the render in that place but I don't get it. So i tryed again with a new mobile (after proper calibration):
 
 [![](http://img.youtube.com/vi/tFPKK3AdDCg/0.jpg)](https://www.youtube.com/watch?v=tFPKK3AdDCg)
 

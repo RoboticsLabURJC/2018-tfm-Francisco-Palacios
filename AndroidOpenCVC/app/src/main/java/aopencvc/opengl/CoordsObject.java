@@ -44,7 +44,7 @@ public class  CoordsObject {
 
 				0.0f, 0.0f, 0.0f,
 
-				0.0f, 0.0f, cellSideSice*5};
+				0.0f, 0.0f, -cellSideSice*5};
 /*
 		final float[] gridData = {
 				0.0f, 0.0f, 0.0f,
