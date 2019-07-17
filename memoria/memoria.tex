@@ -22,6 +22,7 @@
 
 \usepackage[a4paper, left=2.5cm, right=2.5cm, top=3cm, bottom=3cm]{geometry}
 \usepackage{times}
+\usepackage{subcaption}
 \usepackage[utf8]{inputenc}
 \usepackage[spanish]{babel} % Comenta esta línea si tu memoria es en inglés
 \usepackage{url}
@@ -191,10 +192,41 @@ Hola hola
 \chapter{Introducción}
 \label{sec:intro} % etiqueta para poder referenciar luego en el texto con ~\ref{sec:intro}
 \pagenumbering{arabic} % para empezar la numeración de página con números
-
+En este trabajo hacemos funcionar el algoritmo de SLAM, SD-SLAM, en dispositivos Android haciendo que todo el procesamiento de datos sea realizado por el dispositivo y en tiempo real. Además implementamos una base de Realidad Aumentada para comprobar su funcionamiento y dar pie a poder desarrollar aplicaciones con usos en la realidad. En este capitulo, hablaremos de en que bases se encuentra fundamentado este trabajo.
 
 \section{Visión Artificial}
 \label{sec:visionartificial}
+
+La visión artificial es una rama de la inteligencia artificial que intenta conseguir información de alto nivel a partir de imágenes o videos, que luego pueda ser interpretada para realizar acciones dependiendo de las características de la información hallada, de forma automática y a través de ordenadores. Por ejemplo, para automatizar un proceso de acceso a unas instalaciones, se podría disponer de una cámara que captara la cara de las personas que quisieran entrar, contrastarla con las imágenes guardadas anteriormente de las personas que pueden acceder y decidir si la persona en cuestión tiene permiso para entrar o no.
+
+Las investigaciones en visión artificial empezaron en la década de los 60, con la idea de conseguir la capacidad de los humanos usando su sistema visual. En 1966, se creía, que bastaría con conectar una cámara a un ordenador y preguntarle "¿Que es lo que ves?. En los 70 se formó una etapa temprana de muchos de los algoritmos de bajo nivel que utilizamos hoy en día, como pueden ser el reconocimiento de bordes en una imagen, flujo óptico o estimación del movimiento.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.8]{img/edge_detection.png}%
+\caption{Ejemplo de detector de bordes. Wikipedia-edgedetection}%
+\end{figure}
+
+Gracias a estos primeros acercamientos y al hecho de que las cámaras y ordenadores son mucho más baratos, más eficientes y más pequeños, la visión artificial a avanzado mucho en desde entonces. Hoy es fácil encontrar aplicaciones que hagan uso de una manera u otra de la visión artificial para simplificar ciertos trabajos, como puede ser OCR para digitalizar textos, detección de señales de tráfico, sistemas biométricos para reconocer la cara de una persona o realidad aumentada para medición del entorno.
+
+\begin{figure}[ht]
+\centering
+\begin{subfigure}{0.3\textwidth}
+  \centering
+  \includegraphics[scale=0.4]{img/google-translate-word-lens.jpg}
+\end{subfigure}%
+\qquad
+\qquad
+\qquad
+\qquad
+\qquad
+\qquad
+\begin{subfigure}{0.3\textwidth}
+  \centering
+  \includegraphics[scale=0.425]{img/measure-app.jpg}
+\end{subfigure}%
+\caption{Ejemplos de aplicaciones de visión artificial. Google}%
+\end{figure}
 
 \section{Autolocalización Visual}
 \label{sec:autolocalizacionvisual}
@@ -202,7 +234,7 @@ Hola hola
 \subsection{Visual SLAM}
 \label{subsec:visualslam}
 
-\section{Realidad Aumentadal}
+\section{Realidad Aumentada}
 \label{sec:realidadaumentada}
 
 \subsection{Tecnologías Software}
