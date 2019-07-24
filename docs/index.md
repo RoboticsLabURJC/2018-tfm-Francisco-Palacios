@@ -24,6 +24,7 @@ The contents of android-AccelerometerPlay are from https://github.com/googlesamp
 I have done some test doing only some pure rotations and pure translations (rotate along the x-axis, translate along the x-axis and so on) to try to find what is failing. In the next video we can see the results.
 
 [![](http://img.youtube.com/vi/Eq0cZVtVvf8/0.jpg)](https://youtu.be/Eq0cZVtVvf8)
+
 When i rotate the camera along the z-axis (the axis that goes from the screen to my eyes) the render goes crazy. It start to move from where it was very heavily, so the problem seems to be related to the z-axis.
 From here, i think i need to revisitate the projection matrix of the camera, since i don't think that the readings from SD-SLAM are being bad and the render is stationary.
 
