@@ -13,8 +13,21 @@ layout: default
 - [Weeks 19-24 - Solving problems: SelfRecorder, CamTrail and Arrows](#week7)
 - [Weeks 25-31 - Inverse and scale drift](#week8)
 - [Weeks 32-33 - Going deep in scale drift](#week9)
+- [Weeks 33-34 - Bad camera location error finded](#week10)
+
 ## References
 The contents of android-AccelerometerPlay are from https://github.com/googlesamples/android-AccelerometerPlay/.
+
+<a name="week10"></a>
+## Weeks 24-30
+
+I have done some test doing only some pure rotations and pure translations (rotate along the x-axis, translate along the x-axis and so on) to try to find what is failing. In the next video we can see the results.
+
+[![](http://img.youtube.com/vi/Eq0cZVtVvf8/0.jpg)](https://youtu.be/Eq0cZVtVvf8)
+When i rotate the camera along the z-axis (the axis that goes from the screen to my eyes) the render goes crazy. It start to move from where it was very heavily, so the problem seems to be related to the z-axis.
+From here, i think i need to revisitate the projection matrix of the camera, since i don't think that the readings from SD-SLAM are being bad and the render is stationary.
+
+Also, i added a number in the left-up corner with the numbers of keypoints in the actual frame. It respect the colors of the state of the tracker.
 
 <a name="week9"></a>
 ## Weeks 24-30

@@ -84,6 +84,7 @@ Java_aopencvc_utils_SLAMHandler_SaveTrajectory(JNIEnv *env, jobject instance, js
 
 
 using std::vector;
+using namespace std;
 
 namespace SLAM {
 
@@ -146,8 +147,10 @@ namespace SLAM {
 
 
     void SDSLAMHandler::GetPose(cv::Mat &pose){
+        SD_SLAM::Frame currentFrame = tracker->GetCurrentFrame();
+        Eigen::Matrix4d mTwc = currentFrame.GetPoseInverse();
+        numberOfKeyPoints = currentFrame.N;
 
-        Eigen::Matrix4d mTwc = tracker->GetCurrentFrame().GetPoseInverse();
         /*
         Eigen::Matrix3d mRcw = mTcw.block<3, 3>(0, 0);
         Eigen::Vector3d mtcw = mTcw.block<3, 1>(0, 3);
@@ -229,15 +232,17 @@ namespace SLAM {
     void SDSLAMHandler::DrawFrame(cv::Mat &img) {
 
         // Not initialized
+
+        const char *N = ToString(numberOfKeyPoints).c_str();
         if (trackerStatus == SD_SLAM::Tracking::NOT_INITIALIZED) {
-            circle(img, cv::Point(50,50),5, cv::Scalar(0,255,0),CV_FILLED, 8,0);
+            putText(img,N,cv::Point(50,50),CV_FONT_HERSHEY_SIMPLEX,1,cv::Scalar(0,255,0),1.5);
         }
         // Status OK
         if (trackerStatus == SD_SLAM::Tracking::OK) {
-            circle(img, cv::Point(50,50),5, cv::Scalar(0,0,255),CV_FILLED, 8,0);
+            putText(img,N,cv::Point(50,50),CV_FONT_HERSHEY_SIMPLEX,1,cv::Scalar(0,0,255),1.5);
         }
         if (trackerStatus == SD_SLAM::Tracking::LOST) {
-            circle(img, cv::Point(50,50),5, cv::Scalar(255,0,0),CV_FILLED, 8,0);
+            putText(img,N,cv::Point(50,50),CV_FONT_HERSHEY_SIMPLEX,1,cv::Scalar(255,0,0),1.5);
         }
 
 

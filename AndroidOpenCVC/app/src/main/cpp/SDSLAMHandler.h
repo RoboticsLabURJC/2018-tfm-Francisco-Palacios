@@ -64,6 +64,8 @@ namespace SLAM{
 
         SD_SLAM::MapPoint * CurrentMP;
 
+        int numberOfKeyPoints;
+
 
         SD_SLAM::System * slam;
 

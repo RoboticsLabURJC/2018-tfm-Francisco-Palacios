@@ -1,7 +1,7 @@
 \select@language {spanish}
 \contentsline {chapter}{\numberline {1}Introducci\IeC {\'o}n}{1}
 \contentsline {section}{\numberline {1.1}Visi\IeC {\'o}n Artificial}{1}
-\contentsline {section}{\numberline {1.2}Autolocalizaci\IeC {\'o}n Visual}{3}
+\contentsline {section}{\numberline {1.2}Autolocalizaci\IeC {\'o}n Visual}{2}
 \contentsline {subsection}{\numberline {1.2.1}Visual SLAM}{3}
 \contentsline {section}{\numberline {1.3}Realidad Aumentada}{3}
 \contentsline {subsection}{\numberline {1.3.1}Tecnolog\IeC {\'\i }as Software}{3}
@@ -19,12 +19,13 @@
 \contentsline {section}{\numberline {4.4}OpenGL}{9}
 \contentsline {section}{\numberline {4.5}Android}{9}
 \contentsline {subsection}{\numberline {4.5.1}Android Studio}{9}
-\contentsline {chapter}{\numberline {5}SD-SLAM mobile}{11}
-\contentsline {section}{\numberline {5.1}Adaptaci\IeC {\'o}n de SD-SLAM para Android}{11}
+\contentsline {chapter}{\numberline {5}Desarrollo}{11}
+\contentsline {section}{\numberline {5.1}SD-SLAM en Android}{11}
 \contentsline {subsection}{\numberline {5.1.1}Incorporaci\IeC {\'o}n de SD-SLAM a proyecto en Android}{11}
-\contentsline {subsection}{\numberline {5.1.2}Inicializaci\IeC {\'o}n}{11}
-\contentsline {subsection}{\numberline {5.1.3}IMU}{11}
-\contentsline {section}{\numberline {5.2}AR con OpenGL}{11}
-\contentsline {chapter}{\numberline {6}Experimentos}{13}
-\contentsline {section}{\numberline {6.1}Guia por flechas}{13}
-\contentsline {chapter}{\numberline {7}Conclusiones}{15}
+\contentsline {subsection}{\numberline {5.1.2}Uniendo SD-SLAM y OpenGL}{11}
+\contentsline {subsection}{\numberline {5.1.3}Optimizado de SD-SLAM en m\IeC {\'o}vil}{11}
+\contentsline {paragraph}{IMU}{11}
+\contentsline {paragraph}{Inicializaci\IeC {\'o}n}{11}
+\contentsline {section}{\numberline {5.2}Aplicaciones de Realidad Aumentada}{11}
+\contentsline {subsection}{\numberline {5.2.1}Localizaci\IeC {\'o}n indoor}{11}
+\contentsline {chapter}{\numberline {6}Conclusiones}{13}

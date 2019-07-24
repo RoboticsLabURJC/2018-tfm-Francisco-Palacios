@@ -76,13 +76,13 @@ Trabajo Fin de Máster
 \vspace{2.5cm}
 
 \LARGE
-REALIDAD AUMENTADA CON SD-SLAM MOBILE
+TÍTULO DEL TRABAJO EN MAYÚSCULAS
 
 \vspace{4cm}
 
 \large
 Autor : Francisco Javier Palacios Fernández \\
-Tutor : Eduardo Perdices Garcia y José María Cañas Plaza
+Tutor : Eduardo Perdices y José María Cañas Plaza
 \end{center}
 \end{titlepage}
 
@@ -199,7 +199,7 @@ En este trabajo hacemos funcionar el algoritmo de SLAM, SD-SLAM, en dispositivos
 
 La visión artificial es una rama de la inteligencia artificial que intenta conseguir información de alto nivel a partir de imágenes o videos, que luego pueda ser interpretada para realizar acciones dependiendo de las características de la información hallada, de forma automática y a través de ordenadores. Por ejemplo, para automatizar un proceso de acceso a unas instalaciones, se podría disponer de una cámara que captara la cara de las personas que quisieran entrar, contrastarla con las imágenes guardadas anteriormente de las personas que pueden acceder y decidir si la persona en cuestión tiene permiso para entrar o no.
 
-Las investigaciones en visión artificial empezaron en la década de los 60, con la idea de conseguir la capacidad de los humanos usando su sistema visual. En 1966, se creía, que bastaría con conectar una cámara a un ordenador y preguntarle "¿Que es lo que ves?. En los 70 se formó una etapa temprana de muchos de los algoritmos de bajo nivel que utilizamos hoy en día, como pueden ser el reconocimiento de bordes en una imagen, flujo óptico o estimación del movimiento.
+Las investigaciones en visión artificial empezaron en la década de los 60, con la idea de conseguir la capacidad de los humanos usando su sistema visual. En 1966, se creía, que bastaría con conectar una cámara a un ordenador y preguntarle "¿Que es lo que ves?". En los 70 se formó una etapa temprana de muchos de los algoritmos de bajo nivel que utilizamos hoy en día, como pueden ser el reconocimiento de bordes en una imagen, flujo óptico o estimación del movimiento.
 
 \begin{figure}[ht]
 \centering
@@ -207,7 +207,9 @@ Las investigaciones en visión artificial empezaron en la década de los 60, con
 \caption{Ejemplo de detector de bordes. Wikipedia-edgedetection}%
 \end{figure}
 
-Gracias a estos primeros acercamientos y al hecho de que las cámaras y ordenadores son mucho más baratos, más eficientes y más pequeños, la visión artificial a avanzado mucho en desde entonces. Hoy es fácil encontrar aplicaciones que hagan uso de una manera u otra de la visión artificial para simplificar ciertos trabajos, como puede ser OCR para digitalizar textos, detección de señales de tráfico, sistemas biométricos para reconocer la cara de una persona o realidad aumentada para medición del entorno.
+Gracias a estos primeros acercamientos y al hecho de que las cámaras y ordenadores son mucho más baratos, más eficientes y más pequeños ahora, la visión artificial a avanzado mucho en desde entonces. Hoy es fácil encontrar aplicaciones que hagan uso de una manera u otra de la visión artificial para simplificar ciertos trabajos, como puede ser OCR para digitalizar textos, detección de señales de tráfico, sistemas biométricos para reconocer la cara de una persona o realidad aumentada para medición del entorno.
+
+
 
 \begin{figure}[ht]
 \centering
@@ -228,11 +230,23 @@ Gracias a estos primeros acercamientos y al hecho de que las cámaras y ordenado
 \caption{Ejemplos de aplicaciones de visión artificial. Google}%
 \end{figure}
 
+
+Este trabajo entra dentro de los ámbitos de la visión artificial, dotando a una herramienta de mayores funcionalidades.
+
 \section{Autolocalización Visual}
 \label{sec:autolocalizacionvisual}
 
+La autolocalización visual, entra dentro del ámbito de la visión tridimensional y por tanto, de la visión artificial. Consiste en dotar a una cámara de ser capaz de localizarse teniendo en cuenta el entorno que le rodea, utilizando las imágenes suministradas por esta. Para ello, es necesario conseguir las características geométricas de la escena que se esta visualizando y con esta información inferir la localización del dispositivo.
+
+Esta tarea, en principio puede parecer sencilla, ya que cualquier persona puede ver una foto y saber, por ejemplo, a que distancia se encuentra un objeto que aparezca en esta, aproximadamente. Sin embargo, las imágenes o fotografías de la realidad son una proyección en 2 dimensiones de nuestro mundo en 3 dimensiones y por tanto hay una perdida de información muy importante para las tareas de autolocalización.
+
+Además, utilizar una única cámara para realizar este trabajo también es una dificultad. No es casualidad, que la mayoría de los seres vivos con el sentido de la vista, tengamos al menos 2 ojos. Esto es por que con un único ojo no es posible determinar la profundidad a la que se encuentra un objeto, sin captar varias imágenes de este. No sabríamos diferenciar si un objeto esta demasiado cerca o es demasiado grande o si es esta demasiado lejos o es demasiado pequeño.
+
 \subsection{Visual SLAM}
 \label{subsec:visualslam}
+
+SLAM (Simultaneous Localization And Mapping) es una rama de la robótica que pretende dotar de la capacidad de autolocalizarse a la par que crea un mapa del entorno que lo rodea a robots utilizando diversos sensores como láseres, radares o cámaras o una mezcla de ellos.
+A partir de 2005, se popularizo la investigación en VSLAM (Visual SLAM) queriendo conseguir un mapeo del entorno y la localización del robot tan solo utilizando sensores visuales (cámaras y sensores de profundidad).
 
 \section{Realidad Aumentada}
 \label{sec:realidadaumentada}
@@ -282,29 +296,32 @@ Gracias a estos primeros acercamientos y al hecho de que las cámaras y ordenado
 \subsection{Android Studio}
 \label{subsec:androidstudio}
 
-\chapter{SD-SLAM mobile}
+\chapter{Desarrollo}
 \label{sec:desarrollo}
 
-\section{Adaptación de SD-SLAM para Android}
-\label{sec:adaptacionsdslam}
+\section{SD-SLAM en Android}
+\label{sec:sdslamenandroid}
 
 \subsection{Incorporación de SD-SLAM a proyecto en Android}
-\label{subsec:incorporacionsdslam}
+\label{subsec:sdslamincorporadoandroid}
 
-\subsection{Inicialización}
-\label{subsec:inicializacion}
+\subsection{Uniendo SD-SLAM y OpenGL}
+\label{subsec:sdslamyopengl}
 
-\subsection{IMU}
+\subsection{Optimizado de SD-SLAM en móvil}
+\label{subsec:opmizacionsdslammovil}
+
+\paragraph{IMU}
 \label{subsec:imu}
 
-\section{AR con OpenGL}
-\label{sec:arconopengl}
+\paragraph{Inicialización}
+\label{subsec:inicializacion}
 
-\chapter{Experimentos}
-\label{sec:experimentos}
+\section{Aplicaciones de Realidad Aumentada}
+\label{sec:aplicacionesdesarrolladas}
 
-\section{Guia por flechas}
-\label{subsec:guiaporflechas}
+\subsection{Localización indoor}
+\label{sec:localizacionindoor}
 
 \chapter{Conclusiones}
 \label{sec:conclusiones}
