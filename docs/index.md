@@ -13,13 +13,13 @@ layout: default
 - [Weeks 19-24 - Solving problems: SelfRecorder, CamTrail and Arrows](#week7)
 - [Weeks 25-31 - Inverse and scale drift](#week8)
 - [Weeks 32-33 - Going deep in scale drift](#week9)
-- [Weeks 33-34 - Bad camera location error finded](#week10)
+- [Week 34 - Bad camera location error finded](#week10)
 
 ## References
 The contents of android-AccelerometerPlay are from https://github.com/googlesamples/android-AccelerometerPlay/.
 
 <a name="week10"></a>
-## Weeks 24-30
+## Weeks 34
 
 I have done some test doing only some pure rotations and pure translations (rotate along the x-axis, translate along the x-axis and so on) to try to find what is failing. In the next video we can see the results.
 
@@ -31,7 +31,7 @@ From here, i think i need to revisitate the projection matrix of the camera, sin
 Also, i added a number in the left-up corner with the numbers of keypoints in the actual frame. It respect the colors of the state of the tracker.
 
 <a name="week9"></a>
-## Weeks 24-30
+## Weeks 32-33
 I tryed to figure it out what is exactly the problem that we saw the last time. It seems to be a scale drift but doing some test i found this:
 
 ![alt text](https://github.com/RoboticsURJC-students/2018-tfm-Francisco-Palacios/blob/master/docs/bad-projection.png "Bad projection")
@@ -43,7 +43,7 @@ I have also recorded a video trying to trying to match the AR grid and the patte
 [![](http://img.youtube.com/vi/3MLG9KbqcfU/0.jpg)](https://youtu.be/3MLG9KbqcfU)
 
 <a name="week8"></a>
-## Weeks 24-30
+## Weeks 25-31
 
 In this time i solved the problem with the left handed coordinate system and also the localization of the AR renders appears to be the best.
 
